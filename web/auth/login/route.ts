@@ -1,0 +1,54 @@
+import { NextResponse } from "next/server";
+import bcrypt from "bcryptjs";
+import crypto from "crypto";
+import { prisma } from "@/src/lib/prisma";
+
+function sha256(input: string) {
+  return crypto.createHash("sha256").update(input).digest("hex");
+}
+
+export async function POST(req: Request) {
+  const { email, password } = await req.json();
+
+  if (!email || !password) {
+    return NextResponse.json({ error: "Email and password required" }, { status: 400 });
+  }
+
+  const user = await prisma.user.findUnique({ where: { email } });
+  if (!user) return NextResponse.json({ error: "Invalid credentials" }, { status: 401 });
+
+  const ok = await bcrypt.compare(password, user.passwordHash);
+  if (!ok) return NextResponse.json({ error: "Invalid credentials" }, { status: 401 });
+
+  // 2 сесії максимум: знаходимо активні (не revoked і не прострочені)
+  const active = await prisma.session.findMany({
+    where: { userId: user.id, revokedAt: null, expiresAt: { gt: new Date() } },
+    orderBy: { createdAt: "asc" }, // найстаріші першими
+  });
+
+  // якщо вже 2 — ревокуємо найстарішу
+  if (active.length >= 2) {
+    await prisma.session.update({
+      where: { id: active[0].id },
+      data: { revokedAt: new Date() },
+    });
+  }
+
+  // створюємо нову сесію
+  const token = crypto.randomBytes(32).toString("hex");
+  const tokenHash = sha256(token);
+
+  const expiresAt = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000); // 7 днів
+
+  await prisma.session.create({
+    data: {
+      userId: user.id,
+      tokenHash,
+      expiresAt,
+    },
+  });
+
+  // Поки що повертаємо token у відповіді (для тесту).
+  // Пізніше перенесемо у httpOnly cookie.
+  return NextResponse.json({ token });
+}
