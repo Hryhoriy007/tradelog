@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 
-export default function Register() {
+export default function RegisterPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
@@ -11,47 +11,64 @@ export default function Register() {
     e.preventDefault();
     setLoading(true);
 
-    const res = await fetch("/api/register", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ email, password }),
-    });
+    try {
+      const res = await fetch("/api/auth/register", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password, locale: "ua" }),
+      });
 
-    const data = await res.json();
-    setLoading(false);
+      const isJson = res.headers.get("content-type")?.includes("application/json");
+      const data = isJson ? await res.json() : null;
 
-    if (data.ok) {
+      setLoading(false);
+
+      if (!res.ok) {
+        alert(data?.error || `Registration failed (${res.status})`);
+        return;
+      }
+
       window.location.href = "/login";
-    } else {
-      alert(data.error || "Registration failed");
+    } catch {
+      setLoading(false);
+      alert("Network error");
     }
   }
 
   return (
-    <form onSubmit={handleSubmit}>
+    <main style={{ padding: 40 }}>
       <h1>Register</h1>
+      <p>Створи акаунт і почни 7-day trial</p>
 
-      <input
-        type="email"
-        placeholder="Email"
-        value={email}
-        onChange={(e) => setEmail(e.target.value)}
-        required
-      />
+      <form
+        onSubmit={handleSubmit}
+        style={{ display: "grid", gap: 12, maxWidth: 320, marginTop: 16 }}
+      >
+        <input
+          placeholder="Email"
+          type="email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          required
+        />
 
-      <input
-        type="password"
-        placeholder="Password"
-        value={password}
-        onChange={(e) => setPassword(e.target.value)}
-        required
-      />
+        <input
+          placeholder="Password (min 8 chars)"
+          type="password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          minLength={8}
+          required
+        />
 
-      <button type="submit" disabled={loading}>
-        {loading ? "Loading..." : "Start free trial"}
-      </button>
-    </form>
+        <button type="submit" disabled={loading}>
+          {loading ? "Loading..." : "Start free trial"}
+        </button>
+      </form>
+
+      <p style={{ marginTop: 16 }}>
+        Already have an account? <a href="/login">Login</a>
+      </p>
+    </main>
   );
 }
