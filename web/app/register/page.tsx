@@ -1,18 +1,57 @@
-export default function RegisterPage() {
+"use client";
+
+import { useState } from "react";
+
+export default function Register() {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  async function handleSubmit(e: React.FormEvent) {
+    e.preventDefault();
+    setLoading(true);
+
+    const res = await fetch("/api/register", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ email, password }),
+    });
+
+    const data = await res.json();
+    setLoading(false);
+
+    if (data.ok) {
+      window.location.href = "/login";
+    } else {
+      alert(data.error || "Registration failed");
+    }
+  }
+
   return (
-    <main style={{ padding: 40 }}>
+    <form onSubmit={handleSubmit}>
       <h1>Register</h1>
-      <p>Створи акаунт і почни 7-day trial</p>
 
-      <form style={{ display: "grid", gap: 12, maxWidth: 320, marginTop: 16 }}>
-        <input placeholder="Email" type="email" />
-        <input placeholder="Password (min 8 chars)" type="password" />
-        <button type="submit">Start free trial</button>
-      </form>
+      <input
+        type="email"
+        placeholder="Email"
+        value={email}
+        onChange={(e) => setEmail(e.target.value)}
+        required
+      />
 
-      <p style={{ marginTop: 16 }}>
-        Already have an account? <a href="/login">Login</a>
-      </p>
-    </main>
+      <input
+        type="password"
+        placeholder="Password"
+        value={password}
+        onChange={(e) => setPassword(e.target.value)}
+        required
+      />
+
+      <button type="submit" disabled={loading}>
+        {loading ? "Loading..." : "Start free trial"}
+      </button>
+    </form>
   );
 }
