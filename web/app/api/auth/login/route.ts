@@ -47,7 +47,19 @@ export async function POST(req: Request) {
     },
   });
 
-  // Поки що повертаємо токен у JSON (для тесту).
-  // Наступним кроком запишемо його в httpOnly cookie.
-  return NextResponse.json({ token });
+  // ✅ записуємо токен у httpOnly cookie
+  const res = NextResponse.json({
+    ok: true,
+    user: { id: user.id, email: user.email, plan: user.plan, locale: user.locale },
+  });
+
+  res.cookies.set("session", token, {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+    sameSite: "lax",
+    path: "/",
+    maxAge: 60 * 60 * 24 * 7,
+  });
+
+  return res;
 }
