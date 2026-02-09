@@ -7,8 +7,8 @@ import { Page, HeaderRow, Row } from "@/app/components/ui/Layout";
 import { Card } from "@/app/components/ui/Card";
 import { Button } from "@/app/components/ui/Button";
 import { ui } from "@/app/components/ui/styles";
-import { MockDashboard } from "@/app/components/marketing/MockDashboard";
 
+import { MockDashboard } from "@/app/components/marketing/MockDashboard";
 
 function Badge({ children }: { children: React.ReactNode }) {
   return (
@@ -28,22 +28,6 @@ function Badge({ children }: { children: React.ReactNode }) {
     >
       {children}
     </span>
-  );
-}
-
-function Kpi({ label, value }: { label: string; value: string }) {
-  return (
-    <div
-      style={{
-        padding: 14,
-        borderRadius: 16,
-        border: "1px solid rgba(255,255,255,0.10)",
-        background: "rgba(255,255,255,0.02)",
-      }}
-    >
-      <div style={{ fontSize: 12, opacity: 0.65 }}>{label}</div>
-      <div style={{ fontSize: 18, fontWeight: 900, marginTop: 6 }}>{value}</div>
-    </div>
   );
 }
 
@@ -137,6 +121,7 @@ export default function HomePage() {
           marginTop: 10,
         }}
       >
+        {/* Left hero */}
         <div
           style={{
             padding: 22,
@@ -187,41 +172,9 @@ export default function HomePage() {
           </div>
         </div>
 
-        {/* Right: quick preview card */}
-        <div style={{ display: "grid", gap: 12 }}>
-          <Card title="Quick preview" subtitle="What you’ll get in 30 seconds">
-            <div style={{ display: "grid", gap: 12 }}>
-              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10 }}>
-                <Kpi label="Total R" value="+12.4R" />
-                <Kpi label="Win rate" value="48%" />
-                <Kpi label="Avg R" value="+0.42R" />
-                <Kpi label="Streak" value="WIN × 4" />
-              </div>
-
-              <div
-                style={{
-                  borderRadius: 16,
-                  border: "1px solid rgba(255,255,255,0.10)",
-                  background: "rgba(0,0,0,0.20)",
-                  padding: 14,
-                }}
-              >
-                <div style={{ fontWeight: 900, marginBottom: 8 }}>Why it works</div>
-                <div style={{ opacity: 0.8, fontSize: 13, lineHeight: 1.55 }}>
-                  You stop guessing. You see what setups pay, what mistakes repeat, and how your emotions affect R.
-                </div>
-              </div>
-            </div>
-          </Card>
-
-          <Card title="Perfect for" subtitle="Scalpers • Intraday • Swing">
-            <div style={{ display: "grid", gap: 8, opacity: 0.9 }}>
-              <div>• tracking R-multiples instead of money noise</div>
-              <div>• reviewing “rule broken?” patterns</div>
-              <div>• comparing setups by Avg R and distribution</div>
-              <div>• saving presets for fast trade creation</div>
-            </div>
-          </Card>
+        {/* Right: dashboard mock */}
+        <div>
+          <MockDashboard />
         </div>
       </div>
 
@@ -305,13 +258,31 @@ export default function HomePage() {
       </div>
 
       {/* Footer */}
-      <div style={{ marginTop: 14, opacity: 0.6, fontSize: 12, display: "flex", justifyContent: "space-between", gap: 10, flexWrap: "wrap" }}>
+      <div
+        style={{
+          marginTop: 14,
+          opacity: 0.6,
+          fontSize: 12,
+          display: "flex",
+          justifyContent: "space-between",
+          gap: 10,
+          flexWrap: "wrap",
+        }}
+      >
         <div>© {year} TradeLog</div>
         <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
-          <Link href="/dashboard" style={{ textDecoration: "none", color: "inherit" }}>App</Link>
-          <Link href="/stats" style={{ textDecoration: "none", color: "inherit" }}>Stats</Link>
-          <Link href="/templates" style={{ textDecoration: "none", color: "inherit" }}>Templates</Link>
-          <Link href="/backup" style={{ textDecoration: "none", color: "inherit" }}>Backup</Link>
+          <Link href="/dashboard" style={{ textDecoration: "none", color: "inherit" }}>
+            App
+          </Link>
+          <Link href="/stats" style={{ textDecoration: "none", color: "inherit" }}>
+            Stats
+          </Link>
+          <Link href="/templates" style={{ textDecoration: "none", color: "inherit" }}>
+            Templates
+          </Link>
+          <Link href="/backup" style={{ textDecoration: "none", color: "inherit" }}>
+            Backup
+          </Link>
         </div>
       </div>
 
