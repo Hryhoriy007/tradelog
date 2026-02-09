@@ -396,8 +396,10 @@ __turbopack_context__.s([
     ()=>MockDashboard
 ]);
 var __TURBOPACK__imported__module__$5b$project$5d2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/web/node_modules/next/dist/compiled/react/jsx-dev-runtime.js [app-client] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$web$2f$node_modules$2f$styled$2d$jsx$2f$style$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/web/node_modules/styled-jsx/style.js [app-client] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$web$2f$app$2f$components$2f$ui$2f$Card$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/web/app/components/ui/Card.tsx [app-client] (ecmascript)");
 "use client";
+;
 ;
 ;
 function MockDashboard() {
@@ -405,163 +407,194 @@ function MockDashboard() {
         style: {
             position: "relative",
             borderRadius: 22,
-            padding: 14,
-            border: "1px solid rgba(255,255,255,0.10)",
-            background: "linear-gradient(180deg, rgba(255,255,255,0.04), rgba(255,255,255,0.01))",
-            boxShadow: "0 40px 80px rgba(0,0,0,0.55), inset 0 1px 0 rgba(255,255,255,0.04)",
-            overflow: "hidden"
+            padding: 0
         },
-        children: [
-            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                style: {
-                    position: "absolute",
-                    inset: -40,
-                    background: "radial-gradient(600px 200px at 80% 0%, rgba(140,80,255,0.25), transparent 60%)",
-                    pointerEvents: "none"
-                }
-            }, void 0, false, {
-                fileName: "[project]/web/app/components/marketing/MockDashboard.tsx",
-                lineNumber: 22,
-                columnNumber: 7
-            }, this),
-            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                style: {
-                    position: "relative",
-                    display: "grid",
-                    gap: 12
-                },
-                children: [
-                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+        children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+            style: {
+                display: "grid",
+                gap: 12
+            },
+            children: [
+                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                    style: {
+                        display: "grid",
+                        gridTemplateColumns: "repeat(4, 1fr)",
+                        gap: 10
+                    },
+                    children: [
+                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(MiniCard, {
+                            label: "Total R",
+                            value: "+12.4R"
+                        }, void 0, false, {
+                            fileName: "[project]/web/app/components/marketing/MockDashboard.tsx",
+                            lineNumber: 17,
+                            columnNumber: 11
+                        }, this),
+                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(MiniCard, {
+                            label: "Win rate",
+                            value: "48%"
+                        }, void 0, false, {
+                            fileName: "[project]/web/app/components/marketing/MockDashboard.tsx",
+                            lineNumber: 18,
+                            columnNumber: 11
+                        }, this),
+                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(MiniCard, {
+                            label: "Avg R",
+                            value: "+0.42R"
+                        }, void 0, false, {
+                            fileName: "[project]/web/app/components/marketing/MockDashboard.tsx",
+                            lineNumber: 19,
+                            columnNumber: 11
+                        }, this),
+                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(MiniCard, {
+                            label: "Streak",
+                            value: "WIN × 4"
+                        }, void 0, false, {
+                            fileName: "[project]/web/app/components/marketing/MockDashboard.tsx",
+                            lineNumber: 20,
+                            columnNumber: 11
+                        }, this)
+                    ]
+                }, void 0, true, {
+                    fileName: "[project]/web/app/components/marketing/MockDashboard.tsx",
+                    lineNumber: 16,
+                    columnNumber: 9
+                }, this),
+                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$web$2f$app$2f$components$2f$ui$2f$Card$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Card"], {
+                    title: "Equity curve (R)",
+                    subtitle: "Last 30 trades",
+                    children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                        style: {
+                            position: "relative"
+                        },
+                        className: "jsx-1e28a73c67e5971",
+                        children: [
+                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("svg", {
+                                width: "100%",
+                                height: "120",
+                                viewBox: "0 0 400 120",
+                                className: "jsx-1e28a73c67e5971",
+                                children: [
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("line", {
+                                        x1: "0",
+                                        y1: "100",
+                                        x2: "400",
+                                        y2: "100",
+                                        stroke: "rgba(255,255,255,0.10)",
+                                        strokeWidth: "1",
+                                        className: "jsx-1e28a73c67e5971"
+                                    }, void 0, false, {
+                                        fileName: "[project]/web/app/components/marketing/MockDashboard.tsx",
+                                        lineNumber: 28,
+                                        columnNumber: 15
+                                    }, this),
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("polyline", {
+                                        points: "0,80 40,90 80,70 120,75 160,55 200,60 240,40 280,45 320,30 360,20",
+                                        fill: "none",
+                                        stroke: "rgba(255,255,255,0.92)",
+                                        strokeWidth: "2.6",
+                                        strokeLinejoin: "round",
+                                        strokeLinecap: "round",
+                                        className: "jsx-1e28a73c67e5971" + " " + "eqLine"
+                                    }, void 0, false, {
+                                        fileName: "[project]/web/app/components/marketing/MockDashboard.tsx",
+                                        lineNumber: 31,
+                                        columnNumber: 15
+                                    }, this),
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("polyline", {
+                                        points: "0,80 40,90 80,70 120,75 160,55 200,60 240,40 280,45 320,30 360,20",
+                                        fill: "none",
+                                        stroke: "rgba(140,80,255,0.35)",
+                                        strokeWidth: "6",
+                                        strokeLinejoin: "round",
+                                        strokeLinecap: "round",
+                                        opacity: "0.35",
+                                        className: "jsx-1e28a73c67e5971" + " " + "eqGlow"
+                                    }, void 0, false, {
+                                        fileName: "[project]/web/app/components/marketing/MockDashboard.tsx",
+                                        lineNumber: 42,
+                                        columnNumber: 15
+                                    }, this)
+                                ]
+                            }, void 0, true, {
+                                fileName: "[project]/web/app/components/marketing/MockDashboard.tsx",
+                                lineNumber: 26,
+                                columnNumber: 13
+                            }, this),
+                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$web$2f$node_modules$2f$styled$2d$jsx$2f$style$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
+                                id: "1e28a73c67e5971",
+                                children: ".eqLine.jsx-1e28a73c67e5971{stroke-dasharray:520;stroke-dashoffset:520px;animation:1.15s forwards draw}.eqGlow.jsx-1e28a73c67e5971{stroke-dasharray:520;stroke-dashoffset:520px;filter:blur(6px);animation:1.15s forwards draw}@keyframes draw{to{stroke-dashoffset:0}}"
+                            }, void 0, false, void 0, this)
+                        ]
+                    }, void 0, true, {
+                        fileName: "[project]/web/app/components/marketing/MockDashboard.tsx",
+                        lineNumber: 25,
+                        columnNumber: 11
+                    }, this)
+                }, void 0, false, {
+                    fileName: "[project]/web/app/components/marketing/MockDashboard.tsx",
+                    lineNumber: 24,
+                    columnNumber: 9
+                }, this),
+                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$web$2f$app$2f$components$2f$ui$2f$Card$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Card"], {
+                    title: "Last trades",
+                    subtitle: "Preview",
+                    children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                         style: {
                             display: "grid",
-                            gridTemplateColumns: "repeat(4, 1fr)",
-                            gap: 10
+                            gap: 6
                         },
                         children: [
-                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(MiniCard, {
-                                label: "Total R",
-                                value: "+12.4R"
+                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(TradeRow, {
+                                pair: "ETHUSDT",
+                                side: "SHORT",
+                                r: "+2.1R",
+                                tone: "win"
                             }, void 0, false, {
                                 fileName: "[project]/web/app/components/marketing/MockDashboard.tsx",
-                                lineNumber: 35,
-                                columnNumber: 11
+                                lineNumber: 78,
+                                columnNumber: 13
                             }, this),
-                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(MiniCard, {
-                                label: "Win rate",
-                                value: "48%"
+                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(TradeRow, {
+                                pair: "BTCUSDT",
+                                side: "LONG",
+                                r: "-1.0R",
+                                tone: "loss"
                             }, void 0, false, {
                                 fileName: "[project]/web/app/components/marketing/MockDashboard.tsx",
-                                lineNumber: 36,
-                                columnNumber: 11
+                                lineNumber: 79,
+                                columnNumber: 13
                             }, this),
-                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(MiniCard, {
-                                label: "Avg R",
-                                value: "+0.42R"
+                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(TradeRow, {
+                                pair: "ETHUSDT",
+                                side: "LONG",
+                                r: "+1.4R",
+                                tone: "win"
                             }, void 0, false, {
                                 fileName: "[project]/web/app/components/marketing/MockDashboard.tsx",
-                                lineNumber: 37,
-                                columnNumber: 11
-                            }, this),
-                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(MiniCard, {
-                                label: "Streak",
-                                value: "WIN × 4"
-                            }, void 0, false, {
-                                fileName: "[project]/web/app/components/marketing/MockDashboard.tsx",
-                                lineNumber: 38,
-                                columnNumber: 11
+                                lineNumber: 80,
+                                columnNumber: 13
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/web/app/components/marketing/MockDashboard.tsx",
-                        lineNumber: 34,
-                        columnNumber: 9
-                    }, this),
-                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$web$2f$app$2f$components$2f$ui$2f$Card$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Card"], {
-                        title: "Equity curve (R)",
-                        subtitle: "Last 30 trades",
-                        children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("svg", {
-                            width: "100%",
-                            height: "120",
-                            viewBox: "0 0 400 120",
-                            children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("polyline", {
-                                points: "0,80 40,90 80,70 120,75 160,55 200,60 240,40 280,45 320,30 360,20",
-                                fill: "none",
-                                stroke: "rgba(255,255,255,0.9)",
-                                strokeWidth: "2.5",
-                                strokeLinejoin: "round",
-                                strokeLinecap: "round"
-                            }, void 0, false, {
-                                fileName: "[project]/web/app/components/marketing/MockDashboard.tsx",
-                                lineNumber: 44,
-                                columnNumber: 13
-                            }, this)
-                        }, void 0, false, {
-                            fileName: "[project]/web/app/components/marketing/MockDashboard.tsx",
-                            lineNumber: 43,
-                            columnNumber: 11
-                        }, this)
-                    }, void 0, false, {
-                        fileName: "[project]/web/app/components/marketing/MockDashboard.tsx",
-                        lineNumber: 42,
-                        columnNumber: 9
-                    }, this),
-                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$web$2f$app$2f$components$2f$ui$2f$Card$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Card"], {
-                        title: "Last trades",
-                        subtitle: "Preview",
-                        children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                            style: {
-                                display: "grid",
-                                gap: 6
-                            },
-                            children: [
-                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(TradeRow, {
-                                    pair: "ETHUSDT",
-                                    side: "SHORT",
-                                    r: "+2.1R"
-                                }, void 0, false, {
-                                    fileName: "[project]/web/app/components/marketing/MockDashboard.tsx",
-                                    lineNumber: 58,
-                                    columnNumber: 13
-                                }, this),
-                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(TradeRow, {
-                                    pair: "BTCUSDT",
-                                    side: "LONG",
-                                    r: "-1.0R"
-                                }, void 0, false, {
-                                    fileName: "[project]/web/app/components/marketing/MockDashboard.tsx",
-                                    lineNumber: 59,
-                                    columnNumber: 13
-                                }, this),
-                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(TradeRow, {
-                                    pair: "ETHUSDT",
-                                    side: "LONG",
-                                    r: "+1.4R"
-                                }, void 0, false, {
-                                    fileName: "[project]/web/app/components/marketing/MockDashboard.tsx",
-                                    lineNumber: 60,
-                                    columnNumber: 13
-                                }, this)
-                            ]
-                        }, void 0, true, {
-                            fileName: "[project]/web/app/components/marketing/MockDashboard.tsx",
-                            lineNumber: 57,
-                            columnNumber: 11
-                        }, this)
-                    }, void 0, false, {
-                        fileName: "[project]/web/app/components/marketing/MockDashboard.tsx",
-                        lineNumber: 56,
-                        columnNumber: 9
+                        lineNumber: 77,
+                        columnNumber: 11
                     }, this)
-                ]
-            }, void 0, true, {
-                fileName: "[project]/web/app/components/marketing/MockDashboard.tsx",
-                lineNumber: 32,
-                columnNumber: 7
-            }, this)
-        ]
-    }, void 0, true, {
+                }, void 0, false, {
+                    fileName: "[project]/web/app/components/marketing/MockDashboard.tsx",
+                    lineNumber: 76,
+                    columnNumber: 9
+                }, this)
+            ]
+        }, void 0, true, {
+            fileName: "[project]/web/app/components/marketing/MockDashboard.tsx",
+            lineNumber: 14,
+            columnNumber: 7
+        }, this)
+    }, void 0, false, {
         fileName: "[project]/web/app/components/marketing/MockDashboard.tsx",
-        lineNumber: 8,
+        lineNumber: 7,
         columnNumber: 5
     }, this);
 }
@@ -583,7 +616,7 @@ function MiniCard({ label, value }) {
                 children: label
             }, void 0, false, {
                 fileName: "[project]/web/app/components/marketing/MockDashboard.tsx",
-                lineNumber: 78,
+                lineNumber: 98,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -594,18 +627,33 @@ function MiniCard({ label, value }) {
                 children: value
             }, void 0, false, {
                 fileName: "[project]/web/app/components/marketing/MockDashboard.tsx",
-                lineNumber: 79,
+                lineNumber: 99,
                 columnNumber: 7
             }, this)
         ]
     }, void 0, true, {
         fileName: "[project]/web/app/components/marketing/MockDashboard.tsx",
-        lineNumber: 70,
+        lineNumber: 90,
         columnNumber: 5
     }, this);
 }
 _c1 = MiniCard;
-function TradeRow({ pair, side, r }) {
+function toneStyle(tone) {
+    if (tone === "win") return {
+        bg: "rgba(80,200,120,0.14)",
+        br: "rgba(80,200,120,0.22)"
+    };
+    if (tone === "loss") return {
+        bg: "rgba(255,100,100,0.14)",
+        br: "rgba(255,100,100,0.22)"
+    };
+    return {
+        bg: "rgba(180,180,180,0.12)",
+        br: "rgba(180,180,180,0.18)"
+    };
+}
+function TradeRow({ pair, side, r, tone }) {
+    const t = toneStyle(tone);
     return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
         style: {
             display: "flex",
@@ -615,49 +663,79 @@ function TradeRow({ pair, side, r }) {
             borderRadius: 10,
             border: "1px solid rgba(255,255,255,0.08)",
             background: "rgba(255,255,255,0.02)",
-            fontSize: 12
+            fontSize: 12,
+            alignItems: "center"
         },
         children: [
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                style: {
+                    display: "flex",
+                    alignItems: "center",
+                    gap: 10
+                },
                 children: [
-                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("b", {
-                        children: pair
-                    }, void 0, false, {
+                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                        children: [
+                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("b", {
+                                children: pair
+                            }, void 0, false, {
+                                fileName: "[project]/web/app/components/marketing/MockDashboard.tsx",
+                                lineNumber: 150,
+                                columnNumber: 11
+                            }, this),
+                            " ",
+                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                style: {
+                                    opacity: 0.7
+                                },
+                                children: side
+                            }, void 0, false, {
+                                fileName: "[project]/web/app/components/marketing/MockDashboard.tsx",
+                                lineNumber: 150,
+                                columnNumber: 25
+                            }, this)
+                        ]
+                    }, void 0, true, {
                         fileName: "[project]/web/app/components/marketing/MockDashboard.tsx",
-                        lineNumber: 99,
+                        lineNumber: 149,
                         columnNumber: 9
                     }, this),
-                    " ",
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
                         style: {
-                            opacity: 0.7
+                            padding: "3px 8px",
+                            borderRadius: 999,
+                            border: `1px solid ${t.br}`,
+                            background: t.bg,
+                            opacity: 0.92,
+                            fontSize: 11,
+                            fontWeight: 800
                         },
-                        children: side
+                        children: tone.toUpperCase()
                     }, void 0, false, {
                         fileName: "[project]/web/app/components/marketing/MockDashboard.tsx",
-                        lineNumber: 100,
+                        lineNumber: 153,
                         columnNumber: 9
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "[project]/web/app/components/marketing/MockDashboard.tsx",
-                lineNumber: 98,
+                lineNumber: 148,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                 style: {
-                    fontWeight: 700
+                    fontWeight: 800
                 },
                 children: r
             }, void 0, false, {
                 fileName: "[project]/web/app/components/marketing/MockDashboard.tsx",
-                lineNumber: 102,
+                lineNumber: 168,
                 columnNumber: 7
             }, this)
         ]
     }, void 0, true, {
         fileName: "[project]/web/app/components/marketing/MockDashboard.tsx",
-        lineNumber: 86,
+        lineNumber: 135,
         columnNumber: 5
     }, this);
 }
@@ -678,6 +756,9 @@ __turbopack_context__.s([
     ()=>DashboardWindow
 ]);
 var __TURBOPACK__imported__module__$5b$project$5d2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/web/node_modules/next/dist/compiled/react/jsx-dev-runtime.js [app-client] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/web/node_modules/next/dist/compiled/react/index.js [app-client] (ecmascript)");
+;
+var _s = __turbopack_context__.k.signature(), _s1 = __turbopack_context__.k.signature();
 "use client";
 ;
 function Dot({ color }) {
@@ -709,7 +790,7 @@ function Pill({ children, tone }) {
             fontSize: 12,
             border: `1px solid ${map[tone]}`,
             background: map[tone],
-            opacity: 0.9,
+            opacity: 0.92,
             whiteSpace: "nowrap"
         },
         children: children
@@ -720,115 +801,300 @@ function Pill({ children, tone }) {
     }, this);
 }
 _c1 = Pill;
-function DashboardWindow({ children }) {
-    return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+const THEME_KEY = "tradelog_theme_v1";
+function getTheme() {
+    if ("TURBOPACK compile-time falsy", 0) //TURBOPACK unreachable
+    ;
+    const v = (localStorage.getItem(THEME_KEY) || "").toLowerCase();
+    return v === "light" ? "light" : "dark";
+}
+function applyTheme(t) {
+    if ("TURBOPACK compile-time falsy", 0) //TURBOPACK unreachable
+    ;
+    localStorage.setItem(THEME_KEY, t);
+    document.documentElement.dataset.theme = t;
+}
+function ThemeToggleMini() {
+    _s();
+    const [theme, setTheme] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])("dark");
+    (0, __TURBOPACK__imported__module__$5b$project$5d2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useEffect"])({
+        "ThemeToggleMini.useEffect": ()=>{
+            setTheme(getTheme());
+        }
+    }["ThemeToggleMini.useEffect"], []);
+    const onToggle = ()=>{
+        const next = theme === "dark" ? "light" : "dark";
+        setTheme(next);
+        applyTheme(next);
+    };
+    return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
+        type: "button",
+        onClick: onToggle,
+        title: "Toggle theme",
         style: {
-            borderRadius: 22,
+            height: 26,
+            padding: "0 10px",
+            borderRadius: 10,
             border: "1px solid rgba(255,255,255,0.12)",
-            background: `
-          linear-gradient(180deg, rgba(255,255,255,0.04), rgba(0,0,0,0.15)),
-          url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='120' height='120' filter='url(%23n)' opacity='.035'/%3E%3C/svg%3E")
-          `,
-            overflow: "hidden"
+            background: "rgba(255,255,255,0.04)",
+            color: "inherit",
+            fontSize: 12,
+            fontWeight: 800,
+            opacity: 0.92,
+            cursor: "pointer"
         },
-        children: [
-            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                style: {
-                    height: 38,
-                    display: "flex",
-                    alignItems: "center",
-                    gap: 8,
-                    padding: "0 14px",
-                    borderBottom: "1px solid rgba(255,255,255,0.08)",
-                    background: "rgba(0,0,0,0.25)"
-                },
-                children: [
-                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(Dot, {
-                        color: "#ff5f56"
-                    }, void 0, false, {
-                        fileName: "[project]/web/app/components/marketing/DashboardWindow.tsx",
-                        lineNumber: 75,
-                        columnNumber: 9
-                    }, this),
-                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(Dot, {
-                        color: "#ffbd2e"
-                    }, void 0, false, {
-                        fileName: "[project]/web/app/components/marketing/DashboardWindow.tsx",
-                        lineNumber: 76,
-                        columnNumber: 9
-                    }, this),
-                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(Dot, {
-                        color: "#27c93f"
-                    }, void 0, false, {
-                        fileName: "[project]/web/app/components/marketing/DashboardWindow.tsx",
-                        lineNumber: 77,
-                        columnNumber: 9
-                    }, this),
-                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                        style: {
-                            marginLeft: 10,
-                            display: "flex",
-                            gap: 8
-                        },
-                        children: [
-                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(Pill, {
-                                tone: "win",
-                                children: "Win"
-                            }, void 0, false, {
-                                fileName: "[project]/web/app/components/marketing/DashboardWindow.tsx",
-                                lineNumber: 80,
-                                columnNumber: 11
-                            }, this),
-                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(Pill, {
-                                tone: "loss",
-                                children: "Loss"
-                            }, void 0, false, {
-                                fileName: "[project]/web/app/components/marketing/DashboardWindow.tsx",
-                                lineNumber: 81,
-                                columnNumber: 11
-                            }, this),
-                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(Pill, {
-                                tone: "be",
-                                children: "BE"
-                            }, void 0, false, {
-                                fileName: "[project]/web/app/components/marketing/DashboardWindow.tsx",
-                                lineNumber: 82,
-                                columnNumber: 11
-                            }, this)
-                        ]
-                    }, void 0, true, {
-                        fileName: "[project]/web/app/components/marketing/DashboardWindow.tsx",
-                        lineNumber: 79,
-                        columnNumber: 9
-                    }, this)
-                ]
-            }, void 0, true, {
-                fileName: "[project]/web/app/components/marketing/DashboardWindow.tsx",
-                lineNumber: 64,
-                columnNumber: 7
-            }, this),
-            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                style: {
-                    padding: 14
-                },
-                children: children
-            }, void 0, false, {
-                fileName: "[project]/web/app/components/marketing/DashboardWindow.tsx",
-                lineNumber: 87,
-                columnNumber: 7
-            }, this)
-        ]
-    }, void 0, true, {
+        children: theme === "dark" ? "Dark" : "Light"
+    }, void 0, false, {
         fileName: "[project]/web/app/components/marketing/DashboardWindow.tsx",
-        lineNumber: 51,
+        lineNumber: 78,
         columnNumber: 5
     }, this);
 }
-_c2 = DashboardWindow;
-var _c, _c1, _c2;
+_s(ThemeToggleMini, "HKZhbbE1NL5O9VXEQueUHrvooII=");
+_c2 = ThemeToggleMini;
+function DashboardWindow({ children, watermark = "Demo data" }) {
+    _s1();
+    const ref = (0, __TURBOPACK__imported__module__$5b$project$5d2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useRef"])(null);
+    const [tilt, setTilt] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])({
+        rx: 0,
+        ry: 0,
+        s: 1
+    });
+    const [glow, setGlow] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])({
+        x: 70,
+        y: 12
+    }); // percent positions
+    const supportsFinePointer = (0, __TURBOPACK__imported__module__$5b$project$5d2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useMemo"])({
+        "DashboardWindow.useMemo[supportsFinePointer]": ()=>{
+            if ("TURBOPACK compile-time falsy", 0) //TURBOPACK unreachable
+            ;
+            return window.matchMedia?.("(pointer: fine)").matches ?? false;
+        }
+    }["DashboardWindow.useMemo[supportsFinePointer]"], []);
+    const onMove = (e)=>{
+        if (!supportsFinePointer) return;
+        const el = ref.current;
+        if (!el) return;
+        const r = el.getBoundingClientRect();
+        const px = (e.clientX - r.left) / r.width; // 0..1
+        const py = (e.clientY - r.top) / r.height; // 0..1
+        // tilt around center
+        const ry = (px - 0.5) * 10;
+        const rx = -(py - 0.5) * 10;
+        setTilt({
+            rx,
+            ry,
+            s: 1.01
+        });
+        // parallax glow anchor (in % for CSS gradients)
+        setGlow({
+            x: Math.max(0, Math.min(100, px * 100)),
+            y: Math.max(0, Math.min(100, py * 100))
+        });
+    };
+    const onLeave = ()=>{
+        setTilt({
+            rx: 0,
+            ry: 0,
+            s: 1
+        });
+        setGlow({
+            x: 70,
+            y: 12
+        }); // back to nice default
+    };
+    return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+        style: {
+            perspective: 900
+        },
+        children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+            ref: ref,
+            onMouseMove: onMove,
+            onMouseLeave: onLeave,
+            style: {
+                transform: `rotateX(${tilt.rx}deg) rotateY(${tilt.ry}deg) scale(${tilt.s})`,
+                transformStyle: "preserve-3d",
+                transition: supportsFinePointer ? "transform 120ms ease" : "none",
+                willChange: "transform",
+                borderRadius: 22,
+                border: "1px solid rgba(255,255,255,0.12)",
+                overflow: "hidden",
+                boxShadow: "0 40px 90px rgba(0,0,0,0.55), inset 0 1px 0 rgba(255,255,255,0.04)",
+                position: "relative",
+                background: `
+            linear-gradient(180deg, rgba(255,255,255,0.04), rgba(0,0,0,0.15)),
+            url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='120' height='120' filter='url(%23n)' opacity='.035'/%3E%3C/svg%3E")
+            `
+            },
+            children: [
+                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                    style: {
+                        position: "absolute",
+                        inset: -80,
+                        pointerEvents: "none",
+                        background: `radial-gradient(650px 240px at ${glow.x}% ${glow.y}%, rgba(140,80,255,0.26), transparent 60%)`,
+                        transition: supportsFinePointer ? "background 60ms linear" : "none"
+                    }
+                }, void 0, false, {
+                    fileName: "[project]/web/app/components/marketing/DashboardWindow.tsx",
+                    lineNumber: 168,
+                    columnNumber: 9
+                }, this),
+                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                    style: {
+                        position: "absolute",
+                        inset: -120,
+                        pointerEvents: "none",
+                        background: `radial-gradient(520px 200px at ${Math.min(100, glow.x + 10)}% ${Math.max(0, glow.y - 10)}%, rgba(255,255,255,0.10), transparent 65%)`,
+                        mixBlendMode: "screen",
+                        opacity: 0.7,
+                        transition: supportsFinePointer ? "background 60ms linear" : "none"
+                    }
+                }, void 0, false, {
+                    fileName: "[project]/web/app/components/marketing/DashboardWindow.tsx",
+                    lineNumber: 179,
+                    columnNumber: 9
+                }, this),
+                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                    style: {
+                        position: "absolute",
+                        right: 14,
+                        bottom: 12,
+                        fontSize: 12,
+                        fontWeight: 900,
+                        letterSpacing: 0.6,
+                        opacity: 0.16,
+                        transform: "rotate(-8deg)",
+                        pointerEvents: "none",
+                        userSelect: "none"
+                    },
+                    children: watermark
+                }, void 0, false, {
+                    fileName: "[project]/web/app/components/marketing/DashboardWindow.tsx",
+                    lineNumber: 195,
+                    columnNumber: 9
+                }, this),
+                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                    style: {
+                        position: "relative",
+                        height: 38,
+                        display: "flex",
+                        alignItems: "center",
+                        gap: 8,
+                        padding: "0 14px",
+                        borderBottom: "1px solid rgba(255,255,255,0.08)",
+                        background: "rgba(0,0,0,0.25)"
+                    },
+                    children: [
+                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(Dot, {
+                            color: "#ff5f56"
+                        }, void 0, false, {
+                            fileName: "[project]/web/app/components/marketing/DashboardWindow.tsx",
+                            lineNumber: 225,
+                            columnNumber: 11
+                        }, this),
+                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(Dot, {
+                            color: "#ffbd2e"
+                        }, void 0, false, {
+                            fileName: "[project]/web/app/components/marketing/DashboardWindow.tsx",
+                            lineNumber: 226,
+                            columnNumber: 11
+                        }, this),
+                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(Dot, {
+                            color: "#27c93f"
+                        }, void 0, false, {
+                            fileName: "[project]/web/app/components/marketing/DashboardWindow.tsx",
+                            lineNumber: 227,
+                            columnNumber: 11
+                        }, this),
+                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                            style: {
+                                marginLeft: 10,
+                                display: "flex",
+                                gap: 8,
+                                alignItems: "center"
+                            },
+                            children: [
+                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(Pill, {
+                                    tone: "win",
+                                    children: "Win"
+                                }, void 0, false, {
+                                    fileName: "[project]/web/app/components/marketing/DashboardWindow.tsx",
+                                    lineNumber: 230,
+                                    columnNumber: 13
+                                }, this),
+                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(Pill, {
+                                    tone: "loss",
+                                    children: "Loss"
+                                }, void 0, false, {
+                                    fileName: "[project]/web/app/components/marketing/DashboardWindow.tsx",
+                                    lineNumber: 231,
+                                    columnNumber: 13
+                                }, this),
+                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(Pill, {
+                                    tone: "be",
+                                    children: "BE"
+                                }, void 0, false, {
+                                    fileName: "[project]/web/app/components/marketing/DashboardWindow.tsx",
+                                    lineNumber: 232,
+                                    columnNumber: 13
+                                }, this)
+                            ]
+                        }, void 0, true, {
+                            fileName: "[project]/web/app/components/marketing/DashboardWindow.tsx",
+                            lineNumber: 229,
+                            columnNumber: 11
+                        }, this),
+                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                            style: {
+                                marginLeft: "auto"
+                            },
+                            children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(ThemeToggleMini, {}, void 0, false, {
+                                fileName: "[project]/web/app/components/marketing/DashboardWindow.tsx",
+                                lineNumber: 236,
+                                columnNumber: 13
+                            }, this)
+                        }, void 0, false, {
+                            fileName: "[project]/web/app/components/marketing/DashboardWindow.tsx",
+                            lineNumber: 235,
+                            columnNumber: 11
+                        }, this)
+                    ]
+                }, void 0, true, {
+                    fileName: "[project]/web/app/components/marketing/DashboardWindow.tsx",
+                    lineNumber: 213,
+                    columnNumber: 9
+                }, this),
+                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                    style: {
+                        position: "relative",
+                        padding: 14
+                    },
+                    children: children
+                }, void 0, false, {
+                    fileName: "[project]/web/app/components/marketing/DashboardWindow.tsx",
+                    lineNumber: 241,
+                    columnNumber: 9
+                }, this)
+            ]
+        }, void 0, true, {
+            fileName: "[project]/web/app/components/marketing/DashboardWindow.tsx",
+            lineNumber: 146,
+            columnNumber: 7
+        }, this)
+    }, void 0, false, {
+        fileName: "[project]/web/app/components/marketing/DashboardWindow.tsx",
+        lineNumber: 145,
+        columnNumber: 5
+    }, this);
+}
+_s1(DashboardWindow, "Rbu0odWwdSb1Y2CsifGy0jabNWM=");
+_c3 = DashboardWindow;
+var _c, _c1, _c2, _c3;
 __turbopack_context__.k.register(_c, "Dot");
 __turbopack_context__.k.register(_c1, "Pill");
-__turbopack_context__.k.register(_c2, "DashboardWindow");
+__turbopack_context__.k.register(_c2, "ThemeToggleMini");
+__turbopack_context__.k.register(_c3, "DashboardWindow");
 if (typeof globalThis.$RefreshHelpers$ === 'object' && globalThis.$RefreshHelpers !== null) {
     __turbopack_context__.k.registerExports(__turbopack_context__.m, globalThis.$RefreshHelpers$);
 }
