@@ -2,7 +2,7 @@
 
 import React, { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 
 import { addTrade, type Trade } from "@/lib/tradeStore";
 import { calcPlannedRR, calcRMultiple, type Direction } from "@/lib/tradeMath";
@@ -34,6 +34,7 @@ function uid() {
 
 export default function NewTradePage() {
   const router = useRouter();
+  const searchParams = useSearchParams();
 
   // --- defaults ---
   const nowIso = useMemo(() => new Date().toISOString(), []);
@@ -75,6 +76,7 @@ export default function NewTradePage() {
   // --- presets ---
   const [presets, setPresets] = useState<TradePreset[]>([]);
   const [presetId, setPresetId] = useState("");
+  const [autoApplied, setAutoApplied] = useState(false);
 
   useEffect(() => {
     setPresets(getPresets());
@@ -85,10 +87,7 @@ export default function NewTradePage() {
     [presets, presetId]
   );
 
-  const chips = useMemo(() => {
-    // show first 6 presets as quick actions
-    return presets.slice(0, 6);
-  }, [presets]);
+  const chips = useMemo(() => presets.slice(0, 6), [presets]);
 
   function applyPreset(p?: TradePreset | null) {
     const preset = p ?? selectedPreset;
@@ -103,7 +102,7 @@ export default function NewTradePage() {
 
     if (preset.setup) setSetupTag(preset.setup);
 
-    // optional: do not overwrite what user already typed
+    // do not overwrite what user already typed
     if (preset.notes) setThesis((prev) => (prev ? prev : preset.notes));
   }
 
@@ -111,6 +110,22 @@ export default function NewTradePage() {
     setPresetId(p.id);
     applyPreset(p);
   }
+
+  // ✅ Auto apply preset from query param ?preset=<id>
+  useEffect(() => {
+    if (presets.length === 0) return;
+    if (autoApplied) return;
+
+    const id = searchParams?.get("preset") ?? "";
+    if (!id) return;
+
+    const p = presets.find((x) => x.id === id);
+    if (!p) return;
+
+    setPresetId(p.id);
+    applyPreset(p);
+    setAutoApplied(true);
+  }, [presets, searchParams, autoApplied]);
 
   // --- derived ---
   const plannedRR = useMemo(() => {
@@ -196,7 +211,6 @@ export default function NewTradePage() {
 
   return (
     <Page>
-      {/* Header */}
       <HeaderRow>
         <div>
           <h1 style={{ fontSize: 34, fontWeight: 900, marginBottom: 6 }}>Add Trade</h1>
@@ -216,11 +230,10 @@ export default function NewTradePage() {
       {/* Presets */}
       <Card
         title="Preset"
-        subtitle="One-click chips + apply preset (symbol / direction / setup)"
+        subtitle="One-click chips + URL preset (?preset=id)"
         style={{ marginBottom: 14 }}
       >
         <div style={{ display: "grid", gap: 12 }}>
-          {/* chips */}
           {chips.length > 0 ? (
             <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
               {chips.map((p) => (
@@ -251,7 +264,6 @@ export default function NewTradePage() {
             </div>
           )}
 
-          {/* select + actions */}
           <div style={{ display: "flex", gap: 10, alignItems: "center", flexWrap: "wrap" }}>
             <div style={{ minWidth: 240 }}>
               <Select value={presetId} onChange={(e) => setPresetId(e.target.value)}>
@@ -294,7 +306,6 @@ export default function NewTradePage() {
       </Row>
 
       <form onSubmit={onSubmit} style={{ display: "grid", gap: 16 }}>
-        {/* Trade */}
         <Card title="Trade">
           <Grid2>
             <Field label="Symbol">
@@ -362,7 +373,6 @@ export default function NewTradePage() {
           </Grid2>
         </Card>
 
-        {/* Notes */}
         <Card title="Notes">
           <div style={{ display: "grid", gap: 12 }}>
             <Field label="Thesis">
@@ -379,7 +389,6 @@ export default function NewTradePage() {
           </div>
         </Card>
 
-        {/* Psychology */}
         <Card title="Psychology">
           <div style={{ display: "grid", gap: 12 }}>
             <Field label="Before">

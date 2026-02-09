@@ -43,7 +43,6 @@ export default function TemplatesPage() {
   }, []);
 
   const pairs = useMemo(() => {
-    // simple helper list; you can remove or replace later
     return ["ETHUSDT", "BTCUSDT", "ARBUSDT", "OPUSDT", "SOLUSDT"];
   }, []);
 
@@ -67,7 +66,10 @@ export default function TemplatesPage() {
       pair: (editing.pair ?? "").trim() || undefined,
       setup: (editing.setup ?? "").trim() || undefined,
       notes: (editing.notes ?? "").trim() || undefined,
-      risk: typeof editing.risk === "number" && Number.isFinite(editing.risk) ? editing.risk : undefined,
+      risk:
+        typeof editing.risk === "number" && Number.isFinite(editing.risk)
+          ? editing.risk
+          : undefined,
     };
     upsertPreset(clean);
     const next = getPresets();
@@ -134,7 +136,12 @@ export default function TemplatesPage() {
                     </div>
                   </div>
 
-                  <div style={{ display: "flex", gap: 8 }}>
+                  <div style={{ display: "flex", gap: 8, flexWrap: "wrap", justifyContent: "flex-end" }}>
+                    {/* ✅ NEW: Use preset */}
+                    <Link href={`/trades/new?preset=${encodeURIComponent(p.id)}`} style={{ textDecoration: "none" }}>
+                      <Button variant="secondary">Use</Button>
+                    </Link>
+
                     <Button variant="secondary" onClick={() => setEditing(p)}>
                       Edit
                     </Button>
@@ -150,9 +157,7 @@ export default function TemplatesPage() {
 
         <Card title="Editor" subtitle="Налаштування пресету">
           {!editing ? (
-            <div style={{ opacity: 0.7 }}>
-              Вибери пресет зліва або створи новий.
-            </div>
+            <div style={{ opacity: 0.7 }}>Вибери пресет зліва або створи новий.</div>
           ) : (
             <div style={{ display: "grid", gap: 12 }}>
               <Field label="Name">
