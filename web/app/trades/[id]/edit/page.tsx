@@ -1,12 +1,12 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 
 import { getTradeById, updateTrade, type Trade } from "@/lib/tradeStore";
 import { calcPlannedRR, calcRMultiple, type Direction } from "@/lib/tradeMath";
 
-import { Page, Row } from "@/app/components/ui/Layout";
+import { Page, HeaderRow, Row, Grid2, Grid3, Grid5 } from "@/app/components/ui/Layout";
 import { Card } from "@/app/components/ui/Card";
 import { Button } from "@/app/components/ui/Button";
 import { Input } from "@/app/components/ui/Input";
@@ -20,66 +20,93 @@ function toLocalInputValue(iso: string | null) {
   const d = new Date(iso);
   if (Number.isNaN(d.getTime())) return "";
   const pad = (n: number) => String(n).padStart(2, "0");
-  return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(
-    d.getMinutes()
-  )}`;
-}
-
-function safeNum(n: number | null | undefined) {
-  return typeof n === "number" && Number.isFinite(n) ? n : null;
+  return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`;
 }
 
 export default function EditTradePage() {
   const { id } = useParams<{ id: string }>();
   const router = useRouter();
 
-  const trade = getTradeById(id);
+  const [mounted, setMounted] = useState(false);
+  const [trade, setTrade] = useState<Trade | null>(null);
 
-  if (!trade) {
-    return (
-      <Page>
-        <h1 style={{ fontSize: 24, fontWeight: 900 }}>Trade not found</h1>
-        <Row style={{ marginTop: 12 }}>
-          <Button onClick={() => router.push("/trades")}>← Back to trades</Button>
-        </Row>
-      </Page>
-    );
-  }
+  useEffect(() => {
+    setMounted(true);
+    setTrade(getTradeById(id));
+  }, [id]);
 
-  // --- prefill ---
-  const [symbol, setSymbol] = useState(trade.symbol);
-  const [direction, setDirection] = useState<Direction>(trade.direction);
+  // --- form state (filled after trade loads) ---
+  const inited = useRef(false);
 
-  const [entry, setEntry] = useState<number>(trade.entry);
-  const [exit, setExit] = useState<number | "">(trade.exit ?? "");
+  const [symbol, setSymbol] = useState("");
+  const [direction, setDirection] = useState<Direction>("LONG");
 
-  const [stopLoss, setStopLoss] = useState<number | "">(trade.stopLoss ?? "");
-  const [takeProfit, setTakeProfit] = useState<number | "">(trade.takeProfit ?? "");
+  const [entry, setEntry] = useState<number>(0);
+  const [exit, setExit] = useState<number | "">("");
 
-  const [openedAt, setOpenedAt] = useState(toLocalInputValue(trade.openedAt));
-  const [closedAt, setClosedAt] = useState(toLocalInputValue(trade.closedAt));
+  const [stopLoss, setStopLoss] = useState<number | "">("");
+  const [takeProfit, setTakeProfit] = useState<number | "">("");
 
-  const [setupTag, setSetupTag] = useState(trade.setupTag ?? "");
-  const [psychTagsRaw, setPsychTagsRaw] = useState((trade.psychTags ?? []).join(", "));
+  const [openedAt, setOpenedAt] = useState("");
+  const [closedAt, setClosedAt] = useState("");
 
-  const [thesis, setThesis] = useState(trade.notes?.thesis ?? "");
-  const [wentWell, setWentWell] = useState(trade.notes?.whatWentWell ?? "");
-  const [improve, setImprove] = useState(trade.notes?.improve ?? "");
+  const [setupTag, setSetupTag] = useState("");
+  const [psychTagsRaw, setPsychTagsRaw] = useState("");
 
-  const [before, setBefore] = useState(trade.psych?.before ?? "");
-  const [during, setDuring] = useState(trade.psych?.during ?? "");
-  const [after, setAfter] = useState(trade.psych?.after ?? "");
+  const [thesis, setThesis] = useState("");
+  const [wentWell, setWentWell] = useState("");
+  const [improve, setImprove] = useState("");
 
-  const [focus, setFocus] = useState(trade.psych?.focus ?? 3);
-  const [fear, setFear] = useState(trade.psych?.fear ?? 3);
-  const [greed, setGreed] = useState(trade.psych?.greed ?? 3);
-  const [confidence, setConfidence] = useState(trade.psych?.confidence ?? 3);
-  const [fatigue, setFatigue] = useState(trade.psych?.fatigue ?? 3);
+  const [before, setBefore] = useState("");
+  const [during, setDuring] = useState("");
+  const [after, setAfter] = useState("");
 
-  const [ruleBroken, setRuleBroken] = useState(trade.psych?.ruleBroken ?? false);
-  const [ruleText, setRuleText] = useState(trade.psych?.ruleText ?? "");
+  const [focus, setFocus] = useState(3);
+  const [fear, setFear] = useState(3);
+  const [greed, setGreed] = useState(3);
+  const [confidence, setConfidence] = useState(3);
+  const [fatigue, setFatigue] = useState(3);
 
-  // --- derived ---
+  const [ruleBroken, setRuleBroken] = useState(false);
+  const [ruleText, setRuleText] = useState("");
+
+  useEffect(() => {
+    if (!trade || inited.current) return;
+    inited.current = true;
+
+    setSymbol(trade.symbol ?? "");
+    setDirection(trade.direction);
+
+    setEntry(trade.entry ?? 0);
+    setExit(trade.exit ?? "");
+
+    setStopLoss(trade.stopLoss ?? "");
+    setTakeProfit(trade.takeProfit ?? "");
+
+    setOpenedAt(toLocalInputValue(trade.openedAt));
+    setClosedAt(toLocalInputValue(trade.closedAt));
+
+    setSetupTag(trade.setupTag ?? "");
+    setPsychTagsRaw((trade.psychTags ?? []).join(", "));
+
+    setThesis(trade.notes?.thesis ?? "");
+    setWentWell(trade.notes?.whatWentWell ?? "");
+    setImprove(trade.notes?.improve ?? "");
+
+    setBefore(trade.psych?.before ?? "");
+    setDuring(trade.psych?.during ?? "");
+    setAfter(trade.psych?.after ?? "");
+
+    setFocus(trade.psych?.focus ?? 3);
+    setFear(trade.psych?.fear ?? 3);
+    setGreed(trade.psych?.greed ?? 3);
+    setConfidence(trade.psych?.confidence ?? 3);
+    setFatigue(trade.psych?.fatigue ?? 3);
+
+    setRuleBroken(trade.psych?.ruleBroken ?? false);
+    setRuleText(trade.psych?.ruleText ?? "");
+  }, [trade]);
+
   const plannedRR = useMemo(() => {
     if (stopLoss === "" || takeProfit === "" || !(entry > 0)) return null;
     return calcPlannedRR({
@@ -102,7 +129,7 @@ export default function EditTradePage() {
 
   function handleSave() {
     if (!symbol.trim()) return alert("Вкажи symbol (наприклад ETHUSDT)");
-    if (!(safeNum(entry) !== null && entry > 0)) return alert("Entry має бути > 0");
+    if (!(entry > 0)) return alert("Entry має бути > 0");
     if (!openedAt) return alert("Opened At обовʼязкове");
 
     const tags = psychTagsRaw
@@ -151,54 +178,54 @@ export default function EditTradePage() {
     handleSave();
   }
 
+  if (!mounted) {
+    return (
+      <Page>
+        <div style={{ ...ui.card, textAlign: "center", opacity: 0.8 }}>Loading…</div>
+      </Page>
+    );
+  }
+
+  if (!trade) {
+    return (
+      <Page>
+        <h1 style={{ fontSize: 24, fontWeight: 900 }}>Trade not found</h1>
+        <Button onClick={() => router.push("/trades")}>← Back to trades</Button>
+      </Page>
+    );
+  }
+
   return (
     <Page>
-      {/* Header */}
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "space-between",
-          gap: 16,
-          alignItems: "center",
-          flexWrap: "wrap",
-          marginBottom: 14,
-        }}
-      >
-        <div style={{ minWidth: 260 }}>
-          <h1 style={{ fontSize: 34, fontWeight: 900, margin: 0 }}>Edit Trade</h1>
-          <div style={{ ...ui.subtle, fontSize: 13, marginTop: 6 }}>
+      <HeaderRow>
+        <div>
+          <h1 style={{ fontSize: 34, fontWeight: 900, marginBottom: 6 }}>Edit Trade</h1>
+          <div style={{ ...ui.subtle, fontSize: 13 }}>
             {trade.symbol} · {trade.direction}
           </div>
         </div>
 
-        <Row style={{ gap: 10, justifyContent: "flex-end" }}>
+        <Row style={{ alignItems: "center" }}>
           <Button onClick={() => router.push(`/trades/${id}`)}>Back</Button>
           <Button variant="primary" onClick={handleSave} type="button">
             Save
           </Button>
         </Row>
-      </div>
+      </HeaderRow>
 
-      {/* RR */}
-      <Row style={{ marginBottom: 14, opacity: 0.9, gap: 18 }}>
+      <Row style={{ marginBottom: 14, opacity: 0.9 }}>
         <div>
-          <b>Planned R:R:</b> {plannedRR === null ? "—" : plannedRR.toFixed(2)}
+          <b>Planned R:R:</b> {plannedRR !== null ? plannedRR.toFixed(2) : "—"}
         </div>
         <div>
-          <b>Fact R:</b> {rMultiple === null ? "—" : rMultiple.toFixed(2)}
+          <b>Fact R:</b> {rMultiple !== null ? rMultiple.toFixed(2) : "—"}
         </div>
       </Row>
 
       <form onSubmit={onSubmit} style={{ display: "grid", gap: 16 }}>
-        {/* Trade */}
         <Card title="Trade">
-          <div
-            style={{
-              display: "grid",
-              gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))",
-              gap: 14,
-            }}
-          >
+          {/* 3 колонки на широкому екрані, а на вузькому автоматично стане норм */}
+          <Grid3>
             <Field label="Symbol">
               <Input value={symbol} onChange={(e) => setSymbol(e.target.value)} />
             </Field>
@@ -211,12 +238,7 @@ export default function EditTradePage() {
             </Field>
 
             <Field label="Entry">
-              <Input
-                type="number"
-                inputMode="decimal"
-                value={entry}
-                onChange={(e) => setEntry(Number(e.target.value))}
-              />
+              <Input type="number" inputMode="decimal" value={entry} onChange={(e) => setEntry(Number(e.target.value))} />
             </Field>
 
             <Field label="Exit (optional)">
@@ -261,10 +283,9 @@ export default function EditTradePage() {
             <Field label="Psych tags (comma)">
               <Input value={psychTagsRaw} onChange={(e) => setPsychTagsRaw(e.target.value)} />
             </Field>
-          </div>
+          </Grid3>
         </Card>
 
-        {/* Notes */}
         <Card title="Notes">
           <div style={{ display: "grid", gap: 12 }}>
             <Field label="Thesis">
@@ -281,7 +302,6 @@ export default function EditTradePage() {
           </div>
         </Card>
 
-        {/* Psychology */}
         <Card title="Psychology">
           <div style={{ display: "grid", gap: 12 }}>
             <Field label="Before">
@@ -298,13 +318,7 @@ export default function EditTradePage() {
           </div>
 
           <div style={{ marginTop: 14 }}>
-            <div
-              style={{
-                display: "grid",
-                gridTemplateColumns: "repeat(auto-fit, minmax(140px, 1fr))",
-                gap: 12,
-              }}
-            >
+            <Grid5>
               <Field label="Focus">
                 <Input type="number" min={1} max={5} value={focus} onChange={(e) => setFocus(Number(e.target.value))} />
               </Field>
@@ -326,7 +340,7 @@ export default function EditTradePage() {
               <Field label="Fatigue">
                 <Input type="number" min={1} max={5} value={fatigue} onChange={(e) => setFatigue(Number(e.target.value))} />
               </Field>
-            </div>
+            </Grid5>
           </div>
 
           <div style={{ marginTop: 12 }}>
@@ -342,11 +356,7 @@ export default function EditTradePage() {
 
             {ruleBroken && (
               <div style={{ marginTop: 10 }}>
-                <Input
-                  placeholder="Яке правило порушив?"
-                  value={ruleText}
-                  onChange={(e) => setRuleText(e.target.value)}
-                />
+                <Input placeholder="Яке правило порушив?" value={ruleText} onChange={(e) => setRuleText(e.target.value)} />
               </div>
             )}
           </div>

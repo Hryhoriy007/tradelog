@@ -52,7 +52,8 @@ export const ui = {
 
   control: {
   width: "100%",
-  minWidth: 0,          // ✅ додаємо
+  minWidth: 0,
+  boxSizing: "border-box",
   height: 44,
   padding: "0 12px",
   borderRadius: 12,

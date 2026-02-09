@@ -17,6 +17,10 @@ export function Grid2({ children }: { children: ReactNode }) {
   return <div style={ui.grid2}>{children}</div>;
 }
 
+export function Grid3({ children }: { children: ReactNode }) {
+  return <div style={ui.grid3}>{children}</div>;
+}
+
 export function Grid5({ children }: { children: ReactNode }) {
   return <div style={ui.grid5}>{children}</div>;
 }
