@@ -2,8 +2,18 @@
 
 import { useMemo, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
+
 import { getTradeById, updateTrade, type Trade } from "@/lib/tradeStore";
 import { calcPlannedRR, calcRMultiple, type Direction } from "@/lib/tradeMath";
+
+import { Page, HeaderRow, Row, Grid2, Grid5 } from "@/app/components/ui/Layout";
+import { Card } from "@/app/components/ui/Card";
+import { Button } from "@/app/components/ui/Button";
+import { Input } from "@/app/components/ui/Input";
+import { Select } from "@/app/components/ui/Select";
+import { Textarea } from "@/app/components/ui/Textarea";
+import { Field } from "@/app/components/ui/Field";
+import { ui } from "@/app/components/ui/styles";
 
 function toLocalInputValue(iso: string | null) {
   if (!iso) return "";
@@ -14,114 +24,18 @@ function toLocalInputValue(iso: string | null) {
   )}:${pad(d.getMinutes())}`;
 }
 
-function Field({
-  label,
-  children,
-}: {
-  label: string;
-  children: React.ReactNode;
-}) {
-  return (
-    <label style={{ display: "grid", gap: 8 }}>
-      <span style={{ fontSize: 13, fontWeight: 800, opacity: 0.85 }}>
-        {label}
-      </span>
-      {children}
-    </label>
-  );
-}
-
-const S = {
-  page: {
-    maxWidth: 980,
-    margin: "0 auto",
-    padding: 24,
-  } as React.CSSProperties,
-  header: {
-    display: "flex",
-    justifyContent: "space-between",
-    alignItems: "flex-start",
-    gap: 16,
-    marginBottom: 16,
-  } as React.CSSProperties,
-  card: {
-    border: "1px solid #222",
-    borderRadius: 16,
-    padding: 18,
-  } as React.CSSProperties,
-  h2: {
-    fontSize: 18,
-    fontWeight: 900,
-    marginBottom: 12,
-  } as React.CSSProperties,
-  grid2: {
-    display: "grid",
-    gridTemplateColumns: "1fr 1fr",
-    gap: 14,
-  } as React.CSSProperties,
-  grid5: {
-    display: "grid",
-    gridTemplateColumns: "repeat(5, 1fr)",
-    gap: 12,
-  } as React.CSSProperties,
-  control: {
-    width: "100%",
-    height: 44,
-    padding: "0 12px",
-    borderRadius: 12,
-    border: "1px solid #222",
-    background: "transparent",
-    color: "inherit",
-    outline: "none",
-  } as React.CSSProperties,
-  textarea: (minHeight = 110) =>
-    ({
-      width: "100%",
-      padding: "10px 12px",
-      borderRadius: 12,
-      border: "1px solid #222",
-      background: "transparent",
-      color: "inherit",
-      outline: "none",
-      minHeight,
-      resize: "vertical",
-    } as React.CSSProperties),
-  btn: {
-    padding: "10px 14px",
-    borderRadius: 12,
-    border: "1px solid #333",
-    background: "transparent",
-    fontWeight: 900,
-    cursor: "pointer",
-    height: 42,
-  } as React.CSSProperties,
-  btnPrimary: {
-    padding: "10px 14px",
-    borderRadius: 12,
-    border: "1px solid #333",
-    background: "#fff",
-    color: "#111",
-    fontWeight: 900,
-    cursor: "pointer",
-    height: 42,
-  } as React.CSSProperties,
-};
-
 export default function EditTradePage() {
-  const params = useParams<{ id: string }>();
-  const id = params.id;
+  const { id } = useParams<{ id: string }>();
   const router = useRouter();
 
   const trade = getTradeById(id);
 
   if (!trade) {
     return (
-      <div style={S.page}>
+      <Page>
         <h1 style={{ fontSize: 24, fontWeight: 900 }}>Trade not found</h1>
-        <button style={S.btn} onClick={() => router.push("/trades")}>
-          ← Back to trades
-        </button>
-      </div>
+        <Button onClick={() => router.push("/trades")}>← Back to trades</Button>
+      </Page>
     );
   }
 
@@ -179,13 +93,17 @@ export default function EditTradePage() {
     });
   }, [direction, entry, exit, stopLoss]);
 
-  function buildPatch(): Partial<Trade> {
+  function handleSave() {
+    if (!symbol.trim()) return alert("Вкажи symbol (наприклад ETHUSDT)");
+    if (!(entry > 0)) return alert("Entry має бути > 0");
+    if (!openedAt) return alert("Opened At обовʼязкове");
+
     const tags = psychTagsRaw
       .split(",")
       .map((t) => t.trim())
       .filter(Boolean);
 
-    return {
+    const patch: Partial<Trade> = {
       symbol: symbol.trim().toUpperCase(),
       direction,
       entry: Number(entry),
@@ -214,14 +132,8 @@ export default function EditTradePage() {
         ruleText: ruleBroken ? ruleText : "",
       },
     };
-  }
 
-  function handleSave() {
-    if (!symbol.trim()) return alert("Вкажи symbol (наприклад ETHUSDT)");
-    if (!(entry > 0)) return alert("Entry має бути > 0");
-    if (!openedAt) return alert("Opened At обовʼязкове");
-
-    const ok = updateTrade(id, buildPatch());
+    const ok = updateTrade(id, patch);
     if (!ok) return alert("Не вдалося оновити trade");
 
     router.push(`/trades/${id}`);
@@ -233,141 +145,164 @@ export default function EditTradePage() {
   }
 
   return (
-    <div style={S.page}>
-      <div style={S.header}>
+    <Page>
+      {/* Header */}
+      <HeaderRow>
         <div>
-          <h1 style={{ fontSize: 34, fontWeight: 900, marginBottom: 6 }}>
-            Edit Trade
-          </h1>
-          <div style={{ opacity: 0.7 }}>
+          <h1 style={{ fontSize: 34, fontWeight: 900, marginBottom: 6 }}>Edit Trade</h1>
+          <div style={{ ...ui.subtle, fontSize: 13 }}>
             {trade.symbol} · {trade.direction}
           </div>
         </div>
 
-        <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
-          <button style={S.btn} onClick={() => router.push(`/trades/${id}`)}>
-            Back
-          </button>
-          <button style={S.btnPrimary} onClick={handleSave} type="button">
+        <Row>
+          <Button onClick={() => router.push(`/trades/${id}`)}>Back</Button>
+          <Button variant="primary" onClick={handleSave} type="button">
             Save
-          </button>
-        </div>
-      </div>
+          </Button>
+        </Row>
+      </HeaderRow>
 
-      <div style={{ display: "flex", gap: 16, flexWrap: "wrap", marginBottom: 14, opacity: 0.9 }}>
+      {/* RR */}
+      <Row style={{ marginBottom: 14, opacity: 0.9 }}>
         <div>
           <b>Planned R:R:</b> {plannedRR ? plannedRR.toFixed(2) : "—"}
         </div>
         <div>
           <b>Fact R:</b> {rMultiple ? rMultiple.toFixed(2) : "—"}
         </div>
-      </div>
+      </Row>
 
       <form onSubmit={onSubmit} style={{ display: "grid", gap: 16 }}>
-        <section style={S.card}>
-          <h2 style={S.h2}>Trade</h2>
-
-          <div style={S.grid2}>
+        {/* Trade */}
+        <Card title="Trade">
+          <Grid2>
             <Field label="Symbol">
-              <input style={S.control} value={symbol} onChange={(e) => setSymbol(e.target.value)} />
+              <Input value={symbol} onChange={(e) => setSymbol(e.target.value)} />
             </Field>
 
             <Field label="Direction">
-              <select style={S.control} value={direction} onChange={(e) => setDirection(e.target.value as Direction)}>
+              <Select value={direction} onChange={(e) => setDirection(e.target.value as Direction)}>
                 <option value="LONG">LONG</option>
                 <option value="SHORT">SHORT</option>
-              </select>
+              </Select>
             </Field>
 
             <Field label="Entry">
-              <input style={S.control} type="number" inputMode="decimal" value={entry} onChange={(e) => setEntry(Number(e.target.value))} />
+              <Input
+                type="number"
+                inputMode="decimal"
+                value={entry}
+                onChange={(e) => setEntry(Number(e.target.value))}
+              />
             </Field>
 
             <Field label="Exit (optional)">
-              <input style={S.control} type="number" inputMode="decimal" value={exit} onChange={(e) => setExit(e.target.value === "" ? "" : Number(e.target.value))} />
+              <Input
+                type="number"
+                inputMode="decimal"
+                value={exit}
+                onChange={(e) => setExit(e.target.value === "" ? "" : Number(e.target.value))}
+              />
             </Field>
 
             <Field label="Stop Loss (optional)">
-              <input style={S.control} type="number" inputMode="decimal" value={stopLoss} onChange={(e) => setStopLoss(e.target.value === "" ? "" : Number(e.target.value))} />
+              <Input
+                type="number"
+                inputMode="decimal"
+                value={stopLoss}
+                onChange={(e) => setStopLoss(e.target.value === "" ? "" : Number(e.target.value))}
+              />
             </Field>
 
             <Field label="Take Profit (optional)">
-              <input style={S.control} type="number" inputMode="decimal" value={takeProfit} onChange={(e) => setTakeProfit(e.target.value === "" ? "" : Number(e.target.value))} />
+              <Input
+                type="number"
+                inputMode="decimal"
+                value={takeProfit}
+                onChange={(e) => setTakeProfit(e.target.value === "" ? "" : Number(e.target.value))}
+              />
             </Field>
 
             <Field label="Opened At">
-              <input style={S.control} type="datetime-local" value={openedAt} onChange={(e) => setOpenedAt(e.target.value)} />
+              <Input type="datetime-local" value={openedAt} onChange={(e) => setOpenedAt(e.target.value)} />
             </Field>
 
             <Field label="Closed At (optional)">
-              <input style={S.control} type="datetime-local" value={closedAt} onChange={(e) => setClosedAt(e.target.value)} />
+              <Input type="datetime-local" value={closedAt} onChange={(e) => setClosedAt(e.target.value)} />
             </Field>
 
             <Field label="Setup tag">
-              <input style={S.control} value={setupTag} onChange={(e) => setSetupTag(e.target.value)} />
+              <Input value={setupTag} onChange={(e) => setSetupTag(e.target.value)} />
             </Field>
 
             <Field label="Psych tags (comma)">
-              <input style={S.control} value={psychTagsRaw} onChange={(e) => setPsychTagsRaw(e.target.value)} />
+              <Input value={psychTagsRaw} onChange={(e) => setPsychTagsRaw(e.target.value)} />
             </Field>
-          </div>
-        </section>
+          </Grid2>
+        </Card>
 
-        <section style={S.card}>
-          <h2 style={S.h2}>Notes</h2>
-
+        {/* Notes */}
+        <Card title="Notes">
           <div style={{ display: "grid", gap: 12 }}>
             <Field label="Thesis">
-              <input style={S.control} value={thesis} onChange={(e) => setThesis(e.target.value)} />
+              <Input value={thesis} onChange={(e) => setThesis(e.target.value)} />
             </Field>
 
             <Field label="What went well">
-              <textarea style={S.textarea()} value={wentWell} onChange={(e) => setWentWell(e.target.value)} />
+              <Textarea value={wentWell} onChange={(e) => setWentWell(e.target.value)} />
             </Field>
 
             <Field label="Improve next time">
-              <textarea style={S.textarea()} value={improve} onChange={(e) => setImprove(e.target.value)} />
+              <Textarea value={improve} onChange={(e) => setImprove(e.target.value)} />
             </Field>
           </div>
-        </section>
+        </Card>
 
-        <section style={S.card}>
-          <h2 style={S.h2}>Psychology</h2>
-
+        {/* Psychology */}
+        <Card title="Psychology">
           <div style={{ display: "grid", gap: 12 }}>
             <Field label="Before">
-              <textarea style={S.textarea(80)} value={before} onChange={(e) => setBefore(e.target.value)} />
+              <Textarea minHeight={90} value={before} onChange={(e) => setBefore(e.target.value)} />
             </Field>
 
             <Field label="During">
-              <textarea style={S.textarea(80)} value={during} onChange={(e) => setDuring(e.target.value)} />
+              <Textarea minHeight={90} value={during} onChange={(e) => setDuring(e.target.value)} />
             </Field>
 
             <Field label="After">
-              <textarea style={S.textarea(80)} value={after} onChange={(e) => setAfter(e.target.value)} />
+              <Textarea minHeight={90} value={after} onChange={(e) => setAfter(e.target.value)} />
             </Field>
           </div>
 
-          <div style={{ marginTop: 14, ...S.grid5 }}>
-            <Field label="Focus">
-              <input style={S.control} type="number" min={1} max={5} value={focus} onChange={(e) => setFocus(Number(e.target.value))} />
-            </Field>
-            <Field label="Fear">
-              <input style={S.control} type="number" min={1} max={5} value={fear} onChange={(e) => setFear(Number(e.target.value))} />
-            </Field>
-            <Field label="Greed">
-              <input style={S.control} type="number" min={1} max={5} value={greed} onChange={(e) => setGreed(Number(e.target.value))} />
-            </Field>
-            <Field label="Confidence">
-              <input style={S.control} type="number" min={1} max={5} value={confidence} onChange={(e) => setConfidence(Number(e.target.value))} />
-            </Field>
-            <Field label="Fatigue">
-              <input style={S.control} type="number" min={1} max={5} value={fatigue} onChange={(e) => setFatigue(Number(e.target.value))} />
-            </Field>
+          <div style={{ marginTop: 14 }}>
+            <Grid5>
+              <Field label="Focus">
+                <Input type="number" min={1} max={5} value={focus} onChange={(e) => setFocus(Number(e.target.value))} />
+              </Field>
+              <Field label="Fear">
+                <Input type="number" min={1} max={5} value={fear} onChange={(e) => setFear(Number(e.target.value))} />
+              </Field>
+              <Field label="Greed">
+                <Input type="number" min={1} max={5} value={greed} onChange={(e) => setGreed(Number(e.target.value))} />
+              </Field>
+              <Field label="Confidence">
+                <Input
+                  type="number"
+                  min={1}
+                  max={5}
+                  value={confidence}
+                  onChange={(e) => setConfidence(Number(e.target.value))}
+                />
+              </Field>
+              <Field label="Fatigue">
+                <Input type="number" min={1} max={5} value={fatigue} onChange={(e) => setFatigue(Number(e.target.value))} />
+              </Field>
+            </Grid5>
           </div>
 
           <div style={{ marginTop: 12 }}>
-            <label style={{ display: "flex", gap: 10, alignItems: "center", fontWeight: 700 }}>
+            <label style={{ display: "flex", gap: 10, alignItems: "center", fontWeight: 900 }}>
               <input
                 type="checkbox"
                 checked={ruleBroken}
@@ -379,16 +314,20 @@ export default function EditTradePage() {
 
             {ruleBroken && (
               <div style={{ marginTop: 10 }}>
-                <input style={S.control} placeholder="Яке правило порушив?" value={ruleText} onChange={(e) => setRuleText(e.target.value)} />
+                <Input
+                  placeholder="Яке правило порушив?"
+                  value={ruleText}
+                  onChange={(e) => setRuleText(e.target.value)}
+                />
               </div>
             )}
           </div>
-        </section>
+        </Card>
 
-        <button type="submit" style={{ ...S.btnPrimary, width: "100%" }}>
+        <Button variant="primary" type="submit" style={{ width: "100%" }}>
           Save changes
-        </button>
+        </Button>
       </form>
-    </div>
+    </Page>
   );
 }
