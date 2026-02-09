@@ -66,7 +66,7 @@ export const ui = {
   textarea: (minHeight = 110) =>
     ({
       width: "100%",
-      padding: "10px 12px",
+      padding: "10px 0px",
       borderRadius: 12,
       border: "1px solid #222",
       background: "transparent",
