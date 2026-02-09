@@ -99,6 +99,10 @@
   }
 }
 
+.collapse {
+  visibility: collapse;
+}
+
 .flex {
   display: flex;
 }
