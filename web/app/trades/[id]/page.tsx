@@ -40,6 +40,10 @@ export default function TradeDetailsPage() {
         <Link href="/trades">
           <button style={btn()}>← Back</button>
         </Link>
+
+        <Link href={`/trades/${trade.id}/edit`}>
+  <button style={btn()}>Edit</button>
+</Link>
       </div>
 
       {/* Summary */}

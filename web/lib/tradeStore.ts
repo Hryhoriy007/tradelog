@@ -69,3 +69,18 @@ export function getTradeById(id: string) {
   const trades = getTrades();
   return trades.find(t => t.id === id) || null;
 }
+
+export function updateTrade(id: string, patch: Partial<Trade>) {
+  const trades = getTrades();
+  const idx = trades.findIndex((t) => t.id === id);
+  if (idx === -1) return false;
+
+  trades[idx] = { ...trades[idx], ...patch };
+  saveTrades(trades);
+  return true;
+}
+
+export function deleteTrade(id: string) {
+  const trades = getTrades().filter((t) => t.id !== id);
+  saveTrades(trades);
+}
