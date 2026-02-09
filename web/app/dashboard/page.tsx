@@ -1,18 +1,14 @@
-import { cookies } from "next/headers";
-import { redirect } from "next/navigation";
+import LogoutButton from "../components/LogoutButton";
 
 export default async function DashboardPage() {
-  const cookieStore = await cookies();
-  const session = cookieStore.get("session")?.value;
-
-  if (!session) {
-    redirect("/login");
-  }
-
   return (
-    <main>
+    <main style={{ padding: 40 }}>
       <h1>Dashboard</h1>
-      <p>Ця сторінка доступна тільки після логіну</p>
+      <p>Ця сторінка має відкриватися тільки після логіну.</p>
+
+      <div style={{ marginTop: 20 }}>
+        <LogoutButton />
+      </div>
     </main>
   );
 }
