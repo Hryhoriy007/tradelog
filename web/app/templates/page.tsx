@@ -46,8 +46,9 @@ export default function TemplatesPage() {
     return ["ETHUSDT", "BTCUSDT", "ARBUSDT", "OPUSDT", "SOLUSDT"];
   }, []);
 
+  // ✅ auto-open editor after create (by setting editing immediately)
   const onCreate = () => {
-    setEditing({
+    const next: TradePreset = {
       id: createId(),
       name: "New preset",
       pair: "",
@@ -55,7 +56,8 @@ export default function TemplatesPage() {
       setup: "",
       risk: 1,
       notes: "",
-    });
+    };
+    setEditing(next);
   };
 
   const onSave = () => {
@@ -66,14 +68,10 @@ export default function TemplatesPage() {
       pair: (editing.pair ?? "").trim() || undefined,
       setup: (editing.setup ?? "").trim() || undefined,
       notes: (editing.notes ?? "").trim() || undefined,
-      risk:
-        typeof editing.risk === "number" && Number.isFinite(editing.risk)
-          ? editing.risk
-          : undefined,
+      risk: typeof editing.risk === "number" && Number.isFinite(editing.risk) ? editing.risk : undefined,
     };
     upsertPreset(clean);
-    const next = getPresets();
-    setPresets(next);
+    setPresets(getPresets());
     setEditing(null);
   };
 
@@ -90,11 +88,13 @@ export default function TemplatesPage() {
         subtitle="Presets для швидкого створення trade"
         right={
           <div style={{ display: "flex", gap: 8 }}>
-            <Link href="/stats">
-              <Button variant="secondary">Stats</Button>
+            <Link href="/stats" style={{ textDecoration: "none" }}>
+              <Button variant="secondary" title="Open Stats">
+                Stats
+              </Button>
             </Link>
-            <Link href="/trades/new">
-              <Button>Add trade</Button>
+            <Link href="/trades/new" style={{ textDecoration: "none" }}>
+              <Button title="Add a new trade">Add trade</Button>
             </Link>
           </div>
         }
@@ -104,17 +104,42 @@ export default function TemplatesPage() {
         <Card
           title="Presets"
           subtitle="Список шаблонів"
-          right={<Button onClick={onCreate}>New preset</Button>}
+          right={
+            <Button onClick={onCreate} title="Create a new preset">
+              New preset
+            </Button>
+          }
         >
           <div style={{ display: "grid", gap: 10 }}>
             {presets.length === 0 ? (
-              <div style={{ opacity: 0.7 }}>
-                Ще немає пресетів. Натисни <b>New preset</b>.
+              <div
+                style={{
+                  opacity: 0.8,
+                  display: "flex",
+                  flexDirection: "column",
+                  gap: 10,
+                }}
+              >
+                <div>Ще немає пресетів.</div>
+
+                <Button
+                  variant="secondary"
+                  onClick={onCreate}
+                  title="Create your first preset"
+                  style={{ alignSelf: "flex-start" }}
+                >
+                  Create first preset
+                </Button>
+
+                <div style={{ opacity: 0.7, fontSize: 13 }}>
+                  Після створення пресети зʼявляться в Add Trade (Preset + Chips).
+                </div>
               </div>
             ) : (
               presets.map((p) => (
                 <div
                   key={p.id}
+                  title="Preset card — click Edit to modify"
                   style={{
                     display: "flex",
                     gap: 10,
@@ -136,16 +161,36 @@ export default function TemplatesPage() {
                     </div>
                   </div>
 
-                  <div style={{ display: "flex", gap: 8, flexWrap: "wrap", justifyContent: "flex-end" }}>
-                    {/* ✅ NEW: Use preset */}
-                    <Link href={`/trades/new?preset=${encodeURIComponent(p.id)}`} style={{ textDecoration: "none" }}>
-                      <Button variant="secondary">Use</Button>
+                  <div
+                    style={{
+                      display: "flex",
+                      gap: 8,
+                      flexWrap: "wrap",
+                      justifyContent: "flex-end",
+                    }}
+                  >
+                    <Link
+                      href={`/trades/new?preset=${encodeURIComponent(p.id)}`}
+                      style={{ textDecoration: "none" }}
+                    >
+                      <Button variant="secondary" title="Use this preset to create a new trade">
+                        Use
+                      </Button>
                     </Link>
 
-                    <Button variant="secondary" onClick={() => setEditing(p)}>
+                    <Button
+                      variant="secondary"
+                      onClick={() => setEditing(p)}
+                      title="Click Edit to modify this preset"
+                    >
                       Edit
                     </Button>
-                    <Button variant="secondary" onClick={() => onDelete(p.id)}>
+
+                    <Button
+                      variant="secondary"
+                      onClick={() => onDelete(p.id)}
+                      title="Delete this preset"
+                    >
                       Delete
                     </Button>
                   </div>
@@ -157,7 +202,21 @@ export default function TemplatesPage() {
 
         <Card title="Editor" subtitle="Налаштування пресету">
           {!editing ? (
-            <div style={{ opacity: 0.7 }}>Вибери пресет зліва або створи новий.</div>
+            // ✅ better empty editor state + CTA button
+            <div style={{ opacity: 0.85, display: "grid", gap: 12 }}>
+              <div>Вибери пресет зліва або створи новий.</div>
+              <Button
+                variant="secondary"
+                onClick={onCreate}
+                title="Create a new preset and open editor"
+                style={{ justifySelf: "flex-start" }}
+              >
+                New preset
+              </Button>
+              <div style={{ opacity: 0.7, fontSize: 13 }}>
+                Порада: щоб змінити існуючий пресет — натисни <b>Edit</b>.
+              </div>
+            </div>
           ) : (
             <div style={{ display: "grid", gap: 12 }}>
               <Field label="Name">
@@ -224,10 +283,12 @@ export default function TemplatesPage() {
               </Field>
 
               <div style={{ display: "flex", gap: 8, justifyContent: "flex-end" }}>
-                <Button variant="secondary" onClick={() => setEditing(null)}>
+                <Button variant="secondary" onClick={() => setEditing(null)} title="Discard changes">
                   Cancel
                 </Button>
-                <Button onClick={onSave}>Save</Button>
+                <Button onClick={onSave} title="Save preset">
+                  Save
+                </Button>
               </div>
             </div>
           )}
