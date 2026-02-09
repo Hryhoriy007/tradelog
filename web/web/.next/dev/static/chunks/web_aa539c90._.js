@@ -14,46 +14,70 @@ var __TURBOPACK__imported__module__$5b$project$5d2f$web$2f$node_modules$2f$next$
 var _s = __turbopack_context__.k.signature(), _s1 = __turbopack_context__.k.signature();
 "use client";
 ;
+const STORAGE_KEY = "lang";
 const LangContext = /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["createContext"])(null);
+function isLang(v) {
+    return v === "ua" || v === "en";
+}
+function detectLangFromNavigator() {
+    const browserLang = (navigator.language || "").toLowerCase();
+    // uk / uk-UA => ua
+    if (browserLang.startsWith("uk")) return "ua";
+    return "en";
+}
 function LanguageProvider({ children }) {
     _s();
-    const [lang, setLang] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])("en");
-    // 1️⃣ авто-визначення мови
+    const [lang, setLangState] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])("en");
+    const [ready, setReady] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(false);
+    // 1) ініціалізація (saved -> navigator)
     (0, __TURBOPACK__imported__module__$5b$project$5d2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useEffect"])({
         "LanguageProvider.useEffect": ()=>{
-            const saved = localStorage.getItem("lang");
-            if (saved) {
-                setLang(saved);
-                return;
-            }
-            const browserLang = navigator.language.toLowerCase();
-            if (browserLang.startsWith("uk")) {
-                setLang("ua");
-                localStorage.setItem("lang", "ua");
-            } else {
-                setLang("en");
-                localStorage.setItem("lang", "en");
+            try {
+                const saved = localStorage.getItem(STORAGE_KEY);
+                if (isLang(saved)) {
+                    setLangState(saved);
+                } else {
+                    const detected = detectLangFromNavigator();
+                    setLangState(detected);
+                    localStorage.setItem(STORAGE_KEY, detected);
+                }
+            } catch  {
+                // якщо localStorage недоступний — просто беремо navigator
+                setLangState(detectLangFromNavigator());
+            } finally{
+                setReady(true);
             }
         }
     }["LanguageProvider.useEffect"], []);
-    // 2️⃣ зберігаємо при зміні
-    function changeLang(l) {
-        setLang(l);
-        localStorage.setItem("lang", l);
+    // 2) зміна мови вручну
+    function setLang(l) {
+        setLangState(l);
+        try {
+            localStorage.setItem(STORAGE_KEY, l);
+        } catch  {
+        // ignore
+        }
     }
+    const value = (0, __TURBOPACK__imported__module__$5b$project$5d2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useMemo"])({
+        "LanguageProvider.useMemo[value]": ()=>({
+                lang,
+                setLang,
+                ready
+            })
+    }["LanguageProvider.useMemo[value]"], [
+        lang,
+        ready
+    ]);
     return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(LangContext.Provider, {
-        value: {
-            lang,
-            setLang: changeLang
-        },
+        value: value,
         children: children
     }, void 0, false, {
         fileName: "[project]/web/app/components/LanguageProvider.tsx",
-        lineNumber: 42,
-        columnNumber: 5
+        lineNumber: 63,
+        columnNumber: 10
     }, this);
 }
-_s(LanguageProvider, "b/D3b8IfsEgcDi4wlH3EtzoKXdE=");
+_s(LanguageProvider, "SDJF4/AXyjKbPK1AEAwMSCTBwbw=");
 _c = LanguageProvider;
 function useLang() {
     _s1();
