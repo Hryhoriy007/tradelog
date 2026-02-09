@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useMemo, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 
 function Dot({ color }: { color: string }) {
   return (
@@ -52,7 +52,6 @@ const THEME_KEY = "tradelog_theme_v1";
 function ThemeToggleMini() {
   const [theme, setTheme] = useState<Theme>("dark");
 
-  // ✅ read theme only on client AFTER mount to avoid hydration mismatch
   useEffect(() => {
     try {
       const stored = (localStorage.getItem(THEME_KEY) || "").toLowerCase();
@@ -107,6 +106,11 @@ function ThemeToggleMini() {
   );
 }
 
+/**
+ * ✅ NAMED EXPORT (важливо!)
+ * Так твій import працюватиме:
+ * import { DashboardWindow } from "@/app/components/marketing/DashboardWindow";
+ */
 export function DashboardWindow({
   children,
   watermark = "Demo data",
@@ -117,21 +121,39 @@ export function DashboardWindow({
   const ref = useRef<HTMLDivElement | null>(null);
 
   const [tilt, setTilt] = useState({ rx: 0, ry: 0, s: 1 });
-  const [glow, setGlow] = useState({ x: 70, y: 12 }); // percent positions
+  const [glow, setGlow] = useState({ x: 70, y: 12 });
 
-  const supportsFinePointer = useMemo(() => {
-    if (typeof window === "undefined") return false;
-    return window.matchMedia?.("(pointer: fine)").matches ?? false;
+  // ✅ SSR-safe: default false
+  const [finePointer, setFinePointer] = useState(false);
+
+  useEffect(() => {
+    try {
+      const mq = window.matchMedia?.("(pointer: fine)");
+      setFinePointer(mq?.matches ?? false);
+
+      if (!mq) return;
+      const onChange = () => setFinePointer(mq.matches);
+
+      if ("addEventListener" in mq) mq.addEventListener("change", onChange);
+      else (mq as any).addListener?.(onChange);
+
+      return () => {
+        if ("removeEventListener" in mq) mq.removeEventListener("change", onChange);
+        else (mq as any).removeListener?.(onChange);
+      };
+    } catch {
+      setFinePointer(false);
+    }
   }, []);
 
   const onMove = (e: React.MouseEvent) => {
-    if (!supportsFinePointer) return;
+    if (!finePointer) return;
     const el = ref.current;
     if (!el) return;
 
     const r = el.getBoundingClientRect();
-    const px = (e.clientX - r.left) / r.width; // 0..1
-    const py = (e.clientY - r.top) / r.height; // 0..1
+    const px = (e.clientX - r.left) / r.width;
+    const py = (e.clientY - r.top) / r.height;
 
     const ry = (px - 0.5) * 10;
     const rx = -(py - 0.5) * 10;
@@ -158,7 +180,7 @@ export function DashboardWindow({
         style={{
           transform: `rotateX(${tilt.rx}deg) rotateY(${tilt.ry}deg) scale(${tilt.s})`,
           transformStyle: "preserve-3d",
-          transition: supportsFinePointer ? "transform 140ms ease" : "none",
+          transition: finePointer ? "transform 140ms ease" : "none",
           willChange: "transform",
           borderRadius: 22,
           border: "1px solid rgba(255,255,255,0.12)",
@@ -232,14 +254,7 @@ export function DashboardWindow({
           <Dot color="#ffbd2e" />
           <Dot color="#27c93f" />
 
-          <div
-            style={{
-              marginLeft: 10,
-              display: "flex",
-              gap: 8,
-              alignItems: "center",
-            }}
-          >
+          <div style={{ marginLeft: 10, display: "flex", gap: 8, alignItems: "center" }}>
             <Pill tone="win">Win</Pill>
             <Pill tone="loss">Loss</Pill>
             <Pill tone="be">BE</Pill>
