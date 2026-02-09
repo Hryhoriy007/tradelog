@@ -7,6 +7,7 @@ export default function DashboardPage() {
         <h1>Dashboard</h1>
         <LogoutButton />
       </div>
+
       <p>Ця сторінка має відкриватися тільки після логіну.</p>
     </main>
   );
