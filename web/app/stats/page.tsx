@@ -162,71 +162,6 @@ export default function StatsPage() {
     return rows;
   }, [rReadyTrades]);
 
-  const byPsych = useMemo(() => {
-    const map = new Map<
-      string,
-      {
-        tag: string;
-        n: number;
-        wins: number;
-        losses: number;
-        sumR: number;
-        sumWinR: number;
-        sumLossR: number;
-        winCount: number;
-        lossCount: number;
-      }
-    >();
-
-    for (const t of rReadyTrades) {
-      const r = tradeR(t) as number;
-      const tags = Array.isArray(t.psychTags) ? t.psychTags : [];
-
-      for (const raw of tags) {
-        const tag = (raw || "").trim();
-        if (!tag) continue;
-
-        if (!map.has(tag)) {
-          map.set(tag, {
-            tag,
-            n: 0,
-            wins: 0,
-            losses: 0,
-            sumR: 0,
-            sumWinR: 0,
-            sumLossR: 0,
-            winCount: 0,
-            lossCount: 0,
-          });
-        }
-        const x = map.get(tag)!;
-        x.n += 1;
-        x.sumR += r;
-
-        if (r > 0) {
-          x.wins += 1;
-          x.sumWinR += r;
-          x.winCount += 1;
-        } else if (r < 0) {
-          x.losses += 1;
-          x.sumLossR += r;
-          x.lossCount += 1;
-        }
-      }
-    }
-
-    const rows = Array.from(map.values()).map((x) => {
-      const winrate = x.n ? x.wins / x.n : 0;
-      const avgR = x.n ? x.sumR / x.n : 0;
-      const avgWinR = x.winCount ? x.sumWinR / x.winCount : 0;
-      const avgLossR = x.lossCount ? x.sumLossR / x.lossCount : 0;
-      return { ...x, winrate, avgR, avgWinR, avgLossR };
-    });
-
-    rows.sort((a, b) => (b.n - a.n) || (b.avgR - a.avgR));
-    return rows;
-  }, [rReadyTrades]);
-
   return (
     <Page>
       <HeaderRow>
@@ -252,19 +187,26 @@ export default function StatsPage() {
 
       {/* Filters */}
       <Card title="Filters">
-        <div style={filtersGrid}>
-          <div style={fieldWrap}>
+        <div
+          style={{
+            display: "flex",
+            flexWrap: "wrap",
+            gap: 12,
+            alignItems: "flex-end",
+          }}
+        >
+          <div style={{ flex: "1 1 220px", minWidth: 0 }}>
             <div style={label()}>Side</div>
-            <Select value={side} onChange={(e) => setSide(e.target.value as SideFilter)} style={{ minWidth: 0 }}>
+            <Select value={side} onChange={(e) => setSide(e.target.value as SideFilter)}>
               <option value="ALL">All</option>
               <option value="LONG">LONG</option>
               <option value="SHORT">SHORT</option>
             </Select>
           </div>
 
-          <div style={fieldWrap}>
+          <div style={{ flex: "1 1 260px", minWidth: 0 }}>
             <div style={label()}>Setup</div>
-            <Select value={setup} onChange={(e) => setSetup(e.target.value)} style={{ minWidth: 0 }}>
+            <Select value={setup} onChange={(e) => setSetup(e.target.value)}>
               {setupOptions.map((x) => (
                 <option key={x} value={x}>
                   {x === "ALL" ? "All setups" : x}
@@ -273,14 +215,16 @@ export default function StatsPage() {
             </Select>
           </div>
 
-          <div style={fieldWrap}>
+          {/* From */}
+          <div style={{ flex: "1 1 220px", minWidth: 0 }}>
             <div style={label()}>From</div>
-            <Input type="date" value={from} onChange={(e) => setFrom(e.target.value)} style={{ minWidth: 0 }} />
+            <Input type="date" value={from} onChange={(e) => setFrom(e.target.value)} />
           </div>
 
-          <div style={fieldWrap}>
+          {/* To */}
+          <div style={{ flex: "1 1 220px", minWidth: 0 }}>
             <div style={label()}>To</div>
-            <Input type="date" value={to} onChange={(e) => setTo(e.target.value)} style={{ minWidth: 0 }} />
+            <Input type="date" value={to} onChange={(e) => setTo(e.target.value)} />
           </div>
         </div>
 
@@ -328,6 +272,7 @@ export default function StatsPage() {
         <Metric title="Winrate" value={pct(stats.winrate, 1)} />
         <Metric title="Avg R" value={fmt(stats.avgR, 2)} />
         <Metric title="Expectancy" value={fmt(stats.expectancy, 2)} />
+
         <Metric title="Profit Factor" value={fmt(stats.profitFactor, 2)} />
         <Metric title="Avg Win R" value={fmt(stats.avgWinR, 2)} />
         <Metric title="Avg Loss R" value={fmt(stats.avgLossR, 2)} />
@@ -339,7 +284,7 @@ export default function StatsPage() {
         <h2 style={{ fontSize: 24, fontWeight: 900, margin: "8px 0 10px" }}>By setup</h2>
 
         <Card>
-          <div style={{ ...ui.tableWrap, overflowX: "auto" }}>
+          <div style={ui.tableWrap}>
             <table style={ui.table}>
               <thead>
                 <tr>
@@ -362,50 +307,7 @@ export default function StatsPage() {
                 ) : (
                   bySetup.map((x) => (
                     <tr key={x.name}>
-                      <td style={{ ...ui.td, fontWeight: 900, whiteSpace: "nowrap" }}>{x.name}</td>
-                      <td style={ui.td}>{x.n}</td>
-                      <td style={ui.td}>{pct(x.winrate, 1)}</td>
-                      <td style={{ ...ui.td, fontWeight: 900 }}>{fmt(x.avgR, 2)}</td>
-                      <td style={ui.td}>{fmt(x.avgWinR, 2)}</td>
-                      <td style={ui.td}>{fmt(x.avgLossR, 2)}</td>
-                    </tr>
-                  ))
-                )}
-              </tbody>
-            </table>
-          </div>
-        </Card>
-      </div>
-
-      {/* By psych tags */}
-      <div style={{ marginTop: 18 }}>
-        <h2 style={{ fontSize: 24, fontWeight: 900, margin: "8px 0 10px" }}>By psych tags</h2>
-
-        <Card>
-          <div style={{ ...ui.tableWrap, overflowX: "auto" }}>
-            <table style={ui.table}>
-              <thead>
-                <tr>
-                  <th style={ui.th}>Tag</th>
-                  <th style={ui.th}>Trades</th>
-                  <th style={ui.th}>Winrate</th>
-                  <th style={ui.th}>Avg R</th>
-                  <th style={ui.th}>Avg Win</th>
-                  <th style={ui.th}>Avg Loss</th>
-                </tr>
-              </thead>
-
-              <tbody>
-                {byPsych.length === 0 ? (
-                  <tr>
-                    <td style={{ ...ui.td, opacity: 0.7 }} colSpan={6}>
-                      No psych-tagged R-ready trades in this filter.
-                    </td>
-                  </tr>
-                ) : (
-                  byPsych.map((x) => (
-                    <tr key={x.tag}>
-                      <td style={{ ...ui.td, fontWeight: 900, whiteSpace: "nowrap" }}>{x.tag}</td>
+                      <td style={{ ...ui.td, fontWeight: 900 }}>{x.name}</td>
                       <td style={ui.td}>{x.n}</td>
                       <td style={ui.td}>{pct(x.winrate, 1)}</td>
                       <td style={{ ...ui.td, fontWeight: 900 }}>{fmt(x.avgR, 2)}</td>
@@ -427,18 +329,7 @@ export default function StatsPage() {
   );
 }
 
-/* ----------------- styles ----------------- */
-
-const filtersGrid: React.CSSProperties = {
-  display: "grid",
-  gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))",
-  gap: 14,
-  alignItems: "end",
-};
-
-const fieldWrap: React.CSSProperties = {
-  minWidth: 0,
-};
+/* ----------------- small UI helpers ----------------- */
 
 function label(): React.CSSProperties {
   return { fontSize: 12, fontWeight: 900, opacity: 0.8, marginBottom: 6 };
