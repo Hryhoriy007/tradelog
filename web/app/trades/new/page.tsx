@@ -85,25 +85,31 @@ export default function NewTradePage() {
     [presets, presetId]
   );
 
-  function applyPreset() {
-    const p = selectedPreset;
-    if (!p) return;
+  const chips = useMemo(() => {
+    // show first 6 presets as quick actions
+    return presets.slice(0, 6);
+  }, [presets]);
 
-    // map preset -> your form fields
-    if (p.pair) setSymbol(String(p.pair).trim().toUpperCase());
+  function applyPreset(p?: TradePreset | null) {
+    const preset = p ?? selectedPreset;
+    if (!preset) return;
 
-    if (p.side) {
-      // preset uses Long/Short, your form uses LONG/SHORT
-      const d = p.side.toUpperCase() as "LONG" | "SHORT";
+    if (preset.pair) setSymbol(String(preset.pair).trim().toUpperCase());
+
+    if (preset.side) {
+      const d = preset.side.toUpperCase() as "LONG" | "SHORT";
       setDirection(d);
     }
 
-    if (p.setup) setSetupTag(p.setup);
+    if (preset.setup) setSetupTag(preset.setup);
 
-    // optional extras:
-    // p.risk / p.notes are optional in store; you can decide where to use them.
-    // I’ll put notes into Thesis only if thesis is empty (so it won’t overwrite).
-    if (p.notes) setThesis((prev) => (prev ? prev : p.notes));
+    // optional: do not overwrite what user already typed
+    if (preset.notes) setThesis((prev) => (prev ? prev : preset.notes));
+  }
+
+  function onChipClick(p: TradePreset) {
+    setPresetId(p.id);
+    applyPreset(p);
   }
 
   // --- derived ---
@@ -210,36 +216,70 @@ export default function NewTradePage() {
       {/* Presets */}
       <Card
         title="Preset"
-        subtitle="Швидко підстав значення (symbol / direction / setup)"
+        subtitle="One-click chips + apply preset (symbol / direction / setup)"
         style={{ marginBottom: 14 }}
       >
-        <div style={{ display: "flex", gap: 10, alignItems: "center", flexWrap: "wrap" }}>
-          <div style={{ minWidth: 240 }}>
-            <Select value={presetId} onChange={(e) => setPresetId(e.target.value)}>
-              <option value="">(none)</option>
-              {presets.map((p) => (
-                <option key={p.id} value={p.id}>
+        <div style={{ display: "grid", gap: 12 }}>
+          {/* chips */}
+          {chips.length > 0 ? (
+            <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
+              {chips.map((p) => (
+                <Chip
+                  key={p.id}
+                  active={p.id === presetId}
+                  onClick={() => onChipClick(p)}
+                  title={[
+                    p.name,
+                    p.pair ? `• ${p.pair}` : "",
+                    p.side ? `• ${p.side}` : "",
+                    p.setup ? `• ${p.setup}` : "",
+                  ]
+                    .filter(Boolean)
+                    .join(" ")}
+                >
                   {p.name}
-                </option>
+                </Chip>
               ))}
-            </Select>
-          </div>
-
-          <Button variant="secondary" onClick={applyPreset} disabled={!presetId}>
-            Apply
-          </Button>
-
-          <Link href="/templates" style={{ textDecoration: "none" }}>
-            <Button variant="secondary">Manage presets</Button>
-          </Link>
-
-          {selectedPreset ? (
-            <div style={{ marginLeft: "auto", display: "flex", gap: 8, flexWrap: "wrap" }}>
-              {selectedPreset.pair ? <Pill>{selectedPreset.pair}</Pill> : null}
-              {selectedPreset.side ? <Pill>{selectedPreset.side}</Pill> : null}
-              {selectedPreset.setup ? <Pill>{selectedPreset.setup}</Pill> : null}
             </div>
-          ) : null}
+          ) : (
+            <div style={{ opacity: 0.7 }}>
+              Немає пресетів. Створи їх у{" "}
+              <Link href="/templates" style={{ textDecoration: "underline", color: "inherit" }}>
+                Templates
+              </Link>
+              .
+            </div>
+          )}
+
+          {/* select + actions */}
+          <div style={{ display: "flex", gap: 10, alignItems: "center", flexWrap: "wrap" }}>
+            <div style={{ minWidth: 240 }}>
+              <Select value={presetId} onChange={(e) => setPresetId(e.target.value)}>
+                <option value="">(none)</option>
+                {presets.map((p) => (
+                  <option key={p.id} value={p.id}>
+                    {p.name}
+                  </option>
+                ))}
+              </Select>
+            </div>
+
+            <Button variant="secondary" onClick={() => applyPreset()} disabled={!presetId}>
+              Apply
+            </Button>
+
+            <Link href="/templates" style={{ textDecoration: "none" }}>
+              <Button variant="secondary">Manage presets</Button>
+            </Link>
+
+            {selectedPreset ? (
+              <div style={{ marginLeft: "auto", display: "flex", gap: 8, flexWrap: "wrap" }}>
+                {selectedPreset.pair ? <Pill>{selectedPreset.pair}</Pill> : null}
+                {selectedPreset.side ? <Pill>{selectedPreset.side}</Pill> : null}
+                {selectedPreset.setup ? <Pill>{selectedPreset.setup}</Pill> : null}
+              </div>
+            ) : null}
+          </div>
         </div>
       </Card>
 
@@ -434,5 +474,38 @@ function Pill({ children }: { children: React.ReactNode }) {
     >
       {children}
     </span>
+  );
+}
+
+function Chip({
+  children,
+  onClick,
+  active,
+  title,
+}: {
+  children: React.ReactNode;
+  onClick: () => void;
+  active?: boolean;
+  title?: string;
+}) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      title={title}
+      style={{
+        cursor: "pointer",
+        borderRadius: 999,
+        padding: "8px 12px",
+        border: active ? "1px solid rgba(255,255,255,0.28)" : "1px solid rgba(255,255,255,0.10)",
+        background: active ? "rgba(255,255,255,0.08)" : "rgba(255,255,255,0.02)",
+        color: "inherit",
+        fontWeight: 800,
+        fontSize: 13,
+        letterSpacing: 0.1,
+      }}
+    >
+      {children}
+    </button>
   );
 }
