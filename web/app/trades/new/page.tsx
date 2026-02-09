@@ -1,7 +1,7 @@
 "use client";
 
-import React, { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
+import { useEffect, useMemo, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 
 import { addTrade, type Trade } from "@/lib/tradeStore";
@@ -22,9 +22,9 @@ function toLocalInputValue(iso: string | null) {
   if (!iso) return "";
   const d = new Date(iso);
   const pad = (n: number) => String(n).padStart(2, "0");
-  return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T${pad(
-    d.getHours()
-  )}:${pad(d.getMinutes())}`;
+  return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(
+    d.getMinutes()
+  )}`;
 }
 
 function uid() {
@@ -32,13 +32,33 @@ function uid() {
   return `t_${Date.now()}_${Math.random().toString(16).slice(2)}`;
 }
 
+function mapPresetSideToDirection(side: any): Direction {
+  const v = String(side ?? "").toUpperCase();
+  if (v === "SHORT") return "SHORT";
+  if (v === "LONG") return "LONG";
+  // legacy "Long"/"Short"
+  if (v === "SHORT" || v === "SHORT ") return "SHORT";
+  return "LONG";
+}
+
+function normPair(p: any) {
+  return String(p ?? "").trim().toUpperCase();
+}
+
 export default function NewTradePage() {
   const router = useRouter();
-  const searchParams = useSearchParams();
+  const params = useSearchParams();
 
-  // --- defaults ---
   const nowIso = useMemo(() => new Date().toISOString(), []);
   const nowLocal = useMemo(() => toLocalInputValue(nowIso), [nowIso]);
+
+  // presets
+  const [presets, setPresets] = useState<TradePreset[]>([]);
+  const [presetId, setPresetId] = useState<string>("");
+
+  useEffect(() => {
+    setPresets(getPresets());
+  }, []);
 
   // --- form state ---
   const [symbol, setSymbol] = useState("ETHUSDT");
@@ -73,59 +93,46 @@ export default function NewTradePage() {
   const [ruleBroken, setRuleBroken] = useState(false);
   const [ruleText, setRuleText] = useState("");
 
-  // --- presets ---
-  const [presets, setPresets] = useState<TradePreset[]>([]);
-  const [presetId, setPresetId] = useState("");
-  const [autoApplied, setAutoApplied] = useState(false);
+  // apply preset by id (doesn't overwrite user-entered numeric fields)
+  const applyPreset = (p: TradePreset) => {
+    const pair = normPair((p as any).pair);
+    const dir = mapPresetSideToDirection((p as any).side);
+    const setup = String((p as any).setup ?? "").trim();
+    const notes = String((p as any).notes ?? "").trim();
 
+    if (pair) setSymbol(pair);
+    if (dir) setDirection(dir);
+    if (setup) setSetupTag(setup);
+
+    // put preset notes into thesis if thesis empty
+    if (notes && !thesis.trim()) setThesis(notes);
+  };
+
+  // read preset from URL on first load (or whenever params change)
   useEffect(() => {
-    setPresets(getPresets());
-  }, []);
+    const pid = params.get("preset");
+    if (!pid) return;
 
-  const selectedPreset = useMemo(
-    () => presets.find((p) => p.id === presetId) ?? null,
-    [presets, presetId]
-  );
+    // ensure presets loaded
+    const list = getPresets();
+    setPresets(list);
 
-  const chips = useMemo(() => presets.slice(0, 6), [presets]);
+    const found = list.find((x) => x.id === pid);
+    if (!found) return;
 
-  function applyPreset(p?: TradePreset | null) {
-    const preset = p ?? selectedPreset;
-    if (!preset) return;
+    setPresetId(found.id);
+    applyPreset(found);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [params]);
 
-    if (preset.pair) setSymbol(String(preset.pair).trim().toUpperCase());
-
-    if (preset.side) {
-      const d = preset.side.toUpperCase() as "LONG" | "SHORT";
-      setDirection(d);
-    }
-
-    if (preset.setup) setSetupTag(preset.setup);
-
-    // do not overwrite what user already typed
-    if (preset.notes) setThesis((prev) => (prev ? prev : preset.notes));
-  }
-
-  function onChipClick(p: TradePreset) {
-    setPresetId(p.id);
-    applyPreset(p);
-  }
-
-  // ✅ Auto apply preset from query param ?preset=<id>
+  // when user changes preset from dropdown
   useEffect(() => {
-    if (presets.length === 0) return;
-    if (autoApplied) return;
-
-    const id = searchParams?.get("preset") ?? "";
-    if (!id) return;
-
-    const p = presets.find((x) => x.id === id);
+    if (!presetId) return;
+    const p = presets.find((x) => x.id === presetId);
     if (!p) return;
-
-    setPresetId(p.id);
     applyPreset(p);
-    setAutoApplied(true);
-  }, [presets, searchParams, autoApplied]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [presetId]);
 
   // --- derived ---
   const plannedRR = useMemo(() => {
@@ -209,6 +216,8 @@ export default function NewTradePage() {
     handleSave();
   }
 
+  const selectedPreset = useMemo(() => presets.find((p) => p.id === presetId) ?? null, [presets, presetId]);
+
   return (
     <Page>
       <HeaderRow>
@@ -227,72 +236,65 @@ export default function NewTradePage() {
         </Row>
       </HeaderRow>
 
-      {/* Presets */}
-      <Card
-        title="Preset"
-        subtitle="One-click chips + URL preset (?preset=id)"
-        style={{ marginBottom: 14 }}
-      >
-        <div style={{ display: "grid", gap: 12 }}>
-          {chips.length > 0 ? (
-            <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
-              {chips.map((p) => (
-                <Chip
-                  key={p.id}
-                  active={p.id === presetId}
-                  onClick={() => onChipClick(p)}
-                  title={[
-                    p.name,
-                    p.pair ? `• ${p.pair}` : "",
-                    p.side ? `• ${p.side}` : "",
-                    p.setup ? `• ${p.setup}` : "",
-                  ]
-                    .filter(Boolean)
-                    .join(" ")}
-                >
+      {/* Preset bar */}
+      <Card title="Preset" subtitle="Optional: auto-fill Pair/Side/Setup from Templates">
+        <Grid2>
+          <Field label="Choose preset">
+            <Select
+              value={presetId}
+              onChange={(e) => setPresetId(e.target.value)}
+              title="Selecting preset will auto-fill Pair/Side/Setup"
+            >
+              <option value="">(none)</option>
+              {presets.map((p) => (
+                <option key={p.id} value={p.id}>
                   {p.name}
-                </Chip>
+                </option>
               ))}
-            </div>
-          ) : (
-            <div style={{ opacity: 0.7 }}>
-              Немає пресетів. Створи їх у{" "}
-              <Link href="/templates" style={{ textDecoration: "underline", color: "inherit" }}>
-                Templates
+            </Select>
+          </Field>
+
+          <div style={{ display: "grid", gap: 6 }}>
+            <div style={{ fontSize: 13, opacity: 0.75 }}>Actions</div>
+            <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
+              <Link href="/templates" style={{ textDecoration: "none" }}>
+                <Button variant="secondary" title="Open Templates page">
+                  Templates
+                </Button>
               </Link>
-              .
+              <Button
+                variant="secondary"
+                onClick={() => setPresetId("")}
+                disabled={!presetId}
+                title="Clear selected preset"
+              >
+                Clear preset
+              </Button>
+              {selectedPreset ? (
+                <Button
+                  variant="secondary"
+                  onClick={() => applyPreset(selectedPreset)}
+                  title="Re-apply preset fields"
+                >
+                  Apply again
+                </Button>
+              ) : null}
             </div>
-          )}
-
-          <div style={{ display: "flex", gap: 10, alignItems: "center", flexWrap: "wrap" }}>
-            <div style={{ minWidth: 240 }}>
-              <Select value={presetId} onChange={(e) => setPresetId(e.target.value)}>
-                <option value="">(none)</option>
-                {presets.map((p) => (
-                  <option key={p.id} value={p.id}>
-                    {p.name}
-                  </option>
-                ))}
-              </Select>
-            </div>
-
-            <Button variant="secondary" onClick={() => applyPreset()} disabled={!presetId}>
-              Apply
-            </Button>
-
-            <Link href="/templates" style={{ textDecoration: "none" }}>
-              <Button variant="secondary">Manage presets</Button>
-            </Link>
-
-            {selectedPreset ? (
-              <div style={{ marginLeft: "auto", display: "flex", gap: 8, flexWrap: "wrap" }}>
-                {selectedPreset.pair ? <Pill>{selectedPreset.pair}</Pill> : null}
-                {selectedPreset.side ? <Pill>{selectedPreset.side}</Pill> : null}
-                {selectedPreset.setup ? <Pill>{selectedPreset.setup}</Pill> : null}
-              </div>
-            ) : null}
           </div>
-        </div>
+        </Grid2>
+
+        {selectedPreset ? (
+          <div style={{ marginTop: 10, opacity: 0.85, fontSize: 13 }}>
+            Using: <b>{selectedPreset.name}</b>
+            {selectedPreset.pair ? <> • Pair: <b>{String(selectedPreset.pair).toUpperCase()}</b></> : null}
+            {selectedPreset.side ? <> • Side: <b>{String(selectedPreset.side)}</b></> : null}
+            {selectedPreset.setup ? <> • Setup: <b>{String(selectedPreset.setup)}</b></> : null}
+          </div>
+        ) : (
+          <div style={{ marginTop: 10, opacity: 0.6, fontSize: 13 }}>
+            Tip: create presets in <b>Templates</b> → then use them here.
+          </div>
+        )}
       </Card>
 
       {/* RR */}
@@ -306,6 +308,7 @@ export default function NewTradePage() {
       </Row>
 
       <form onSubmit={onSubmit} style={{ display: "grid", gap: 16 }}>
+        {/* Trade */}
         <Card title="Trade">
           <Grid2>
             <Field label="Symbol">
@@ -373,6 +376,7 @@ export default function NewTradePage() {
           </Grid2>
         </Card>
 
+        {/* Notes */}
         <Card title="Notes">
           <div style={{ display: "grid", gap: 12 }}>
             <Field label="Thesis">
@@ -389,6 +393,7 @@ export default function NewTradePage() {
           </div>
         </Card>
 
+        {/* Psychology */}
         <Card title="Psychology">
           <div style={{ display: "grid", gap: 12 }}>
             <Field label="Before">
@@ -464,57 +469,5 @@ export default function NewTradePage() {
         </Button>
       </form>
     </Page>
-  );
-}
-
-function Pill({ children }: { children: React.ReactNode }) {
-  return (
-    <span
-      style={{
-        display: "inline-flex",
-        alignItems: "center",
-        padding: "4px 10px",
-        borderRadius: 999,
-        border: "1px solid rgba(255,255,255,0.10)",
-        background: "rgba(255,255,255,0.02)",
-        fontSize: 12,
-        opacity: 0.9,
-      }}
-    >
-      {children}
-    </span>
-  );
-}
-
-function Chip({
-  children,
-  onClick,
-  active,
-  title,
-}: {
-  children: React.ReactNode;
-  onClick: () => void;
-  active?: boolean;
-  title?: string;
-}) {
-  return (
-    <button
-      type="button"
-      onClick={onClick}
-      title={title}
-      style={{
-        cursor: "pointer",
-        borderRadius: 999,
-        padding: "8px 12px",
-        border: active ? "1px solid rgba(255,255,255,0.28)" : "1px solid rgba(255,255,255,0.10)",
-        background: active ? "rgba(255,255,255,0.08)" : "rgba(255,255,255,0.02)",
-        color: "inherit",
-        fontWeight: 800,
-        fontSize: 13,
-        letterSpacing: 0.1,
-      }}
-    >
-      {children}
-    </button>
   );
 }
