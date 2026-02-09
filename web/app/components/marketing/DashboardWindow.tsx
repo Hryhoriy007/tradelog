@@ -62,22 +62,27 @@ function applyTheme(t: Theme) {
 }
 
 function ThemeToggleMini() {
-  const [theme, setTheme] = useState<Theme>("dark");
+  const [theme, setTheme] = useState<"dark" | "light">("dark");
 
   useEffect(() => {
-    setTheme(getTheme());
+    const t =
+      document.documentElement.dataset.theme === "light" ? "light" : "dark";
+    setTheme(t);
   }, []);
 
   const onToggle = () => {
-    const next: Theme = theme === "dark" ? "light" : "dark";
+    const next = theme === "dark" ? "light" : "dark";
     setTheme(next);
-    applyTheme(next);
+    document.documentElement.dataset.theme = next;
+    localStorage.setItem("tradelog_theme_v1", next);
   };
 
   return (
-    <button
-      type="button"
+    <div
+      role="button"
+      tabIndex={0}
       onClick={onToggle}
+      onKeyDown={(e) => (e.key === "Enter" ? onToggle() : null)}
       title="Toggle theme"
       style={{
         height: 26,
@@ -85,17 +90,20 @@ function ThemeToggleMini() {
         borderRadius: 10,
         border: "1px solid rgba(255,255,255,0.12)",
         background: "rgba(255,255,255,0.04)",
-        color: "inherit",
         fontSize: 12,
         fontWeight: 800,
         opacity: 0.92,
         cursor: "pointer",
+        userSelect: "none",
+        display: "flex",
+        alignItems: "center",
       }}
     >
       {theme === "dark" ? "Dark" : "Light"}
-    </button>
+    </div>
   );
 }
+
 
 export function DashboardWindow({
   children,

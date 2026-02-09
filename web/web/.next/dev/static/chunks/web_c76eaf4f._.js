@@ -819,17 +819,21 @@ function ThemeToggleMini() {
     const [theme, setTheme] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])("dark");
     (0, __TURBOPACK__imported__module__$5b$project$5d2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useEffect"])({
         "ThemeToggleMini.useEffect": ()=>{
-            setTheme(getTheme());
+            const t = document.documentElement.dataset.theme === "light" ? "light" : "dark";
+            setTheme(t);
         }
     }["ThemeToggleMini.useEffect"], []);
     const onToggle = ()=>{
         const next = theme === "dark" ? "light" : "dark";
         setTheme(next);
-        applyTheme(next);
+        document.documentElement.dataset.theme = next;
+        localStorage.setItem("tradelog_theme_v1", next);
     };
-    return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
-        type: "button",
+    return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+        role: "button",
+        tabIndex: 0,
         onClick: onToggle,
+        onKeyDown: (e)=>e.key === "Enter" ? onToggle() : null,
         title: "Toggle theme",
         style: {
             height: 26,
@@ -837,16 +841,18 @@ function ThemeToggleMini() {
             borderRadius: 10,
             border: "1px solid rgba(255,255,255,0.12)",
             background: "rgba(255,255,255,0.04)",
-            color: "inherit",
             fontSize: 12,
             fontWeight: 800,
             opacity: 0.92,
-            cursor: "pointer"
+            cursor: "pointer",
+            userSelect: "none",
+            display: "flex",
+            alignItems: "center"
         },
         children: theme === "dark" ? "Dark" : "Light"
     }, void 0, false, {
         fileName: "[project]/web/app/components/marketing/DashboardWindow.tsx",
-        lineNumber: 78,
+        lineNumber: 81,
         columnNumber: 5
     }, this);
 }
@@ -937,7 +943,7 @@ function DashboardWindow({ children, watermark = "Demo data" }) {
                     }
                 }, void 0, false, {
                     fileName: "[project]/web/app/components/marketing/DashboardWindow.tsx",
-                    lineNumber: 168,
+                    lineNumber: 176,
                     columnNumber: 9
                 }, this),
                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -952,7 +958,7 @@ function DashboardWindow({ children, watermark = "Demo data" }) {
                     }
                 }, void 0, false, {
                     fileName: "[project]/web/app/components/marketing/DashboardWindow.tsx",
-                    lineNumber: 179,
+                    lineNumber: 187,
                     columnNumber: 9
                 }, this),
                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -971,7 +977,7 @@ function DashboardWindow({ children, watermark = "Demo data" }) {
                     children: watermark
                 }, void 0, false, {
                     fileName: "[project]/web/app/components/marketing/DashboardWindow.tsx",
-                    lineNumber: 195,
+                    lineNumber: 203,
                     columnNumber: 9
                 }, this),
                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -990,21 +996,21 @@ function DashboardWindow({ children, watermark = "Demo data" }) {
                             color: "#ff5f56"
                         }, void 0, false, {
                             fileName: "[project]/web/app/components/marketing/DashboardWindow.tsx",
-                            lineNumber: 225,
+                            lineNumber: 233,
                             columnNumber: 11
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(Dot, {
                             color: "#ffbd2e"
                         }, void 0, false, {
                             fileName: "[project]/web/app/components/marketing/DashboardWindow.tsx",
-                            lineNumber: 226,
+                            lineNumber: 234,
                             columnNumber: 11
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(Dot, {
                             color: "#27c93f"
                         }, void 0, false, {
                             fileName: "[project]/web/app/components/marketing/DashboardWindow.tsx",
-                            lineNumber: 227,
+                            lineNumber: 235,
                             columnNumber: 11
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1020,7 +1026,7 @@ function DashboardWindow({ children, watermark = "Demo data" }) {
                                     children: "Win"
                                 }, void 0, false, {
                                     fileName: "[project]/web/app/components/marketing/DashboardWindow.tsx",
-                                    lineNumber: 230,
+                                    lineNumber: 238,
                                     columnNumber: 13
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(Pill, {
@@ -1028,7 +1034,7 @@ function DashboardWindow({ children, watermark = "Demo data" }) {
                                     children: "Loss"
                                 }, void 0, false, {
                                     fileName: "[project]/web/app/components/marketing/DashboardWindow.tsx",
-                                    lineNumber: 231,
+                                    lineNumber: 239,
                                     columnNumber: 13
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(Pill, {
@@ -1036,13 +1042,13 @@ function DashboardWindow({ children, watermark = "Demo data" }) {
                                     children: "BE"
                                 }, void 0, false, {
                                     fileName: "[project]/web/app/components/marketing/DashboardWindow.tsx",
-                                    lineNumber: 232,
+                                    lineNumber: 240,
                                     columnNumber: 13
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/web/app/components/marketing/DashboardWindow.tsx",
-                            lineNumber: 229,
+                            lineNumber: 237,
                             columnNumber: 11
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1051,18 +1057,18 @@ function DashboardWindow({ children, watermark = "Demo data" }) {
                             },
                             children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(ThemeToggleMini, {}, void 0, false, {
                                 fileName: "[project]/web/app/components/marketing/DashboardWindow.tsx",
-                                lineNumber: 236,
+                                lineNumber: 244,
                                 columnNumber: 13
                             }, this)
                         }, void 0, false, {
                             fileName: "[project]/web/app/components/marketing/DashboardWindow.tsx",
-                            lineNumber: 235,
+                            lineNumber: 243,
                             columnNumber: 11
                         }, this)
                     ]
                 }, void 0, true, {
                     fileName: "[project]/web/app/components/marketing/DashboardWindow.tsx",
-                    lineNumber: 213,
+                    lineNumber: 221,
                     columnNumber: 9
                 }, this),
                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1073,18 +1079,18 @@ function DashboardWindow({ children, watermark = "Demo data" }) {
                     children: children
                 }, void 0, false, {
                     fileName: "[project]/web/app/components/marketing/DashboardWindow.tsx",
-                    lineNumber: 241,
+                    lineNumber: 249,
                     columnNumber: 9
                 }, this)
             ]
         }, void 0, true, {
             fileName: "[project]/web/app/components/marketing/DashboardWindow.tsx",
-            lineNumber: 146,
+            lineNumber: 154,
             columnNumber: 7
         }, this)
     }, void 0, false, {
         fileName: "[project]/web/app/components/marketing/DashboardWindow.tsx",
-        lineNumber: 145,
+        lineNumber: 153,
         columnNumber: 5
     }, this);
 }
