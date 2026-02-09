@@ -1,12 +1,13 @@
 "use client";
 
 import Link from "next/link";
-import { useParams } from "next/navigation";
-import { getTradeById } from "@/lib/tradeStore";
+import { useParams, useRouter } from "next/navigation";
+import { getTradeById, deleteTrade } from "@/lib/tradeStore";
 import { tradeR } from "@/lib/stats";
 
 export default function TradeDetailsPage() {
   const params = useParams();
+  const router = useRouter();
   const id = params.id as string;
 
   const trade = getTradeById(id);
@@ -24,13 +25,11 @@ export default function TradeDetailsPage() {
 
   const r = tradeR(trade);
 
-  // ✅ show Notes only when at least one field has text
   const hasNotes =
     Boolean(trade.notes?.thesis?.trim()) ||
     Boolean(trade.notes?.whatWentWell?.trim()) ||
     Boolean(trade.notes?.improve?.trim());
 
-  // ✅ show psych text only if any field has text
   const hasPsychText =
     Boolean(trade.psych?.before?.trim()) ||
     Boolean(trade.psych?.during?.trim()) ||
@@ -43,6 +42,14 @@ export default function TradeDetailsPage() {
     hour: "2-digit",
     minute: "2-digit",
   });
+
+  function onDelete() {
+    const ok = confirm(`Delete trade ${trade.symbol} (${trade.direction})?`);
+    if (!ok) return;
+
+    deleteTrade(trade.id);
+    router.push("/trades");
+  }
 
   return (
     <div style={{ maxWidth: 900, margin: "0 auto", padding: 24 }}>
@@ -63,6 +70,10 @@ export default function TradeDetailsPage() {
           <Link href={`/trades/${trade.id}/edit`}>
             <button style={btn()}>Edit</button>
           </Link>
+
+          <button onClick={onDelete} style={btnDanger()}>
+            Delete
+          </button>
         </div>
       </div>
 
@@ -83,7 +94,7 @@ export default function TradeDetailsPage() {
         </Grid>
       </section>
 
-      {/* ✅ Notes (render only if not empty) */}
+      {/* Notes (only if not empty) */}
       {hasNotes && (
         <section style={card()}>
           <h2 style={h2()}>Notes</h2>
@@ -97,7 +108,6 @@ export default function TradeDetailsPage() {
       <section style={card()}>
         <h2 style={h2()}>Psychology</h2>
 
-        {/* ✅ if no text — show a small hint */}
         {hasPsychText ? (
           <>
             <Text label="Before" value={trade.psych?.before ?? ""} />
@@ -152,6 +162,18 @@ function btn(): React.CSSProperties {
     borderRadius: 12,
     border: "1px solid #333",
     background: "transparent",
+    fontWeight: 900,
+    cursor: "pointer",
+  };
+}
+
+function btnDanger(): React.CSSProperties {
+  return {
+    padding: "10px 14px",
+    borderRadius: 12,
+    border: "1px solid #5b1b1b",
+    background: "transparent",
+    color: "#f87171",
     fontWeight: 900,
     cursor: "pointer",
   };
