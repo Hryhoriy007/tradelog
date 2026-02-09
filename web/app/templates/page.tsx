@@ -38,15 +38,27 @@ export default function TemplatesPage() {
   const [presets, setPresets] = useState<TradePreset[]>([]);
   const [editing, setEditing] = useState<TradePreset | null>(null);
 
+  // ✅ highlight selected/saved item
+  const [activeId, setActiveId] = useState<string>("");
+
+  // ✅ tiny toast
+  const [toast, setToast] = useState<string>("");
+
   useEffect(() => {
     setPresets(getPresets());
   }, []);
+
+  useEffect(() => {
+    if (!toast) return;
+    const t = setTimeout(() => setToast(""), 1800);
+    return () => clearTimeout(t);
+  }, [toast]);
 
   const pairs = useMemo(() => {
     return ["ETHUSDT", "BTCUSDT", "ARBUSDT", "OPUSDT", "SOLUSDT"];
   }, []);
 
-  // ✅ auto-open editor after create (by setting editing immediately)
+  // ✅ auto-open editor after create
   const onCreate = () => {
     const next: TradePreset = {
       id: createId(),
@@ -58,10 +70,12 @@ export default function TemplatesPage() {
       notes: "",
     };
     setEditing(next);
+    setActiveId(next.id);
   };
 
   const onSave = () => {
     if (!editing) return;
+
     const clean: TradePreset = {
       ...editing,
       name: (editing.name ?? "").trim() || "Preset",
@@ -70,19 +84,59 @@ export default function TemplatesPage() {
       notes: (editing.notes ?? "").trim() || undefined,
       risk: typeof editing.risk === "number" && Number.isFinite(editing.risk) ? editing.risk : undefined,
     };
+
     upsertPreset(clean);
-    setPresets(getPresets());
-    setEditing(null);
+
+    const next = getPresets();
+    setPresets(next);
+
+    // ✅ keep editor open and synced with saved version
+    const saved = next.find((p) => p.id === clean.id) ?? clean;
+    setEditing(saved);
+    setActiveId(saved.id);
+
+    // ✅ toast
+    setToast("Saved ✅");
   };
 
   const onDelete = (id: string) => {
     deletePreset(id);
-    setPresets(getPresets());
+    const next = getPresets();
+    setPresets(next);
+
     if (editing?.id === id) setEditing(null);
+    if (activeId === id) setActiveId("");
+    setToast("Deleted");
+  };
+
+  const onEdit = (p: TradePreset) => {
+    setEditing(p);
+    setActiveId(p.id);
   };
 
   return (
     <Page>
+      {/* Toast */}
+      {toast ? (
+        <div
+          style={{
+            position: "fixed",
+            top: 18,
+            right: 18,
+            zIndex: 50,
+            padding: "10px 12px",
+            borderRadius: 12,
+            border: "1px solid rgba(255,255,255,0.14)",
+            background: "rgba(0,0,0,0.55)",
+            backdropFilter: "blur(8px)",
+            fontWeight: 800,
+            fontSize: 13,
+          }}
+        >
+          {toast}
+        </div>
+      ) : null}
+
       <HeaderRow
         title="Templates"
         subtitle="Presets для швидкого створення trade"
@@ -112,97 +166,83 @@ export default function TemplatesPage() {
         >
           <div style={{ display: "grid", gap: 10 }}>
             {presets.length === 0 ? (
-              <div
-                style={{
-                  opacity: 0.8,
-                  display: "flex",
-                  flexDirection: "column",
-                  gap: 10,
-                }}
-              >
+              <div style={{ opacity: 0.85, display: "grid", gap: 12 }}>
                 <div>Ще немає пресетів.</div>
-
                 <Button
                   variant="secondary"
                   onClick={onCreate}
                   title="Create your first preset"
-                  style={{ alignSelf: "flex-start" }}
+                  style={{ justifySelf: "flex-start" }}
                 >
                   Create first preset
                 </Button>
-
                 <div style={{ opacity: 0.7, fontSize: 13 }}>
                   Після створення пресети зʼявляться в Add Trade (Preset + Chips).
                 </div>
               </div>
             ) : (
-              presets.map((p) => (
-                <div
-                  key={p.id}
-                  title="Preset card — click Edit to modify"
-                  style={{
-                    display: "flex",
-                    gap: 10,
-                    alignItems: "center",
-                    justifyContent: "space-between",
-                    padding: 10,
-                    borderRadius: 12,
-                    border: "1px solid rgba(255,255,255,0.10)",
-                    background: "rgba(255,255,255,0.02)",
-                  }}
-                >
-                  <div style={{ minWidth: 0 }}>
-                    <div style={{ fontWeight: 700, lineHeight: 1.2 }}>{p.name}</div>
-                    <div style={{ marginTop: 6, display: "flex", gap: 6, flexWrap: "wrap" }}>
-                      {p.pair ? pill(p.pair) : null}
-                      {p.side ? pill(p.side) : null}
-                      {p.setup ? pill(p.setup) : null}
-                      {typeof p.risk === "number" ? pill(`Risk: ${p.risk}`) : null}
-                    </div>
-                  </div>
+              presets.map((p) => {
+                const isActive = p.id === activeId;
 
+                return (
                   <div
+                    key={p.id}
+                    title="Preset card — click Edit to modify"
                     style={{
                       display: "flex",
-                      gap: 8,
-                      flexWrap: "wrap",
-                      justifyContent: "flex-end",
+                      gap: 10,
+                      alignItems: "center",
+                      justifyContent: "space-between",
+                      padding: 10,
+                      borderRadius: 12,
+                      border: isActive
+                        ? "1px solid rgba(255,255,255,0.28)"
+                        : "1px solid rgba(255,255,255,0.10)",
+                      background: isActive ? "rgba(255,255,255,0.06)" : "rgba(255,255,255,0.02)",
+                      boxShadow: isActive ? "0 0 0 1px rgba(255,255,255,0.10) inset" : undefined,
                     }}
                   >
-                    <Link
-                      href={`/trades/new?preset=${encodeURIComponent(p.id)}`}
-                      style={{ textDecoration: "none" }}
-                    >
-                      <Button variant="secondary" title="Use this preset to create a new trade">
-                        Use
+                    <div style={{ minWidth: 0 }}>
+                      <div style={{ fontWeight: 800, lineHeight: 1.2 }}>{p.name}</div>
+                      <div style={{ marginTop: 6, display: "flex", gap: 6, flexWrap: "wrap" }}>
+                        {p.pair ? pill(p.pair) : null}
+                        {p.side ? pill(p.side) : null}
+                        {p.setup ? pill(p.setup) : null}
+                        {typeof p.risk === "number" ? pill(`Risk: ${p.risk}`) : null}
+                      </div>
+                    </div>
+
+                    <div style={{ display: "flex", gap: 8, flexWrap: "wrap", justifyContent: "flex-end" }}>
+                      <Link
+                        href={`/trades/new?preset=${encodeURIComponent(p.id)}`}
+                        style={{ textDecoration: "none" }}
+                      >
+                        <Button variant="secondary" title="Use this preset to create a new trade">
+                          Use
+                        </Button>
+                      </Link>
+
+                      <Button
+                        variant="secondary"
+                        onClick={() => onEdit(p)}
+                        title="Click Edit to modify this preset"
+                      >
+                        Edit
                       </Button>
-                    </Link>
 
-                    <Button
-                      variant="secondary"
-                      onClick={() => setEditing(p)}
-                      title="Click Edit to modify this preset"
-                    >
-                      Edit
-                    </Button>
-
-                    <Button
-                      variant="secondary"
-                      onClick={() => onDelete(p.id)}
-                      title="Delete this preset"
-                    >
-                      Delete
-                    </Button>
+                      <Button variant="secondary" onClick={() => onDelete(p.id)} title="Delete this preset">
+                        Delete
+                      </Button>
+                    </div>
                   </div>
-                </div>
-              ))
+                );
+              })
             )}
           </div>
         </Card>
 
         <Card title="Editor" subtitle="Налаштування пресету">
           {!editing ? (
-            // ✅ better empty editor state + CTA button
             <div style={{ opacity: 0.85, display: "grid", gap: 12 }}>
               <div>Вибери пресет зліва або створи новий.</div>
               <Button
@@ -283,8 +323,15 @@ export default function TemplatesPage() {
               </Field>
 
               <div style={{ display: "flex", gap: 8, justifyContent: "flex-end" }}>
-                <Button variant="secondary" onClick={() => setEditing(null)} title="Discard changes">
-                  Cancel
+                <Button
+                  variant="secondary"
+                  onClick={() => {
+                    setEditing(null);
+                    setToast("Closed");
+                  }}
+                  title="Close editor"
+                >
+                  Close
                 </Button>
                 <Button onClick={onSave} title="Save preset">
                   Save

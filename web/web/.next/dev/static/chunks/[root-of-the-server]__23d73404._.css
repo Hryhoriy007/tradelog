@@ -131,6 +131,10 @@
   visibility: collapse;
 }
 
+.fixed {
+  position: fixed;
+}
+
 .block {
   display: block;
 }

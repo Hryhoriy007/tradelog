@@ -6,426 +6,376 @@ import { useEffect, useMemo, useState } from "react";
 import { getTrades, type Trade } from "@/lib/tradeStore";
 import { tradeR } from "@/lib/stats";
 
-import { Page, HeaderRow, Row } from "@/app/components/ui/Layout";
+import { Page, HeaderRow, Row, Grid2 } from "@/app/components/ui/Layout";
 import { Card } from "@/app/components/ui/Card";
 import { Button } from "@/app/components/ui/Button";
+import { Select } from "@/app/components/ui/Select";
+import { Input } from "@/app/components/ui/Input";
+import { Field } from "@/app/components/ui/Field";
+import { ui } from "@/app/components/ui/styles";
 
-import { RHistogram } from "./ui/RHistogram";
-import { WinLossDonut } from "./ui/WinLossDonut";
+type Side = "ALL" | "LONG" | "SHORT";
+type RangeKey = "ALL" | "30" | "7";
 
 function fmt(n: number, digits = 2) {
   if (!Number.isFinite(n)) return "—";
   return n.toFixed(digits);
 }
 
-function toMs(d: any) {
-  const t = new Date(d ?? 0).getTime();
-  return Number.isFinite(t) ? t : 0;
+function pct(n: number, digits = 0) {
+  if (!Number.isFinite(n)) return "—";
+  return `${n.toFixed(digits)}%`;
 }
 
-function toISODate(ms: number) {
-  const d = new Date(ms);
-  const yyyy = d.getFullYear();
-  const mm = String(d.getMonth() + 1).padStart(2, "0");
-  const dd = String(d.getDate()).padStart(2, "0");
-  return `${yyyy}-${mm}-${dd}`;
+function toDateInput(iso: string) {
+  const d = new Date(iso);
+  const pad = (x: number) => String(x).padStart(2, "0");
+  return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
 }
 
-function tradeDateMs(t: any) {
-  return toMs(t?.date ?? t?.createdAt);
+function isoDayStart(dateStr: string) {
+  // yyyy-mm-dd -> ISO at 00:00 local
+  const [y, m, d] = dateStr.split("-").map(Number);
+  const dt = new Date(y, m - 1, d, 0, 0, 0, 0);
+  return dt.toISOString();
 }
 
-function getPair(t: any) {
-  return String(t?.pair ?? t?.symbol ?? "").trim();
+function isoDayEnd(dateStr: string) {
+  // yyyy-mm-dd -> ISO at 23:59:59 local
+  const [y, m, d] = dateStr.split("-").map(Number);
+  const dt = new Date(y, m - 1, d, 23, 59, 59, 999);
+  return dt.toISOString();
 }
 
-function getSide(t: any) {
-  return String(t?.side ?? "").trim();
+function tradeDateIso(t: any) {
+  // prefer openedAt then date then createdAt
+  return (t?.openedAt ?? t?.date ?? t?.createdAt ?? null) as string | null;
 }
 
-function getSetup(t: any) {
-  // підтримка різних назв поля
-  return String(t?.setup ?? t?.preset ?? t?.template ?? t?.strategy ?? "").trim();
+function normSide(x: any): "LONG" | "SHORT" | null {
+  const v = String(x ?? "").toUpperCase();
+  if (v === "LONG") return "LONG";
+  if (v === "SHORT") return "SHORT";
+  // legacy values
+  if (v === "LONG ") return "LONG";
+  if (v === "SHORT ") return "SHORT";
+  return null;
 }
 
-type Timeframe = "all" | "30d" | "7d";
+function normPair(x: any) {
+  return String(x ?? "").trim().toUpperCase();
+}
+
+function normSetup(x: any) {
+  return String(x ?? "").trim();
+}
 
 export default function StatsPage() {
   const [trades, setTrades] = useState<Trade[]>([]);
-  const [binSize, setBinSize] = useState(0.5);
-
-  // timeframe switch
-  const [timeframe, setTimeframe] = useState<Timeframe>("all");
 
   // filters
-  const [pair, setPair] = useState("");
-  const [side, setSide] = useState<"" | "Long" | "Short">("");
-  const [setup, setSetup] = useState("");
-
-  // date range (YYYY-MM-DD)
-  const [fromDate, setFromDate] = useState("");
-  const [toDate, setToDate] = useState("");
+  const [range, setRange] = useState<RangeKey>("ALL");
+  const [pair, setPair] = useState<string>("ALL");
+  const [side, setSide] = useState<Side>("ALL");
+  const [setup, setSetup] = useState<string>("ALL");
+  const [from, setFrom] = useState<string>(""); // yyyy-mm-dd
+  const [to, setTo] = useState<string>(""); // yyyy-mm-dd
 
   useEffect(() => {
     setTrades(getTrades());
   }, []);
 
-  const options = useMemo(() => {
-    const pairs = Array.from(
-      new Set(trades.map((t: any) => getPair(t)).filter(Boolean))
-    ).sort((a, b) => a.localeCompare(b));
+  // quick ranges -> set from/to
+  useEffect(() => {
+    if (range === "ALL") return;
+    const now = new Date();
+    const days = range === "7" ? 7 : 30;
+    const start = new Date(now.getTime() - days * 24 * 60 * 60 * 1000);
+    setFrom(toDateInput(start.toISOString()));
+    setTo(toDateInput(now.toISOString()));
+  }, [range]);
 
-    const setups = Array.from(
-      new Set(trades.map((t: any) => getSetup(t)).filter(Boolean))
-    ).sort((a, b) => a.localeCompare(b));
-
-    return { pairs, setups };
+  const pairs = useMemo(() => {
+    const set = new Set<string>();
+    for (const t of trades as any[]) {
+      const p = normPair(t?.symbol ?? t?.pair);
+      if (p) set.add(p);
+    }
+    return ["ALL", ...Array.from(set).sort()];
   }, [trades]);
 
-  const filteredTrades = useMemo(() => {
-    const now = Date.now();
+  const setups = useMemo(() => {
+    const set = new Set<string>();
+    for (const t of trades as any[]) {
+      const s = normSetup(t?.setupTag ?? t?.setup);
+      if (s) set.add(s);
+    }
+    return ["ALL", ...Array.from(set).sort((a, b) => a.localeCompare(b))];
+  }, [trades]);
 
-    let startMs = 0;
-    if (timeframe === "7d") startMs = now - 7 * 24 * 60 * 60 * 1000;
-    if (timeframe === "30d") startMs = now - 30 * 24 * 60 * 60 * 1000;
+  const filtered = useMemo(() => {
+    const fromIso = from ? isoDayStart(from) : null;
+    const toIso = to ? isoDayEnd(to) : null;
 
-    const fromMs = fromDate ? toMs(`${fromDate}T00:00:00`) : 0;
-    const toMsInc = toDate ? toMs(`${toDate}T23:59:59`) : 0;
+    return (trades as any[]).filter((t) => {
+      const p = normPair(t?.symbol ?? t?.pair);
+      const s = normSide(t?.direction ?? t?.side);
+      const st = normSetup(t?.setupTag ?? t?.setup);
 
-    const qPair = pair.trim().toLowerCase();
-    const qSetup = setup.trim().toLowerCase();
+      if (pair !== "ALL" && p !== pair) return false;
+      if (side !== "ALL" && s !== side) return false;
+      if (setup !== "ALL" && st !== setup) return false;
 
-    return trades.filter((t: any) => {
-      const dms = tradeDateMs(t);
+      const dIso = tradeDateIso(t);
+      if (!dIso) return true;
 
-      // timeframe
-      if (timeframe !== "all" && dms < startMs) return false;
-
-      // date range
-      if (fromDate && dms < fromMs) return false;
-      if (toDate && dms > toMsInc) return false;
-
-      // pair filter (dropdown or typed)
-      const p = getPair(t).toLowerCase();
-      if (qPair && p !== qPair) return false;
-
-      // side filter
-      const s = getSide(t);
-      if (side && s !== side) return false;
-
-      // setup filter
-      const st = getSetup(t).toLowerCase();
-      if (qSetup && st !== qSetup) return false;
+      if (fromIso && new Date(dIso).toISOString() < fromIso) return false;
+      if (toIso && new Date(dIso).toISOString() > toIso) return false;
 
       return true;
     });
-  }, [trades, timeframe, fromDate, toDate, pair, side, setup]);
+  }, [trades, pair, side, setup, from, to]);
 
-  const rs = useMemo(() => {
-    return filteredTrades
-      .map((t) => tradeR(t))
-      .filter((x) => Number.isFinite(x)) as number[];
-  }, [filteredTrades]);
-
-  const wl = useMemo(() => {
+  const summary = useMemo(() => {
+    const rs = filtered.map((t) => tradeR(t)).filter((x) => Number.isFinite(x));
+    const total = rs.reduce((a, b) => a + b, 0);
     const wins = rs.filter((x) => x > 0).length;
     const losses = rs.filter((x) => x < 0).length;
     const be = rs.length - wins - losses;
-
-    const total = rs.reduce((a, b) => a + b, 0);
     const winRate = rs.length ? (wins / rs.length) * 100 : 0;
     const avg = rs.length ? total / rs.length : 0;
-
-    const sumW = rs.filter((x) => x > 0).reduce((a, b) => a + b, 0);
-    const sumL = rs.filter((x) => x < 0).reduce((a, b) => a + b, 0);
-    const pf = sumL !== 0 ? sumW / Math.abs(sumL) : sumW > 0 ? Infinity : 0;
-
-    return { wins, losses, be, winRate, avg, pf, total };
-  }, [rs]);
-
-  const histogram = useMemo(() => {
-    if (rs.length === 0) return { bins: [] as { from: number; to: number; count: number }[] };
-
-    const min = Math.min(...rs);
-    const max = Math.max(...rs);
-
-    const size = Math.max(0.1, binSize);
-    const start = Math.floor(min / size) * size;
-    const end = Math.ceil(max / size) * size;
-
-    const bins: { from: number; to: number; count: number }[] = [];
-    for (let x = start; x < end + 1e-9; x += size) {
-      bins.push({ from: x, to: x + size, count: 0 });
-    }
-
-    rs.forEach((v) => {
-      const idx = Math.min(
-        bins.length - 1,
-        Math.max(0, Math.floor((v - start) / size))
-      );
-      bins[idx].count += 1;
-    });
-
-    return { bins };
-  }, [rs, binSize]);
+    return { count: rs.length, total, avg, winRate, wins, losses, be };
+  }, [filtered]);
 
   const topSetups = useMemo(() => {
-    // групуємо тільки ті угоди, де є setup
     const map = new Map<
       string,
-      { setup: string; n: number; wins: number; losses: number; be: number; totalR: number }
+      { setup: string; n: number; total: number; wins: number; losses: number; be: number }
     >();
 
-    filteredTrades.forEach((t: any) => {
-      const st = getSetup(t);
-      if (!st) return;
-
+    for (const t of filtered as any[]) {
+      const st = normSetup(t?.setupTag ?? t?.setup) || "(no setup)";
       const r = tradeR(t);
-      if (!Number.isFinite(r)) return;
+      if (!Number.isFinite(r)) continue;
 
-      const row = map.get(st) ?? { setup: st, n: 0, wins: 0, losses: 0, be: 0, totalR: 0 };
-      row.n += 1;
-      row.totalR += r;
+      const cur =
+        map.get(st) ??
+        { setup: st, n: 0, total: 0, wins: 0, losses: 0, be: 0 };
 
-      if (r > 0) row.wins += 1;
-      else if (r < 0) row.losses += 1;
-      else row.be += 1;
+      cur.n += 1;
+      cur.total += r;
+      if (r > 0) cur.wins += 1;
+      else if (r < 0) cur.losses += 1;
+      else cur.be += 1;
 
-      map.set(st, row);
+      map.set(st, cur);
+    }
+
+    const rows = Array.from(map.values()).map((x) => {
+      const avg = x.n ? x.total / x.n : 0;
+      const winRate = x.n ? (x.wins / x.n) * 100 : 0;
+      return { ...x, avg, winRate };
     });
 
-    const rows = Array.from(map.values()).map((r) => ({
-      ...r,
-      avgR: r.n ? r.totalR / r.n : 0,
-      winRate: r.n ? (r.wins / r.n) * 100 : 0,
-    }));
+    // sort by avg desc, then trades desc
+    rows.sort((a, b) => b.avg - a.avg || b.n - a.n);
 
-    // сортуємо по avgR, потім по n
-    rows.sort((a, b) => (b.avgR - a.avgR) || (b.n - a.n));
+    return rows.slice(0, 12);
+  }, [filtered]);
 
-    return rows.slice(0, 10);
-  }, [filteredTrades]);
+  const lastTrades = useMemo(() => {
+    const ordered = [...filtered].sort((a: any, b: any) => {
+      const da = new Date(tradeDateIso(a) ?? 0).getTime();
+      const db = new Date(tradeDateIso(b) ?? 0).getTime();
+      return db - da;
+    });
+    return ordered.slice(0, 12);
+  }, [filtered]);
 
-  const onReset = () => {
-    setTimeframe("all");
-    setPair("");
-    setSide("");
-    setSetup("");
-    setFromDate("");
-    setToDate("");
-    setBinSize(0.5);
-  };
-
-  // auto-fill date inputs when switching timeframe (не блокує ручний режим)
-  useEffect(() => {
-    if (timeframe === "all") return;
-    const now = Date.now();
-    const startMs = timeframe === "7d"
-      ? now - 7 * 24 * 60 * 60 * 1000
-      : now - 30 * 24 * 60 * 60 * 1000;
-
-    // якщо користувач вручну не задав from/to — підставимо
-    setFromDate((v) => (v ? v : toISODate(startMs)));
-    setToDate((v) => (v ? v : toISODate(now)));
-  }, [timeframe]);
+  const titleHint = (text: string) => ({
+    title: text,
+    style: { cursor: "help" as const },
+  });
 
   return (
     <Page>
       <HeaderRow
         title="Stats"
-        subtitle="Фільтри, графіки та топ сетапів"
+        subtitle="Filters + top setups by Avg R"
         right={
-          <div style={{ display: "flex", gap: 8 }}>
-            <Link href="/dashboard">
+          <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
+            <Link href="/dashboard" style={{ textDecoration: "none" }}>
               <Button variant="secondary">Dashboard</Button>
             </Link>
-            <Link href="/trades/new">
+            <Link href="/trades" style={{ textDecoration: "none" }}>
+              <Button variant="secondary">Trades</Button>
+            </Link>
+            <Link href="/trades/new" style={{ textDecoration: "none" }}>
               <Button>Add trade</Button>
             </Link>
           </div>
         }
       />
 
-      {/* Timeframe switch */}
-      <Row cols={1}>
-        <Card title="Filters" subtitle="Timeframe + pair + side + date range + setup">
-          <div style={{ display: "flex", gap: 10, flexWrap: "wrap", alignItems: "center" }}>
-            <div style={{ display: "flex", gap: 6 }}>
-              <Button variant={timeframe === "all" ? "primary" : "secondary"} onClick={() => setTimeframe("all")}>
-                All
-              </Button>
-              <Button variant={timeframe === "30d" ? "primary" : "secondary"} onClick={() => setTimeframe("30d")}>
-                Last 30
-              </Button>
-              <Button variant={timeframe === "7d" ? "primary" : "secondary"} onClick={() => setTimeframe("7d")}>
-                Last 7
-              </Button>
-            </div>
+      {/* Filters */}
+      <Card title="Filters" subtitle="Pair / side / setup / date range">
+        <div style={{ display: "grid", gap: 12 }}>
+          <Row style={{ gap: 8 }}>
+            <Button
+              variant={range === "ALL" ? "primary" : "secondary"}
+              onClick={() => {
+                setRange("ALL");
+                setFrom("");
+                setTo("");
+              }}
+              {...titleHint("Без обмеження по даті")}
+            >
+              All
+            </Button>
+            <Button
+              variant={range === "30" ? "primary" : "secondary"}
+              onClick={() => setRange("30")}
+              {...titleHint("Останні 30 днів")}
+            >
+              Last 30
+            </Button>
+            <Button
+              variant={range === "7" ? "primary" : "secondary"}
+              onClick={() => setRange("7")}
+              {...titleHint("Останні 7 днів")}
+            >
+              Last 7
+            </Button>
 
-            <div style={fieldWrap}>
-              <span style={label}>Pair</span>
-              <select style={selectStyle} value={pair} onChange={(e) => setPair(e.target.value)}>
-                <option value="">All</option>
-                {options.pairs.map((p) => (
+            <div style={{ marginLeft: "auto", ...ui.subtle, fontSize: 13 }}>
+              Showing <b>{filtered.length}</b> trades
+            </div>
+          </Row>
+
+          <Grid2>
+            <Field label="Pair">
+              <Select value={pair} onChange={(e) => setPair(e.target.value)}>
+                {pairs.map((p) => (
                   <option key={p} value={p}>
-                    {p}
+                    {p === "ALL" ? "All pairs" : p}
                   </option>
                 ))}
-              </select>
-            </div>
+              </Select>
+            </Field>
 
-            <div style={fieldWrap}>
-              <span style={label}>Side</span>
-              <select style={selectStyle} value={side} onChange={(e) => setSide(e.target.value as any)}>
-                <option value="">All</option>
-                <option value="Long">Long</option>
-                <option value="Short">Short</option>
-              </select>
-            </div>
+            <Field label="Side">
+              <Select value={side} onChange={(e) => setSide(e.target.value as Side)}>
+                <option value="ALL">All</option>
+                <option value="LONG">Long</option>
+                <option value="SHORT">Short</option>
+              </Select>
+            </Field>
 
-            <div style={fieldWrap}>
-              <span style={label}>From</span>
-              <input
-                type="date"
-                value={fromDate}
-                onChange={(e) => setFromDate(e.target.value)}
-                style={inputStyle}
-              />
-            </div>
-
-            <div style={fieldWrap}>
-              <span style={label}>To</span>
-              <input
-                type="date"
-                value={toDate}
-                onChange={(e) => setToDate(e.target.value)}
-                style={inputStyle}
-              />
-            </div>
-
-            <div style={fieldWrap}>
-              <span style={label}>Setup</span>
-              <select style={selectStyle} value={setup} onChange={(e) => setSetup(e.target.value)}>
-                <option value="">All</option>
-                {options.setups.map((s) => (
+            <Field label="Setup">
+              <Select value={setup} onChange={(e) => setSetup(e.target.value)}>
+                {setups.map((s) => (
                   <option key={s} value={s}>
-                    {s}
+                    {s === "ALL" ? "All setups" : s}
                   </option>
                 ))}
-              </select>
+              </Select>
+            </Field>
+
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}>
+              <Field label="From">
+                <Input
+                  type="date"
+                  value={from}
+                  onChange={(e) => {
+                    setRange("ALL");
+                    setFrom(e.target.value);
+                  }}
+                />
+              </Field>
+
+              <Field label="To">
+                <Input
+                  type="date"
+                  value={to}
+                  onChange={(e) => {
+                    setRange("ALL");
+                    setTo(e.target.value);
+                  }}
+                />
+              </Field>
             </div>
+          </Grid2>
+        </div>
+      </Card>
 
-            <div style={{ marginLeft: "auto" }}>
-              <Button variant="secondary" onClick={onReset}>
-                Reset
-              </Button>
-            </div>
-          </div>
-
-          <div style={{ marginTop: 10, opacity: 0.75, fontSize: 13 }}>
-            Showing <b>{filteredTrades.length}</b> trades
-          </div>
-        </Card>
-      </Row>
-
-      <Row cols={4}>
-        <Card title="Trades" subtitle="К-сть угод" right={<span style={{ fontWeight: 700 }}>{rs.length}</span>} />
-        <Card title="Win rate" subtitle="Виграшні" right={<span style={{ fontWeight: 700 }}>{fmt(wl.winRate, 1)}%</span>} />
-        <Card title="Avg R" subtitle="Середня R" right={<span style={{ fontWeight: 700 }}>{fmt(wl.avg, 2)}R</span>} />
+      {/* Summary */}
+      <Row cols={4} style={{ marginTop: 14 }}>
         <Card
-          title="Profit factor"
-          subtitle="Σwins / |Σloss|"
-          right={<span style={{ fontWeight: 700 }}>{wl.pf === Infinity ? "∞" : fmt(wl.pf, 2)}</span>}
+          title="Total R"
+          subtitle="Сумарно"
+          right={<span style={{ fontWeight: 800 }}>{fmt(summary.total, 2)}R</span>}
+        />
+        <Card
+          title="Avg R"
+          subtitle="Середнє за угоду"
+          right={<span style={{ fontWeight: 800 }}>{fmt(summary.avg, 2)}R</span>}
+        />
+        <Card
+          title="Win rate"
+          subtitle="Відсоток Win"
+          right={<span style={{ fontWeight: 800 }}>{pct(summary.winRate, 1)}</span>}
+        />
+        <Card
+          title="W / L / BE"
+          subtitle="Розподіл"
+          right={
+            <span style={{ fontWeight: 800 }}>
+              {summary.wins} / {summary.losses} / {summary.be}
+            </span>
+          }
         />
       </Row>
 
-      <Row cols={2}>
+      {/* Top setups */}
+      <Row cols={2} style={{ marginTop: 14 }}>
         <Card
-          title="R distribution"
-          subtitle="Скільки угод у кожному діапазоні R"
-          right={
-            <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
-              <span style={{ opacity: 0.7, fontSize: 13 }}>Bin:</span>
-              <div style={{ display: "flex", gap: 6 }}>
-                <Button
-                  variant={binSize === 0.25 ? "primary" : "secondary"}
-                  onClick={() => setBinSize(0.25)}
-                >
-                  0.25
-                </Button>
-                <Button
-                  variant={binSize === 0.5 ? "primary" : "secondary"}
-                  onClick={() => setBinSize(0.5)}
-                >
-                  0.5
-                </Button>
-                <Button
-                  variant={binSize === 1 ? "primary" : "secondary"}
-                  onClick={() => setBinSize(1)}
-                >
-                  1
-                </Button>
-              </div>
-            </div>
-          }
+          title="Top setups by Avg R"
+          subtitle="Рейтинг сетапів (фільтри застосовані)"
         >
-          <div style={{ height: 280 }}>
-            <RHistogram bins={histogram.bins} />
-          </div>
-        </Card>
-
-        <Card title="Win / Loss / BE" subtitle="Розподіл результатів">
-          <div style={{ height: 280, display: "grid", placeItems: "center" }}>
-            <WinLossDonut wins={wl.wins} losses={wl.losses} be={wl.be} />
-          </div>
-
-          <div style={{ display: "flex", gap: 10, marginTop: 10, flexWrap: "wrap" }}>
-            <div style={pillStyle}>
-              <span style={{ opacity: 0.75 }}>Win</span>
-              <b style={{ marginLeft: 6 }}>{wl.wins}</b>
-            </div>
-            <div style={pillStyle}>
-              <span style={{ opacity: 0.75 }}>Loss</span>
-              <b style={{ marginLeft: 6 }}>{wl.losses}</b>
-            </div>
-            <div style={pillStyle}>
-              <span style={{ opacity: 0.75 }}>BE</span>
-              <b style={{ marginLeft: 6 }}>{wl.be}</b>
-            </div>
-            <div style={pillStyle}>
-              <span style={{ opacity: 0.75 }}>Total</span>
-              <b style={{ marginLeft: 6 }}>{fmt(wl.total, 2)}R</b>
-            </div>
-          </div>
-        </Card>
-      </Row>
-
-      <Row cols={1}>
-        <Card title="Top setups" subtitle="Топ-10 сетапів по Avg R (з урахуванням поточних фільтрів)">
           {topSetups.length === 0 ? (
-            <div style={{ opacity: 0.7 }}>Немає сетапів у відфільтрованих угодах (або поле setup порожнє).</div>
+            <div style={{ opacity: 0.7 }}>
+              Немає даних для таблиці. Додай трейди або зміни фільтри.
+            </div>
           ) : (
             <div style={{ overflowX: "auto" }}>
-              <table style={tableStyle}>
+              <table style={{ width: "100%", borderCollapse: "separate", borderSpacing: "0 8px" }}>
                 <thead>
-                  <tr>
-                    <th style={thStyle}>Setup</th>
-                    <th style={thStyle}>Trades</th>
-                    <th style={thStyle}>Win rate</th>
-                    <th style={thStyle}>Avg R</th>
-                    <th style={thStyle}>Total R</th>
-                    <th style={thStyle}>W/L/BE</th>
+                  <tr style={{ textAlign: "left", opacity: 0.7, fontSize: 12 }}>
+                    <th style={{ padding: "0 10px" }}>Setup</th>
+                    <th style={{ padding: "0 10px" }}>Trades</th>
+                    <th style={{ padding: "0 10px" }}>Avg R</th>
+                    <th style={{ padding: "0 10px" }}>Total R</th>
+                    <th style={{ padding: "0 10px" }}>Win rate</th>
+                    <th style={{ padding: "0 10px" }}>W/L/BE</th>
                   </tr>
                 </thead>
                 <tbody>
                   {topSetups.map((r) => (
-                    <tr key={r.setup}>
-                      <td style={tdStyleStrong}>{r.setup}</td>
-                      <td style={tdStyle}>{r.n}</td>
-                      <td style={tdStyle}>{fmt(r.winRate, 1)}%</td>
-                      <td style={tdStyleStrong}>{fmt(r.avgR, 2)}R</td>
-                      <td style={tdStyle}>{fmt(r.totalR, 2)}R</td>
-                      <td style={tdStyle}>
+                    <tr
+                      key={r.setup}
+                      style={{
+                        background: "rgba(255,255,255,0.02)",
+                        border: "1px solid rgba(255,255,255,0.08)",
+                      }}
+                    >
+                      <td style={{ padding: "10px 10px", fontWeight: 800 }}>{r.setup}</td>
+                      <td style={{ padding: "10px 10px" }}>{r.n}</td>
+                      <td style={{ padding: "10px 10px", fontWeight: 800 }}>
+                        {fmt(r.avg, 2)}R
+                      </td>
+                      <td style={{ padding: "10px 10px" }}>{fmt(r.total, 2)}R</td>
+                      <td style={{ padding: "10px 10px" }}>{pct(r.winRate, 1)}</td>
+                      <td style={{ padding: "10px 10px" }}>
                         {r.wins}/{r.losses}/{r.be}
                       </td>
                     </tr>
@@ -435,81 +385,55 @@ export default function StatsPage() {
             </div>
           )}
         </Card>
+
+        <Card title="Filtered trades" subtitle="Останні угоди за фільтром">
+          {lastTrades.length === 0 ? (
+            <div style={{ opacity: 0.7 }}>Немає угод під ці фільтри.</div>
+          ) : (
+            <div style={{ display: "grid", gap: 8 }}>
+              {lastTrades.map((t: any) => {
+                const r = tradeR(t);
+                const date = tradeDateIso(t) ?? "—";
+                const p = normPair(t?.symbol ?? t?.pair) || "—";
+                const s = normSide(t?.direction ?? t?.side) || "—";
+                const st = normSetup(t?.setupTag ?? t?.setup) || "—";
+
+                return (
+                  <Link
+                    key={t.id}
+                    href={`/trades/${t.id}`}
+                    style={{ textDecoration: "none" }}
+                  >
+                    <div
+                      style={{
+                        display: "flex",
+                        justifyContent: "space-between",
+                        gap: 12,
+                        padding: 10,
+                        borderRadius: 12,
+                        border: "1px solid rgba(255,255,255,0.08)",
+                        background: "rgba(255,255,255,0.02)",
+                      }}
+                      title="Open trade"
+                    >
+                      <div style={{ minWidth: 0 }}>
+                        <div style={{ fontWeight: 800, lineHeight: 1.2 }}>
+                          {p} • {s} • {st}
+                        </div>
+                        <div style={{ opacity: 0.7, fontSize: 13 }}>{date}</div>
+                      </div>
+
+                      <div style={{ fontWeight: 900, whiteSpace: "nowrap" }}>
+                        {Number.isFinite(r) ? `${fmt(r, 2)}R` : "—"}
+                      </div>
+                    </div>
+                  </Link>
+                );
+              })}
+            </div>
+          )}
+        </Card>
       </Row>
     </Page>
   );
 }
-
-const pillStyle: React.CSSProperties = {
-  display: "inline-flex",
-  alignItems: "center",
-  padding: "6px 10px",
-  borderRadius: 999,
-  border: "1px solid rgba(255,255,255,0.10)",
-  background: "rgba(255,255,255,0.02)",
-};
-
-const fieldWrap: React.CSSProperties = {
-  display: "inline-flex",
-  alignItems: "center",
-  gap: 8,
-  padding: "6px 10px",
-  borderRadius: 12,
-  border: "1px solid rgba(255,255,255,0.10)",
-  background: "rgba(255,255,255,0.02)",
-};
-
-const label: React.CSSProperties = { opacity: 0.7, fontSize: 13 };
-
-const inputStyle: React.CSSProperties = {
-  height: 34,
-  borderRadius: 10,
-  border: "1px solid rgba(255,255,255,0.12)",
-  background: "rgba(0,0,0,0.20)",
-  color: "inherit",
-  padding: "0 10px",
-  outline: "none",
-};
-
-const selectStyle: React.CSSProperties = {
-  height: 34,
-  borderRadius: 10,
-  border: "1px solid rgba(255,255,255,0.12)",
-  background: "rgba(0,0,0,0.20)",
-  color: "inherit",
-  padding: "0 10px",
-  outline: "none",
-};
-
-const tableStyle: React.CSSProperties = {
-  width: "100%",
-  borderCollapse: "separate",
-  borderSpacing: 0,
-  overflow: "hidden",
-  borderRadius: 14,
-  border: "1px solid rgba(255,255,255,0.10)",
-};
-
-const thStyle: React.CSSProperties = {
-  textAlign: "left",
-  fontSize: 12,
-  letterSpacing: 0.2,
-  opacity: 0.75,
-  padding: "10px 12px",
-  borderBottom: "1px solid rgba(255,255,255,0.10)",
-  background: "rgba(255,255,255,0.03)",
-  whiteSpace: "nowrap",
-};
-
-const tdStyle: React.CSSProperties = {
-  padding: "10px 12px",
-  borderBottom: "1px solid rgba(255,255,255,0.06)",
-  opacity: 0.9,
-  whiteSpace: "nowrap",
-};
-
-const tdStyleStrong: React.CSSProperties = {
-  ...tdStyle,
-  fontWeight: 650,
-  opacity: 1,
-};
