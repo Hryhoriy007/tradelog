@@ -24,26 +24,46 @@ export default function TradeDetailsPage() {
 
   const r = tradeR(trade);
 
+  // ✅ show Notes only when at least one field has text
+  const hasNotes =
+    Boolean(trade.notes?.thesis?.trim()) ||
+    Boolean(trade.notes?.whatWentWell?.trim()) ||
+    Boolean(trade.notes?.improve?.trim());
+
+  // ✅ show psych text only if any field has text
+  const hasPsychText =
+    Boolean(trade.psych?.before?.trim()) ||
+    Boolean(trade.psych?.during?.trim()) ||
+    Boolean(trade.psych?.after?.trim());
+
+  const openedLabel = new Date(trade.openedAt).toLocaleString(undefined, {
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+    hour: "2-digit",
+    minute: "2-digit",
+  });
+
   return (
     <div style={{ maxWidth: 900, margin: "0 auto", padding: 24 }}>
       {/* Header */}
-      <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 20 }}>
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: 12, marginBottom: 20 }}>
         <div>
-          <h1 style={{ fontSize: 28, fontWeight: 800 }}>
+          <h1 style={{ fontSize: 30, fontWeight: 900, marginBottom: 6 }}>
             {trade.symbol} · {trade.direction}
           </h1>
-          <div style={{ opacity: 0.7 }}>
-            {new Date(trade.openedAt).toLocaleString()}
-          </div>
+          <div style={{ opacity: 0.7 }}>{openedLabel}</div>
         </div>
 
-        <Link href="/trades">
-          <button style={btn()}>← Back</button>
-        </Link>
+        <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
+          <Link href="/trades">
+            <button style={btn()}>← Back</button>
+          </Link>
 
-        <Link href={`/trades/${trade.id}/edit`}>
-  <button style={btn()}>Edit</button>
-</Link>
+          <Link href={`/trades/${trade.id}/edit`}>
+            <button style={btn()}>Edit</button>
+          </Link>
+        </div>
       </div>
 
       {/* Summary */}
@@ -54,49 +74,58 @@ export default function TradeDetailsPage() {
           <Item label="Exit" value={trade.exit ?? "—"} />
           <Item label="Stop Loss" value={trade.stopLoss ?? "—"} />
           <Item label="Take Profit" value={trade.takeProfit ?? "—"} />
-          <Item label="Setup" value={trade.setupTag} />
+          <Item label="Setup" value={trade.setupTag || "—"} />
           <Item
             label="R"
             value={r !== null ? r.toFixed(2) : "—"}
-            color={r !== null ? (r >= 0 ? "#4ade80" : "#f87171") : undefined}
+            color={r !== null ? (r >= 0 ? "#4ade80" : "#f87171") : "#999"}
           />
         </Grid>
       </section>
 
-      {/* Notes */}
-      <section style={card()}>
-        <h2 style={h2()}>Notes</h2>
-        <Text label="Thesis" value={trade.notes.thesis} />
-        <Text label="What went well" value={trade.notes.whatWentWell} />
-        <Text label="Improve next time" value={trade.notes.improve} />
-      </section>
+      {/* ✅ Notes (render only if not empty) */}
+      {hasNotes && (
+        <section style={card()}>
+          <h2 style={h2()}>Notes</h2>
+          <Text label="Thesis" value={trade.notes?.thesis ?? ""} />
+          <Text label="What went well" value={trade.notes?.whatWentWell ?? ""} />
+          <Text label="Improve next time" value={trade.notes?.improve ?? ""} />
+        </section>
+      )}
 
       {/* Psychology */}
       <section style={card()}>
         <h2 style={h2()}>Psychology</h2>
 
-        <Text label="Before" value={trade.psych.before} />
-        <Text label="During" value={trade.psych.during} />
-        <Text label="After" value={trade.psych.after} />
+        {/* ✅ if no text — show a small hint */}
+        {hasPsychText ? (
+          <>
+            <Text label="Before" value={trade.psych?.before ?? ""} />
+            <Text label="During" value={trade.psych?.during ?? ""} />
+            <Text label="After" value={trade.psych?.after ?? ""} />
+          </>
+        ) : (
+          <div style={{ opacity: 0.7, marginBottom: 10 }}>No psychology notes yet.</div>
+        )}
 
         <Grid>
-          <Item label="Focus" value={trade.psych.focus} />
-          <Item label="Fear" value={trade.psych.fear} />
-          <Item label="Greed" value={trade.psych.greed} />
-          <Item label="Confidence" value={trade.psych.confidence} />
-          <Item label="Fatigue" value={trade.psych.fatigue} />
+          <Item label="Focus" value={trade.psych?.focus ?? 3} />
+          <Item label="Fear" value={trade.psych?.fear ?? 3} />
+          <Item label="Greed" value={trade.psych?.greed ?? 3} />
+          <Item label="Confidence" value={trade.psych?.confidence ?? 3} />
+          <Item label="Fatigue" value={trade.psych?.fatigue ?? 3} />
+          <Item
+            label="Rule broken"
+            value={trade.psych?.ruleBroken ? "YES" : "NO"}
+            color={trade.psych?.ruleBroken ? "#f87171" : "#4ade80"}
+          />
         </Grid>
 
-        <div style={{ marginTop: 10 }}>
-          <b>Rule broken:</b>{" "}
-          {trade.psych.ruleBroken ? (
-            <span style={{ color: "#f87171" }}>
-              YES — {trade.psych.ruleText}
-            </span>
-          ) : (
-            <span style={{ color: "#4ade80" }}>NO</span>
-          )}
-        </div>
+        {trade.psych?.ruleBroken && trade.psych?.ruleText?.trim() ? (
+          <div style={{ marginTop: 10, opacity: 0.9 }}>
+            <b>Which rule:</b> {trade.psych.ruleText}
+          </div>
+        ) : null}
       </section>
     </div>
   );
@@ -114,7 +143,7 @@ function card(): React.CSSProperties {
 }
 
 function h2(): React.CSSProperties {
-  return { fontSize: 18, fontWeight: 800, marginBottom: 10 };
+  return { fontSize: 18, fontWeight: 900, marginBottom: 10 };
 }
 
 function btn(): React.CSSProperties {
@@ -123,7 +152,7 @@ function btn(): React.CSSProperties {
     borderRadius: 12,
     border: "1px solid #333",
     background: "transparent",
-    fontWeight: 700,
+    fontWeight: 900,
     cursor: "pointer",
   };
 }
@@ -148,17 +177,18 @@ function Item({
   return (
     <div>
       <div style={{ opacity: 0.6, fontSize: 12 }}>{label}</div>
-      <div style={{ fontWeight: 800, color }}>{value}</div>
+      <div style={{ fontWeight: 900, color }}>{value}</div>
     </div>
   );
 }
 
 function Text({ label, value }: { label: string; value: string }) {
-  if (!value) return null;
+  const v = (value || "").trim();
+  if (!v) return null;
   return (
     <div style={{ marginBottom: 10 }}>
       <div style={{ opacity: 0.6, fontSize: 12 }}>{label}</div>
-      <div>{value}</div>
+      <div style={{ whiteSpace: "pre-wrap" }}>{v}</div>
     </div>
   );
 }
