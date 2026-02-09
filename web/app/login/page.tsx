@@ -1,8 +1,14 @@
 "use client";
 
 import { useState } from "react";
+import LangSwitch from "../components/LangSwitch";
+import { useLang } from "../components/LanguageProvider";
+import { dict } from "../lib/i18n";
 
 export default function LoginPage() {
+  const { lang } = useLang();
+  const t = dict[lang];
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
@@ -11,27 +17,36 @@ export default function LoginPage() {
     e.preventDefault();
     setLoading(true);
 
-    const res = await fetch("/api/auth/login", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email, password }),
-    });
+    try {
+      const res = await fetch("/api/auth/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password }),
+      });
 
-    const data = await res.json();
-    setLoading(false);
+      const data = await res.json().catch(() => ({}));
+      setLoading(false);
 
-    if (res.ok) {
-      // ✅ логін успішний → cookie поставлена
-      window.location.href = "/";
-    } else {
-      alert(data.error || "Login failed");
+      if (res.ok && data?.ok) {
+        // ✅ логін успішний → cookie поставлена сервером
+        window.location.href = "/dashboard";
+      } else {
+        alert(data?.error || "Login failed");
+      }
+    } catch (err) {
+      setLoading(false);
+      alert("Network error. Try again.");
     }
   }
 
   return (
     <main style={{ padding: 40 }}>
-      <h1>Login</h1>
-      <p>Увійдіть у TradeLog</p>
+      <div style={{ display: "flex", justifyContent: "flex-end" }}>
+        <LangSwitch />
+      </div>
+
+      <h1>{t.loginTitle}</h1>
+      <p>{t.loginSubtitle}</p>
 
       <form
         onSubmit={handleSubmit}
@@ -43,6 +58,7 @@ export default function LoginPage() {
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           required
+          autoComplete="email"
         />
 
         <input
@@ -51,6 +67,7 @@ export default function LoginPage() {
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           required
+          autoComplete="current-password"
         />
 
         <button type="submit" disabled={loading}>
