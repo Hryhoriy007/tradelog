@@ -50,3 +50,7 @@ export function deletePreset(id: string) {
 export function createId() {
   return Math.random().toString(36).slice(2, 10) + "-" + Date.now().toString(36);
 }
+
+export function setPresets(next: TradePreset[]) {
+  localStorage.setItem(KEY, JSON.stringify(next));
+}

@@ -76,19 +76,23 @@ export default function DashboardPage() {
         title="Dashboard"
         subtitle="Equity curve + last trades"
         right={
-          <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
-            <Link href="/stats" style={{ textDecoration: "none" }}>
-              <Button variant="secondary">Stats</Button>
-            </Link>
-            <Link href="/trades" style={{ textDecoration: "none" }}>
-              <Button variant="secondary">Trades</Button>
-            </Link>
-            <Link href="/trades/new" style={{ textDecoration: "none" }}>
-              <Button>Add trade</Button>
-            </Link>
-          </div>
-        }
-      />
+  <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
+    <Link href="/backup" style={{ textDecoration: "none" }}>
+      <Button variant="secondary">Backup</Button>
+    </Link>
+
+    <Link href="/stats" style={{ textDecoration: "none" }}>
+      <Button variant="secondary">Stats</Button>
+    </Link>
+
+    <Link href="/trades" style={{ textDecoration: "none" }}>
+      <Button variant="secondary">Trades</Button>
+    </Link>
+
+    <Link href="/trades/new" style={{ textDecoration: "none" }}>
+      <Button>Add trade</Button>
+    </Link>
+  </div>}/>
 
       <Row cols={4}>
         <Card

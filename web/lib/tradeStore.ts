@@ -55,6 +55,11 @@ export function getTrades(): Trade[] {
   }
 }
 
+export function setTrades(next: Trade[]) {
+  // ⚠️ використай той самий KEY/механізм, що й getTrades/addTrade
+  localStorage.setItem(KEY, JSON.stringify(next));
+}
+
 export function saveTrades(trades: Trade[]) {
   if (typeof window === "undefined") return;
   localStorage.setItem(KEY, JSON.stringify(trades));
