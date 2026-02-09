@@ -39,10 +39,10 @@ export default function DashboardPage() {
     const winRate = rs.length ? (wins / rs.length) * 100 : 0;
     const avg = rs.length ? total / rs.length : 0;
 
-    // Equity curve by cumulative R in chronological order
+    // Equity curve (cumulative R)
     const ordered = [...trades].sort((a: any, b: any) => {
-      const da = new Date((a?.date ?? a?.createdAt ?? 0) as any).getTime();
-      const db = new Date((b?.date ?? b?.createdAt ?? 0) as any).getTime();
+      const da = new Date((a?.date ?? a?.openedAt ?? a?.createdAt ?? 0) as any).getTime();
+      const db = new Date((b?.date ?? b?.openedAt ?? b?.createdAt ?? 0) as any).getTime();
       return da - db;
     });
 
@@ -52,6 +52,7 @@ export default function DashboardPage() {
       if (Number.isFinite(r)) cum += r;
       const label =
         (t as any)?.date ??
+        (t as any)?.openedAt ??
         (t as any)?.createdAt ??
         `#${idx + 1}`;
       return { x: idx, label: String(label), y: cum };
@@ -61,10 +62,9 @@ export default function DashboardPage() {
   }, [trades]);
 
   const lastTrades = useMemo(() => {
-    // newest first
     const ordered = [...trades].sort((a: any, b: any) => {
-      const da = new Date((a?.date ?? a?.createdAt ?? 0) as any).getTime();
-      const db = new Date((b?.date ?? b?.createdAt ?? 0) as any).getTime();
+      const da = new Date((a?.date ?? a?.openedAt ?? a?.createdAt ?? 0) as any).getTime();
+      const db = new Date((b?.date ?? b?.openedAt ?? b?.createdAt ?? 0) as any).getTime();
       return db - da;
     });
     return ordered.slice(0, 10);
@@ -74,13 +74,16 @@ export default function DashboardPage() {
     <Page>
       <HeaderRow
         title="Dashboard"
-        subtitle="Equity curve та останні угоди"
+        subtitle="Equity curve + last trades"
         right={
-          <div style={{ display: "flex", gap: 8 }}>
-            <Link href="/trades">
+          <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
+            <Link href="/stats" style={{ textDecoration: "none" }}>
+              <Button variant="secondary">Stats</Button>
+            </Link>
+            <Link href="/trades" style={{ textDecoration: "none" }}>
               <Button variant="secondary">Trades</Button>
             </Link>
-            <Link href="/trades/new">
+            <Link href="/trades/new" style={{ textDecoration: "none" }}>
               <Button>Add trade</Button>
             </Link>
           </div>
@@ -131,13 +134,13 @@ export default function DashboardPage() {
               lastTrades.map((t: any) => {
                 const r = tradeR(t);
                 const wl = winLossFromR(r);
-                const date = String(t?.date ?? t?.createdAt ?? "—");
+                const date = String(t?.openedAt ?? t?.date ?? t?.createdAt ?? "—");
                 const pair = String(t?.pair ?? t?.symbol ?? "—");
-                const side = String(t?.side ?? "—");
+                const side = String(t?.side ?? t?.direction ?? "—");
 
                 return (
                   <Link
-                    key={t?.id ?? `${date}-${pair}-${Math.random()}`}
+                    key={t?.id ?? `${date}-${pair}`}
                     href={`/trades/${t?.id ?? ""}`}
                     style={{ textDecoration: "none" }}
                   >
