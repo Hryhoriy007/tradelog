@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 
 import { getTrades, type Trade } from "@/lib/tradeStore";
 import { tradeR } from "@/lib/stats";
@@ -16,6 +16,7 @@ import { ui } from "@/app/components/ui/styles";
 
 type Side = "ALL" | "LONG" | "SHORT";
 type RangeKey = "ALL" | "30" | "7";
+type Bins = 10 | 18 | 30;
 
 function fmt(n: number, digits = 2) {
   if (!Number.isFinite(n)) return "—";
@@ -63,14 +64,16 @@ function clamp(n: number, a: number, b: number) {
 /** ---------- Chart: Histogram (R distribution) ---------- */
 function RHistogram({
   rs,
-  bins = 18,
+  bins,
   min = -5,
   max = 5,
+  caption,
 }: {
   rs: number[];
-  bins?: number;
+  bins: number;
   min?: number;
   max?: number;
+  caption?: string;
 }) {
   const W = 680;
   const H = 220;
@@ -93,28 +96,20 @@ function RHistogram({
     }
 
     const peak = Math.max(1, ...counts);
-    return { counts, peak, binSize };
+    return { counts, peak };
   }, [rs, bins, min, max]);
 
   const plotW = W - padL - padR;
   const plotH = H - padT - padB;
   const barW = plotW / bins;
 
-  // zero line x position (R=0)
   const zeroX = padL + ((0 - min) / (max - min)) * plotW;
-
-  const xLabel = (x: number) => {
-    // show fewer labels
-    const v = min + x * (max - min);
-    return v.toFixed(0);
-  };
 
   return (
     <div style={{ width: "100%", overflowX: "auto" }}>
       <svg viewBox={`0 0 ${W} ${H}`} width="100%" height={H} style={{ display: "block" }}>
-        {/* background */}
         <rect x="0" y="0" width={W} height={H} rx="14" ry="14" fill="rgba(255,255,255,0.01)" />
-        {/* grid lines */}
+
         {[0.25, 0.5, 0.75].map((t) => {
           const y = padT + plotH * (1 - t);
           return (
@@ -129,17 +124,9 @@ function RHistogram({
             />
           );
         })}
-        {/* zero line */}
-        <line
-          x1={zeroX}
-          x2={zeroX}
-          y1={padT}
-          y2={padT + plotH}
-          stroke="rgba(255,255,255,0.16)"
-          strokeWidth="1"
-        />
 
-        {/* bars */}
+        <line x1={zeroX} x2={zeroX} y1={padT} y2={padT + plotH} stroke="rgba(255,255,255,0.16)" />
+
         {data.counts.map((c, i) => {
           const h = (c / data.peak) * plotH;
           const x = padL + i * barW + 2;
@@ -158,50 +145,29 @@ function RHistogram({
           );
         })}
 
-        {/* y labels (count) */}
         <text x={padL - 8} y={padT + 10} textAnchor="end" fill="rgba(255,255,255,0.55)" fontSize="11">
           {data.peak}
         </text>
-        <text
-          x={padL - 8}
-          y={padT + plotH + 4}
-          textAnchor="end"
-          fill="rgba(255,255,255,0.55)"
-          fontSize="11"
-        >
+        <text x={padL - 8} y={padT + plotH + 4} textAnchor="end" fill="rgba(255,255,255,0.55)" fontSize="11">
           0
         </text>
 
-        {/* x labels */}
         {Array.from({ length: 5 }).map((_, k) => {
-          const t = k / 4; // 0..1
+          const t = k / 4;
           const x = padL + t * plotW;
           const v = min + t * (max - min);
           return (
             <g key={k}>
-              <line
-                x1={x}
-                x2={x}
-                y1={padT + plotH}
-                y2={padT + plotH + 6}
-                stroke="rgba(255,255,255,0.12)"
-              />
-              <text
-                x={x}
-                y={padT + plotH + 22}
-                textAnchor="middle"
-                fill="rgba(255,255,255,0.65)"
-                fontSize="11"
-              >
+              <line x1={x} x2={x} y1={padT + plotH} y2={padT + plotH + 6} stroke="rgba(255,255,255,0.12)" />
+              <text x={x} y={padT + plotH + 22} textAnchor="middle" fill="rgba(255,255,255,0.65)" fontSize="11">
                 {v.toFixed(0)}R
               </text>
             </g>
           );
         })}
 
-        {/* title hint */}
         <text x={padL} y={H - 8} fill="rgba(255,255,255,0.45)" fontSize="11">
-          Range: {min}R…{max}R (clamped), bins: {bins}
+          {caption ? caption : `Range: ${min}R…${max}R (clamped), bins: ${bins}`}
         </text>
       </svg>
     </div>
@@ -259,7 +225,6 @@ function WinLossBar({ wins, losses, be }: { wins: number; losses: number; be: nu
 export default function StatsPage() {
   const [trades, setTrades] = useState<Trade[]>([]);
 
-  // filters
   const [range, setRange] = useState<RangeKey>("ALL");
   const [pair, setPair] = useState<string>("ALL");
   const [side, setSide] = useState<Side>("ALL");
@@ -267,11 +232,16 @@ export default function StatsPage() {
   const [from, setFrom] = useState<string>("");
   const [to, setTo] = useState<string>("");
 
+  const [bins, setBins] = useState<Bins>(18);
+  const [histSetup, setHistSetup] = useState<string>("ALL");
+
+  // ✅ for scroll target
+  const histRef = useRef<HTMLDivElement | null>(null);
+
   useEffect(() => {
     setTrades(getTrades());
   }, []);
 
-  // quick ranges -> set from/to
   useEffect(() => {
     if (range === "ALL") return;
     const now = new Date();
@@ -327,6 +297,30 @@ export default function StatsPage() {
     return filtered.map((t) => tradeR(t)).filter((x) => Number.isFinite(x)) as number[];
   }, [filtered]);
 
+  const histSetups = useMemo(() => {
+    // setups available in CURRENT filtered scope
+    const s = new Set<string>();
+    for (const t of filtered as any[]) {
+      s.add(normSetup(t?.setupTag ?? t?.setup) || "(no setup)");
+    }
+    return ["ALL", ...Array.from(s).sort((a, b) => a.localeCompare(b))];
+  }, [filtered]);
+
+  // keep histSetup valid when filters change
+  useEffect(() => {
+    if (!histSetups.includes(histSetup)) setHistSetup("ALL");
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [histSetups.join("|")]);
+
+  const histRs = useMemo(() => {
+    const scoped =
+      histSetup === "ALL"
+        ? filtered
+        : (filtered as any[]).filter((t) => (normSetup(t?.setupTag ?? t?.setup) || "(no setup)") === histSetup);
+
+    return scoped.map((t) => tradeR(t)).filter((x) => Number.isFinite(x)) as number[];
+  }, [filtered, histSetup]);
+
   const summary = useMemo(() => {
     const total = rs.reduce((a, b) => a + b, 0);
     const wins = rs.filter((x) => x > 0).length;
@@ -377,6 +371,14 @@ export default function StatsPage() {
   }, [filtered]);
 
   const titleHint = (text: string) => ({ title: text, style: { cursor: "help" as const } });
+
+  // ✅ click row -> set histSetup + scroll
+  const jumpToHistogram = (setupName: string) => {
+    setHistSetup(setupName);
+    setTimeout(() => {
+      histRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+    }, 0);
+  };
 
   return (
     <Page>
@@ -491,16 +493,57 @@ export default function StatsPage() {
 
       {/* Charts */}
       <Row cols={2} style={{ marginTop: 14 }}>
-        <Card
-          title="R distribution"
-          subtitle="Гістограма результатів у R (обрізаємо в діапазоні -5..+5)"
-        >
-          {rs.length === 0 ? (
-            <div style={{ opacity: 0.7 }}>Немає даних під ці фільтри.</div>
-          ) : (
-            <RHistogram rs={rs} bins={18} min={-5} max={5} />
-          )}
-        </Card>
+        <div ref={histRef}>
+          <Card title="R distribution" subtitle="Гістограма результатів у R">
+            <div style={{ display: "grid", gap: 12 }}>
+              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}>
+                <Field label="Bins">
+                  <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
+                    <Button variant={bins === 10 ? "primary" : "secondary"} onClick={() => setBins(10)} title="10 bins">
+                      10
+                    </Button>
+                    <Button variant={bins === 18 ? "primary" : "secondary"} onClick={() => setBins(18)} title="18 bins">
+                      18
+                    </Button>
+                    <Button variant={bins === 30 ? "primary" : "secondary"} onClick={() => setBins(30)} title="30 bins">
+                      30
+                    </Button>
+                  </div>
+                </Field>
+
+                <Field label="Histogram setup">
+                  <Select value={histSetup} onChange={(e) => setHistSetup(e.target.value)}>
+                    {histSetups.map((s) => (
+                      <option key={s} value={s}>
+                        {s === "ALL" ? "All setups (hist only)" : s}
+                      </option>
+                    ))}
+                  </Select>
+                </Field>
+              </div>
+
+              {histRs.length === 0 ? (
+                <div style={{ opacity: 0.7 }}>Немає даних для гістограми під ці фільтри/сетап.</div>
+              ) : (
+                <RHistogram
+                  rs={histRs}
+                  bins={bins}
+                  min={-5}
+                  max={5}
+                  caption={`Histogram scope: ${histSetup === "ALL" ? "All setups" : histSetup} • trades: ${histRs.length} • bins: ${bins}`}
+                />
+              )}
+
+              {histSetup !== "ALL" ? (
+                <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
+                  <Button variant="secondary" onClick={() => setHistSetup("ALL")} title="Reset histogram setup">
+                    Reset histogram setup
+                  </Button>
+                </div>
+              ) : null}
+            </div>
+          </Card>
+        </div>
 
         <Card title="Win / Loss / BE" subtitle="Розподіл результатів">
           <WinLossBar wins={summary.wins} losses={summary.losses} be={summary.be} />
@@ -509,7 +552,7 @@ export default function StatsPage() {
 
       {/* Top setups + filtered trades */}
       <Row cols={2} style={{ marginTop: 14 }}>
-        <Card title="Top setups by Avg R" subtitle="Рейтинг сетапів (фільтри застосовані)">
+        <Card title="Top setups by Avg R" subtitle="Клікни рядок → histogram по цьому setup">
           {topSetups.length === 0 ? (
             <div style={{ opacity: 0.7 }}>Немає даних для таблиці. Додай трейди або зміни фільтри.</div>
           ) : (
@@ -526,16 +569,28 @@ export default function StatsPage() {
                   </tr>
                 </thead>
                 <tbody>
-                  {topSetups.map((r) => (
-                    <tr key={r.setup} style={{ background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.08)" }}>
-                      <td style={{ padding: "10px 10px", fontWeight: 800 }}>{r.setup}</td>
-                      <td style={{ padding: "10px 10px" }}>{r.n}</td>
-                      <td style={{ padding: "10px 10px", fontWeight: 800 }}>{fmt(r.avg, 2)}R</td>
-                      <td style={{ padding: "10px 10px" }}>{fmt(r.total, 2)}R</td>
-                      <td style={{ padding: "10px 10px" }}>{pct(r.winRate, 1)}</td>
-                      <td style={{ padding: "10px 10px" }}>{r.wins}/{r.losses}/{r.be}</td>
-                    </tr>
-                  ))}
+                  {topSetups.map((r) => {
+                    const isPicked = histSetup === r.setup;
+                    return (
+                      <tr
+                        key={r.setup}
+                        onClick={() => jumpToHistogram(r.setup)}
+                        title="Click to view histogram for this setup"
+                        style={{
+                          cursor: "pointer",
+                          background: isPicked ? "rgba(255,255,255,0.06)" : "rgba(255,255,255,0.02)",
+                          border: "1px solid rgba(255,255,255,0.08)",
+                        }}
+                      >
+                        <td style={{ padding: "10px 10px", fontWeight: 800 }}>{r.setup}</td>
+                        <td style={{ padding: "10px 10px" }}>{r.n}</td>
+                        <td style={{ padding: "10px 10px", fontWeight: 800 }}>{fmt(r.avg, 2)}R</td>
+                        <td style={{ padding: "10px 10px" }}>{fmt(r.total, 2)}R</td>
+                        <td style={{ padding: "10px 10px" }}>{pct(r.winRate, 1)}</td>
+                        <td style={{ padding: "10px 10px" }}>{r.wins}/{r.losses}/{r.be}</td>
+                      </tr>
+                    );
+                  })}
                 </tbody>
               </table>
             </div>
