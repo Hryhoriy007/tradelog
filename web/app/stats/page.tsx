@@ -9,337 +9,179 @@ import { tradeR } from "@/lib/stats";
 import { Page, HeaderRow, Row } from "@/app/components/ui/Layout";
 import { Card } from "@/app/components/ui/Card";
 import { Button } from "@/app/components/ui/Button";
-import { Input } from "@/app/components/ui/Input";
-import { Select } from "@/app/components/ui/Select";
-import { ui } from "@/app/components/ui/styles";
 
-type SideFilter = "ALL" | "LONG" | "SHORT";
+import { RHistogram } from "./ui/RHistogram";
+import { WinLossDonut } from "./ui/WinLossDonut";
 
 function fmt(n: number, digits = 2) {
   if (!Number.isFinite(n)) return "—";
   return n.toFixed(digits);
 }
-function pct(n: number, digits = 1) {
-  if (!Number.isFinite(n)) return "—";
-  return `${(n * 100).toFixed(digits)}%`;
-}
 
 export default function StatsPage() {
   const [trades, setTrades] = useState<Trade[]>([]);
-
-  // filters
-  const [side, setSide] = useState<SideFilter>("ALL");
-  const [setup, setSetup] = useState("ALL");
-  const [onlyRReady, setOnlyRReady] = useState(true);
-
-  // date filters (YYYY-MM-DD)
-  const [from, setFrom] = useState("");
-  const [to, setTo] = useState("");
+  const [binSize, setBinSize] = useState(0.5); // R per bin (0.25/0.5/1)
 
   useEffect(() => {
     setTrades(getTrades());
   }, []);
 
-  const setupOptions = useMemo(() => {
-    const s = new Set<string>();
-    for (const t of trades) {
-      const tag = (t.setupTag || "").trim();
-      if (tag) s.add(tag);
-    }
-    return ["ALL", ...Array.from(s).sort((a, b) => a.localeCompare(b))];
+  const rs = useMemo(() => {
+    return trades
+      .map((t) => tradeR(t))
+      .filter((x) => Number.isFinite(x)) as number[];
   }, [trades]);
 
-  const filtered = useMemo(() => {
-    return trades.filter((t) => {
-      if (side !== "ALL" && t.direction !== side) return false;
-      if (setup !== "ALL" && (t.setupTag || "").trim() !== setup) return false;
-
-      if (from) {
-        const d = new Date(t.openedAt);
-        const min = new Date(from + "T00:00:00");
-        if (d < min) return false;
-      }
-      if (to) {
-        const d = new Date(t.openedAt);
-        const max = new Date(to + "T23:59:59");
-        if (d > max) return false;
-      }
-
-      const r = tradeR(t);
-      if (onlyRReady && r === null) return false;
-
-      return true;
-    });
-  }, [trades, side, setup, from, to, onlyRReady]);
-
-  const rReadyTrades = useMemo(() => filtered.filter((t) => tradeR(t) !== null), [filtered]);
-
-  const stats = useMemo(() => {
-    const rs = rReadyTrades.map((t) => tradeR(t) as number);
-    const n = rs.length;
-
+  const wl = useMemo(() => {
     const wins = rs.filter((x) => x > 0).length;
     const losses = rs.filter((x) => x < 0).length;
-    const be = rs.filter((x) => x === 0).length;
+    const be = rs.length - wins - losses;
+    const winRate = rs.length ? (wins / rs.length) * 100 : 0;
+    const avg = rs.length ? rs.reduce((a, b) => a + b, 0) / rs.length : 0;
 
-    const winrate = n ? wins / n : 0;
+    // profit factor in R: sum(wins)/abs(sum(losses))
+    const sumW = rs.filter((x) => x > 0).reduce((a, b) => a + b, 0);
+    const sumL = rs.filter((x) => x < 0).reduce((a, b) => a + b, 0); // negative
+    const pf = sumL !== 0 ? sumW / Math.abs(sumL) : sumW > 0 ? Infinity : 0;
 
-    const avgR = n ? rs.reduce((a, b) => a + b, 0) / n : 0;
+    return { wins, losses, be, winRate, avg, pf };
+  }, [rs]);
 
-    const winRs = rs.filter((x) => x > 0);
-    const lossRs = rs.filter((x) => x < 0);
+  const histogram = useMemo(() => {
+    if (rs.length === 0) return { bins: [] as { from: number; to: number; count: number }[] };
 
-    const avgWinR = winRs.length ? winRs.reduce((a, b) => a + b, 0) / winRs.length : 0;
-    const avgLossR = lossRs.length ? lossRs.reduce((a, b) => a + b, 0) / lossRs.length : 0;
+    const min = Math.min(...rs);
+    const max = Math.max(...rs);
 
-    const grossProfit = winRs.reduce((a, b) => a + b, 0);
-    const grossLossAbs = Math.abs(lossRs.reduce((a, b) => a + b, 0));
+    const size = Math.max(0.1, binSize);
+    const start = Math.floor(min / size) * size;
+    const end = Math.ceil(max / size) * size;
 
-    const profitFactor = grossLossAbs > 0 ? grossProfit / grossLossAbs : grossProfit > 0 ? 99 : 0;
-
-    const expectancy = n ? winrate * avgWinR + (1 - winrate) * avgLossR : 0;
-
-    return { n, wins, losses, be, winrate, avgR, expectancy, profitFactor, avgWinR, avgLossR };
-  }, [rReadyTrades]);
-
-  const bySetup = useMemo(() => {
-    const map = new Map<
-      string,
-      {
-        name: string;
-        n: number;
-        wins: number;
-        losses: number;
-        sumR: number;
-        sumWinR: number;
-        sumLossR: number;
-        winCount: number;
-        lossCount: number;
-      }
-    >();
-
-    for (const t of rReadyTrades) {
-      const name = (t.setupTag || "—").trim() || "—";
-      const r = tradeR(t) as number;
-
-      if (!map.has(name)) {
-        map.set(name, {
-          name,
-          n: 0,
-          wins: 0,
-          losses: 0,
-          sumR: 0,
-          sumWinR: 0,
-          sumLossR: 0,
-          winCount: 0,
-          lossCount: 0,
-        });
-      }
-      const x = map.get(name)!;
-      x.n += 1;
-      x.sumR += r;
-
-      if (r > 0) {
-        x.wins += 1;
-        x.sumWinR += r;
-        x.winCount += 1;
-      } else if (r < 0) {
-        x.losses += 1;
-        x.sumLossR += r;
-        x.lossCount += 1;
-      }
+    const bins: { from: number; to: number; count: number }[] = [];
+    for (let x = start; x < end + 1e-9; x += size) {
+      bins.push({ from: x, to: x + size, count: 0 });
     }
 
-    const rows = Array.from(map.values()).map((x) => {
-      const winrate = x.n ? x.wins / x.n : 0;
-      const avgR = x.n ? x.sumR / x.n : 0;
-      const avgWinR = x.winCount ? x.sumWinR / x.winCount : 0;
-      const avgLossR = x.lossCount ? x.sumLossR / x.lossCount : 0;
-      return { ...x, winrate, avgR, avgWinR, avgLossR };
+    rs.forEach((v) => {
+      const idx = Math.min(
+        bins.length - 1,
+        Math.max(0, Math.floor((v - start) / size))
+      );
+      bins[idx].count += 1;
     });
 
-    rows.sort((a, b) => (b.n - a.n) || (b.avgR - a.avgR));
-    return rows;
-  }, [rReadyTrades]);
+    return { bins };
+  }, [rs, binSize]);
 
   return (
     <Page>
-      <HeaderRow>
-        <div>
-          <h1 style={{ fontSize: 42, fontWeight: 900, marginBottom: 6 }}>Stats</h1>
-          <div style={{ ...ui.subtle, fontSize: 13 }}>
-            Stats are calculated from <b>R-ready</b> trades (Stop Loss + Exit).
+      <HeaderRow
+        title="Stats"
+        subtitle="Графіки: розподіл R та win/loss"
+        right={
+          <div style={{ display: "flex", gap: 8 }}>
+            <Link href="/dashboard">
+              <Button variant="secondary">Dashboard</Button>
+            </Link>
+            <Link href="/trades/new">
+              <Button>Add trade</Button>
+            </Link>
           </div>
-        </div>
+        }
+      />
 
-        <Row>
-          <Link href="/dashboard">
-            <Button>Dashboard</Button>
-          </Link>
-          <Link href="/trades">
-            <Button>Trades</Button>
-          </Link>
-          <Link href="/trades/new">
-            <Button variant="primary">+ Add trade</Button>
-          </Link>
-        </Row>
-      </HeaderRow>
+      <Row cols={4}>
+        <Card
+          title="Trades"
+          subtitle="К-сть угод"
+          right={<span style={{ fontWeight: 700 }}>{rs.length}</span>}
+        />
+        <Card
+          title="Win rate"
+          subtitle="Виграшні"
+          right={<span style={{ fontWeight: 700 }}>{fmt(wl.winRate, 1)}%</span>}
+        />
+        <Card
+          title="Avg R"
+          subtitle="Середня R"
+          right={<span style={{ fontWeight: 700 }}>{fmt(wl.avg, 2)}R</span>}
+        />
+        <Card
+          title="Profit factor"
+          subtitle="Σwins / |Σloss|"
+          right={
+            <span style={{ fontWeight: 700 }}>
+              {wl.pf === Infinity ? "∞" : fmt(wl.pf, 2)}
+            </span>
+          }
+        />
+      </Row>
 
-      {/* Filters */}
-      <Card title="Filters">
-        <div
-          style={{
-            display: "flex",
-            flexWrap: "wrap",
-            gap: 12,
-            alignItems: "flex-end",
-          }}
+      <Row cols={2}>
+        <Card
+          title="R distribution"
+          subtitle="Скільки угод у кожному діапазоні R"
+          right={
+            <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
+              <span style={{ opacity: 0.7, fontSize: 13 }}>Bin:</span>
+              <div style={{ display: "flex", gap: 6 }}>
+                <Button
+                  variant={binSize === 0.25 ? "primary" : "secondary"}
+                  onClick={() => setBinSize(0.25)}
+                >
+                  0.25
+                </Button>
+                <Button
+                  variant={binSize === 0.5 ? "primary" : "secondary"}
+                  onClick={() => setBinSize(0.5)}
+                >
+                  0.5
+                </Button>
+                <Button
+                  variant={binSize === 1 ? "primary" : "secondary"}
+                  onClick={() => setBinSize(1)}
+                >
+                  1
+                </Button>
+              </div>
+            </div>
+          }
         >
-          <div style={{ flex: "1 1 220px", minWidth: 0 }}>
-            <div style={label()}>Side</div>
-            <Select value={side} onChange={(e) => setSide(e.target.value as SideFilter)}>
-              <option value="ALL">All</option>
-              <option value="LONG">LONG</option>
-              <option value="SHORT">SHORT</option>
-            </Select>
-          </div>
-
-          <div style={{ flex: "1 1 260px", minWidth: 0 }}>
-            <div style={label()}>Setup</div>
-            <Select value={setup} onChange={(e) => setSetup(e.target.value)}>
-              {setupOptions.map((x) => (
-                <option key={x} value={x}>
-                  {x === "ALL" ? "All setups" : x}
-                </option>
-              ))}
-            </Select>
-          </div>
-
-          {/* From */}
-          <div style={{ flex: "1 1 220px", minWidth: 0 }}>
-            <div style={label()}>From</div>
-            <Input type="date" value={from} onChange={(e) => setFrom(e.target.value)} />
-          </div>
-
-          {/* To */}
-          <div style={{ flex: "1 1 220px", minWidth: 0 }}>
-            <div style={label()}>To</div>
-            <Input type="date" value={to} onChange={(e) => setTo(e.target.value)} />
-          </div>
-        </div>
-
-        <Row style={{ marginTop: 12, alignItems: "center", flexWrap: "wrap" }}>
-          <label style={{ display: "flex", gap: 10, alignItems: "center", fontWeight: 900 }}>
-            <input
-              type="checkbox"
-              checked={onlyRReady}
-              onChange={(e) => setOnlyRReady(e.target.checked)}
-              style={{ width: 16, height: 16 }}
-            />
-            Only R-ready
-          </label>
-
-          <div style={{ opacity: 0.75, fontSize: 13 }}>
-            Matching trades: <b>{filtered.length}</b> · R-ready: <b>{rReadyTrades.length}</b>
-          </div>
-
-          <div style={{ flex: 1 }} />
-
-          <Button
-            onClick={() => {
-              setSide("ALL");
-              setSetup("ALL");
-              setFrom("");
-              setTo("");
-              setOnlyRReady(true);
-            }}
-          >
-            Reset
-          </Button>
-        </Row>
-      </Card>
-
-      {/* Key metrics */}
-      <div
-        style={{
-          marginTop: 14,
-          display: "grid",
-          gap: 14,
-          gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))",
-        }}
-      >
-        <Metric title="Trades (R-ready)" value={String(stats.n)} />
-        <Metric title="Winrate" value={pct(stats.winrate, 1)} />
-        <Metric title="Avg R" value={fmt(stats.avgR, 2)} />
-        <Metric title="Expectancy" value={fmt(stats.expectancy, 2)} />
-
-        <Metric title="Profit Factor" value={fmt(stats.profitFactor, 2)} />
-        <Metric title="Avg Win R" value={fmt(stats.avgWinR, 2)} />
-        <Metric title="Avg Loss R" value={fmt(stats.avgLossR, 2)} />
-        <Metric title="Wins / Losses / BE" value={`${stats.wins} / ${stats.losses} / ${stats.be}`} />
-      </div>
-
-      {/* By setup */}
-      <div style={{ marginTop: 18 }}>
-        <h2 style={{ fontSize: 24, fontWeight: 900, margin: "8px 0 10px" }}>By setup</h2>
-
-        <Card>
-          <div style={ui.tableWrap}>
-            <table style={ui.table}>
-              <thead>
-                <tr>
-                  <th style={ui.th}>Setup</th>
-                  <th style={ui.th}>Trades</th>
-                  <th style={ui.th}>Winrate</th>
-                  <th style={ui.th}>Avg R</th>
-                  <th style={ui.th}>Avg Win</th>
-                  <th style={ui.th}>Avg Loss</th>
-                </tr>
-              </thead>
-
-              <tbody>
-                {bySetup.length === 0 ? (
-                  <tr>
-                    <td style={{ ...ui.td, opacity: 0.7 }} colSpan={6}>
-                      No R-ready trades in this filter.
-                    </td>
-                  </tr>
-                ) : (
-                  bySetup.map((x) => (
-                    <tr key={x.name}>
-                      <td style={{ ...ui.td, fontWeight: 900 }}>{x.name}</td>
-                      <td style={ui.td}>{x.n}</td>
-                      <td style={ui.td}>{pct(x.winrate, 1)}</td>
-                      <td style={{ ...ui.td, fontWeight: 900 }}>{fmt(x.avgR, 2)}</td>
-                      <td style={ui.td}>{fmt(x.avgWinR, 2)}</td>
-                      <td style={ui.td}>{fmt(x.avgLossR, 2)}</td>
-                    </tr>
-                  ))
-                )}
-              </tbody>
-            </table>
+          <div style={{ height: 280 }}>
+            <RHistogram bins={histogram.bins} />
           </div>
         </Card>
-      </div>
 
-      <div style={{ opacity: 0.6, fontSize: 12, marginTop: 10 }}>
-        Tip: If stats look empty — fill <b>Stop Loss</b> + <b>Exit</b> in trades (R-ready).
-      </div>
+        <Card title="Win / Loss / BE" subtitle="Розподіл результатів">
+          <div style={{ height: 280, display: "grid", placeItems: "center" }}>
+            <WinLossDonut wins={wl.wins} losses={wl.losses} be={wl.be} />
+          </div>
+
+          <div style={{ display: "flex", gap: 10, marginTop: 10, flexWrap: "wrap" }}>
+            <div style={pillStyle}>
+              <span style={{ opacity: 0.75 }}>Win</span>
+              <b style={{ marginLeft: 6 }}>{wl.wins}</b>
+            </div>
+            <div style={pillStyle}>
+              <span style={{ opacity: 0.75 }}>Loss</span>
+              <b style={{ marginLeft: 6 }}>{wl.losses}</b>
+            </div>
+            <div style={pillStyle}>
+              <span style={{ opacity: 0.75 }}>BE</span>
+              <b style={{ marginLeft: 6 }}>{wl.be}</b>
+            </div>
+          </div>
+        </Card>
+      </Row>
     </Page>
   );
 }
 
-/* ----------------- small UI helpers ----------------- */
-
-function label(): React.CSSProperties {
-  return { fontSize: 12, fontWeight: 900, opacity: 0.8, marginBottom: 6 };
-}
-
-function Metric({ title, value }: { title: string; value: string }) {
-  return (
-    <Card>
-      <div style={{ fontSize: 13, opacity: 0.8, fontWeight: 800 }}>{title}</div>
-      <div style={{ fontSize: 34, fontWeight: 900, marginTop: 6 }}>{value}</div>
-    </Card>
-  );
-}
+const pillStyle: React.CSSProperties = {
+  display: "inline-flex",
+  alignItems: "center",
+  padding: "6px 10px",
+  borderRadius: 999,
+  border: "1px solid rgba(255,255,255,0.10)",
+  background: "rgba(255,255,255,0.02)",
+};
