@@ -7,6 +7,8 @@ import { Page, HeaderRow, Row } from "@/app/components/ui/Layout";
 import { Card } from "@/app/components/ui/Card";
 import { Button } from "@/app/components/ui/Button";
 import { ui } from "@/app/components/ui/styles";
+import { MockDashboard } from "@/app/components/marketing/MockDashboard";
+
 
 function Badge({ children }: { children: React.ReactNode }) {
   return (
