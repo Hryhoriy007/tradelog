@@ -11,20 +11,18 @@ export async function POST(req: Request) {
   const match = cookie.match(/(?:^|;\s*)session=([^;]+)/);
   const token = match?.[1];
 
-  // Завжди чистимо cookie (навіть якщо токена нема)
-  const res = NextResponse.json({ ok: true });
-
   if (token) {
     const tokenHash = sha256(token);
-
-    // revokємо сесію в БД (якщо знайдеться)
     await prisma.session.updateMany({
       where: { tokenHash, revokedAt: null },
       data: { revokedAt: new Date() },
     });
   }
 
-  // чистимо cookie
+  // ✅ редірект на /login
+  const res = NextResponse.redirect(new URL("/login", req.url));
+
+  // ✅ чистимо cookie
   res.cookies.set("session", "", {
     httpOnly: true,
     secure: process.env.NODE_ENV === "production",
