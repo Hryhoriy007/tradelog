@@ -20,6 +20,14 @@
   display: grid;
 }
 
+.hidden {
+  display: none;
+}
+
+.table {
+  display: table;
+}
+
 .resize {
   resize: both;
 }
