@@ -31,3 +31,15 @@ export default function RootLayout({
     </html>
   );
 }
+
+<script
+  dangerouslySetInnerHTML={{
+    __html: `
+(function () {
+  try {
+    var t = localStorage.getItem("tradelog_theme_v1") || "dark";
+    document.documentElement.dataset.theme = (t === "light") ? "light" : "dark";
+  } catch (e) {}
+})();`,
+  }}
+/>
