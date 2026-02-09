@@ -104,6 +104,10 @@
   visibility: collapse;
 }
 
+.block {
+  display: block;
+}
+
 .flex {
   display: flex;
 }
