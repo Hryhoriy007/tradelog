@@ -1,140 +1,329 @@
+"use client";
+
 import Link from "next/link";
+import { useMemo } from "react";
+
+import { Page, HeaderRow, Row } from "@/app/components/ui/Layout";
+import { Card } from "@/app/components/ui/Card";
+import { Button } from "@/app/components/ui/Button";
+import { ui } from "@/app/components/ui/styles";
+
+function Badge({ children }: { children: React.ReactNode }) {
+  return (
+    <span
+      style={{
+        display: "inline-flex",
+        alignItems: "center",
+        gap: 8,
+        padding: "6px 10px",
+        borderRadius: 999,
+        border: "1px solid rgba(255,255,255,0.10)",
+        background: "rgba(255,255,255,0.03)",
+        fontSize: 12,
+        opacity: 0.9,
+        whiteSpace: "nowrap",
+      }}
+    >
+      {children}
+    </span>
+  );
+}
+
+function Kpi({ label, value }: { label: string; value: string }) {
+  return (
+    <div
+      style={{
+        padding: 14,
+        borderRadius: 16,
+        border: "1px solid rgba(255,255,255,0.10)",
+        background: "rgba(255,255,255,0.02)",
+      }}
+    >
+      <div style={{ fontSize: 12, opacity: 0.65 }}>{label}</div>
+      <div style={{ fontSize: 18, fontWeight: 900, marginTop: 6 }}>{value}</div>
+    </div>
+  );
+}
+
+function Feature({
+  title,
+  subtitle,
+  points,
+}: {
+  title: string;
+  subtitle: string;
+  points: string[];
+}) {
+  return (
+    <Card title={title} subtitle={subtitle}>
+      <div style={{ display: "grid", gap: 10 }}>
+        <ul style={{ margin: 0, paddingLeft: 18, display: "grid", gap: 8, opacity: 0.9 }}>
+          {points.map((p) => (
+            <li key={p}>{p}</li>
+          ))}
+        </ul>
+      </div>
+    </Card>
+  );
+}
+
+function Step({ n, title, text }: { n: string; title: string; text: string }) {
+  return (
+    <div
+      style={{
+        padding: 16,
+        borderRadius: 16,
+        border: "1px solid rgba(255,255,255,0.10)",
+        background: "rgba(255,255,255,0.02)",
+        display: "grid",
+        gap: 8,
+      }}
+    >
+      <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+        <div
+          style={{
+            width: 30,
+            height: 30,
+            borderRadius: 10,
+            display: "grid",
+            placeItems: "center",
+            fontWeight: 900,
+            border: "1px solid rgba(255,255,255,0.14)",
+            background: "rgba(255,255,255,0.03)",
+          }}
+        >
+          {n}
+        </div>
+        <div style={{ fontWeight: 900 }}>{title}</div>
+      </div>
+      <div style={{ opacity: 0.75, fontSize: 13, lineHeight: 1.5 }}>{text}</div>
+    </div>
+  );
+}
 
 export default function HomePage() {
+  const year = useMemo(() => new Date().getFullYear(), []);
+
   return (
-    <main style={{ maxWidth: 960, margin: "0 auto", padding: "48px 20px" }}>
-      {/* Header */}
-      <header style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: 16 }}>
-        <div>
-          <h1 style={{ margin: 0, fontSize: 32 }}>TradeLog</h1>
-          <p style={{ marginTop: 8, opacity: 0.8 }}>
-            Journal your crypto trades. Stay consistent. Improve your edge.
-          </p>
+    <Page>
+      {/* Top bar */}
+      <HeaderRow
+        title="TradeLog"
+        subtitle="Journal your crypto trades. Stay consistent. Improve your edge."
+        right={
+          <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
+            <Link href="/dashboard" style={{ textDecoration: "none" }}>
+              <Button variant="secondary">Open app</Button>
+            </Link>
+            <Link href="/login" style={{ textDecoration: "none" }}>
+              <Button variant="secondary">Login</Button>
+            </Link>
+            <Link href="/signup" style={{ textDecoration: "none" }}>
+              <Button variant="primary">Start free trial</Button>
+            </Link>
+          </div>
+        }
+      />
+
+      {/* HERO */}
+      <div
+        style={{
+          display: "grid",
+          gridTemplateColumns: "1.2fr 1fr",
+          gap: 16,
+          alignItems: "stretch",
+          marginTop: 10,
+        }}
+      >
+        <div
+          style={{
+            padding: 22,
+            borderRadius: 22,
+            border: "1px solid rgba(255,255,255,0.10)",
+            background:
+              "radial-gradient(1200px 400px at 10% 10%, rgba(140,80,255,0.16), transparent 50%), rgba(255,255,255,0.02)",
+          }}
+        >
+          <div style={{ display: "flex", gap: 8, flexWrap: "wrap", marginBottom: 12 }}>
+            <Badge>UA + EN</Badge>
+            <Badge>Crypto only</Badge>
+            <Badge>7-day free trial</Badge>
+            <Badge>No spreadsheets</Badge>
+          </div>
+
+          <div style={{ fontSize: 44, fontWeight: 950, letterSpacing: -0.8, lineHeight: 1.05 }}>
+            Track trades.
+            <br />
+            Fix mistakes.
+            <br />
+            Grow consistency.
+          </div>
+
+          <div style={{ marginTop: 12, ...ui.subtle, fontSize: 14, lineHeight: 1.6 }}>
+            EN: Track entries/exits, emotions, rules, and stats — keep your strategy honest.
+            <br />
+            UA: Фіксуй входи/виходи, емоції, правила і статистику — дисципліна стає видимою.
+          </div>
+
+          <div style={{ display: "flex", gap: 10, flexWrap: "wrap", marginTop: 16 }}>
+            <Link href="/signup" style={{ textDecoration: "none" }}>
+              <Button variant="primary">Create account (Trial)</Button>
+            </Link>
+            <Link href="/dashboard" style={{ textDecoration: "none" }}>
+              <Button variant="secondary">Try demo (local)</Button>
+            </Link>
+            <Link href="/templates" style={{ textDecoration: "none" }}>
+              <Button variant="secondary">Templates</Button>
+            </Link>
+          </div>
+
+          <div style={{ marginTop: 14, display: "flex", gap: 10, flexWrap: "wrap", opacity: 0.85 }}>
+            <Badge>⏱ fast logging</Badge>
+            <Badge>📈 R-based stats</Badge>
+            <Badge>🧠 psychology notes</Badge>
+            <Badge>💾 backup/export</Badge>
+          </div>
         </div>
 
-        <div style={{ display: "flex", gap: 10 }}>
-          <Link
-            href="/login"
-            style={{
-              padding: "10px 14px",
-              border: "1px solid #ccc",
-              borderRadius: 10,
-              textDecoration: "none",
-            }}
-          >
-            Login
-          </Link>
+        {/* Right: quick preview card */}
+        <div style={{ display: "grid", gap: 12 }}>
+          <Card title="Quick preview" subtitle="What you’ll get in 30 seconds">
+            <div style={{ display: "grid", gap: 12 }}>
+              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10 }}>
+                <Kpi label="Total R" value="+12.4R" />
+                <Kpi label="Win rate" value="48%" />
+                <Kpi label="Avg R" value="+0.42R" />
+                <Kpi label="Streak" value="WIN × 4" />
+              </div>
 
-          <Link
-            href="/register"
-            style={{
-              padding: "10px 14px",
-              borderRadius: 10,
-              textDecoration: "none",
-              background: "#111",
-              color: "#fff",
-            }}
-          >
-            Start trial
-          </Link>
-        </div>
-      </header>
-
-      {/* Hero */}
-      <section style={{ marginTop: 40 }}>
-        <h2 style={{ fontSize: 26, marginBottom: 10 }}>
-          UA + EN • Crypto only • 7-day free trial
-        </h2>
-
-        <p style={{ lineHeight: 1.6, opacity: 0.9 }}>
-          <b>EN:</b> Track entries/exits, screenshots, emotions, and stats. Keep your strategy honest.
-          <br />
-          <b>UA:</b> Веди журнал угод: входи/виходи, скріншоти, емоції та статистику. Контролюй дисципліну.
-        </p>
-
-        <div style={{ display: "flex", gap: 12, marginTop: 16, flexWrap: "wrap" }}>
-          <Link
-            href="/register"
-            style={{
-              padding: "12px 16px",
-              borderRadius: 12,
-              textDecoration: "none",
-              background: "#111",
-              color: "#fff",
-            }}
-          >
-            Create account (Trial)
-          </Link>
-
-          <Link
-            href="/login"
-            style={{
-              padding: "12px 16px",
-              borderRadius: 12,
-              textDecoration: "none",
-              border: "1px solid #ccc",
-            }}
-          >
-            I already have an account
-          </Link>
-        </div>
-      </section>
-
-      {/* Features */}
-      <section style={{ marginTop: 40 }}>
-        <h3 style={{ fontSize: 20 }}>Features / Можливості</h3>
-
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))", gap: 16, marginTop: 16 }}>
-          {[
-            {
-              title: "Fast trade logging",
-              ua: "Швидке внесення угод",
-              desc: "Log trades in seconds: pair, side, entry/exit, fees, notes.",
-              uaDesc: "Фіксуй угоди за секунди: пара, напрям, вхід/вихід, комісії, нотатки.",
-            },
-            {
-              title: "Sessions (max 2 devices)",
-              ua: "Сесії (до 2 пристроїв)",
-              desc: "Security: keep up to 2 active sessions; old one gets revoked.",
-              uaDesc: "Безпека: максимум 2 активні сесії; стара автоматично відключається.",
-            },
-            {
-              title: "Trial + Paid plans",
-              ua: "Пробний період + Платні плани",
-              desc: "Start with a 7-day trial, then upgrade to keep using.",
-              uaDesc: "Почни з 7-денного trial, потім — підписка для продовження.",
-            },
-            {
-              title: "Stats & discipline",
-              ua: "Статистика і дисципліна",
-              desc: "See your winrate, R:R, mistakes, and patterns over time.",
-              uaDesc: "Аналізуй winrate, R:R, помилки та патерни з часом.",
-            },
-          ].map((f) => (
-            <div
-              key={f.title}
-              style={{
-                border: "1px solid #e5e5e5",
-                borderRadius: 14,
-                padding: 16,
-              }}
-            >
-              <div style={{ fontWeight: 700 }}>{f.title}</div>
-              <div style={{ opacity: 0.75, marginTop: 4 }}>{f.ua}</div>
-              <p style={{ marginTop: 10, lineHeight: 1.5, opacity: 0.9 }}>
-                {f.desc}
-                <br />
-                {f.uaDesc}
-              </p>
+              <div
+                style={{
+                  borderRadius: 16,
+                  border: "1px solid rgba(255,255,255,0.10)",
+                  background: "rgba(0,0,0,0.20)",
+                  padding: 14,
+                }}
+              >
+                <div style={{ fontWeight: 900, marginBottom: 8 }}>Why it works</div>
+                <div style={{ opacity: 0.8, fontSize: 13, lineHeight: 1.55 }}>
+                  You stop guessing. You see what setups pay, what mistakes repeat, and how your emotions affect R.
+                </div>
+              </div>
             </div>
-          ))}
+          </Card>
+
+          <Card title="Perfect for" subtitle="Scalpers • Intraday • Swing">
+            <div style={{ display: "grid", gap: 8, opacity: 0.9 }}>
+              <div>• tracking R-multiples instead of money noise</div>
+              <div>• reviewing “rule broken?” patterns</div>
+              <div>• comparing setups by Avg R and distribution</div>
+              <div>• saving presets for fast trade creation</div>
+            </div>
+          </Card>
         </div>
-      </section>
+      </div>
+
+      {/* HOW IT WORKS */}
+      <div style={{ marginTop: 18 }}>
+        <div style={{ fontSize: 18, fontWeight: 950, marginBottom: 10 }}>How it works</div>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 12 }}>
+          <Step n="1" title="Log the trade" text="Pair, side, entry/exit, SL/TP, setup, tags — done in seconds." />
+          <Step n="2" title="Add context" text="Thesis + what went well + improve. Psychology before/during/after." />
+          <Step n="3" title="Review stats" text="Equity curve, win/loss, R distribution, top setups, streaks." />
+        </div>
+      </div>
+
+      {/* FEATURES */}
+      <div style={{ marginTop: 18 }}>
+        <div style={{ fontSize: 18, fontWeight: 950, marginBottom: 10 }}>Features / Можливості</div>
+        <Row cols={3}>
+          <Feature
+            title="Fast trade logging"
+            subtitle="Швидке внесення угод"
+            points={[
+              "Add trades in ~30 seconds",
+              "Presets/Templates for repeatable setups",
+              "Tags for psychology & mistakes",
+            ]}
+          />
+          <Feature
+            title="Stats & discipline"
+            subtitle="Статистика і дисципліна"
+            points={[
+              "Equity curve in R",
+              "Win/Loss/BE + distribution",
+              "Top setups by Avg R",
+            ]}
+          />
+          <Feature
+            title="Backup & export"
+            subtitle="Бекап та експорт"
+            points={[
+              "Export JSON backup (restore anytime)",
+              "CSV export for Sheets/Excel",
+              "Import merge/replace modes",
+            ]}
+          />
+        </Row>
+      </div>
+
+      {/* CTA BOTTOM */}
+      <div
+        style={{
+          marginTop: 18,
+          padding: 18,
+          borderRadius: 22,
+          border: "1px solid rgba(255,255,255,0.10)",
+          background:
+            "radial-gradient(900px 300px at 90% 10%, rgba(140,80,255,0.14), transparent 55%), rgba(255,255,255,0.02)",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+          gap: 12,
+          flexWrap: "wrap",
+        }}
+      >
+        <div>
+          <div style={{ fontSize: 18, fontWeight: 950 }}>Ready to become consistent?</div>
+          <div style={{ opacity: 0.75, marginTop: 6, fontSize: 13 }}>
+            Start a free trial or open the app locally (no account).
+          </div>
+        </div>
+        <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
+          <Link href="/signup" style={{ textDecoration: "none" }}>
+            <Button variant="primary">Start free trial</Button>
+          </Link>
+          <Link href="/dashboard" style={{ textDecoration: "none" }}>
+            <Button variant="secondary">Open app</Button>
+          </Link>
+          <Link href="/backup" style={{ textDecoration: "none" }}>
+            <Button variant="secondary">Backup</Button>
+          </Link>
+        </div>
+      </div>
 
       {/* Footer */}
-      <footer style={{ marginTop: 48, opacity: 0.7, fontSize: 14 }}>
-        © {new Date().getFullYear()} TradeLog • Crypto only • UA/EN
-      </footer>
-    </main>
+      <div style={{ marginTop: 14, opacity: 0.6, fontSize: 12, display: "flex", justifyContent: "space-between", gap: 10, flexWrap: "wrap" }}>
+        <div>© {year} TradeLog</div>
+        <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
+          <Link href="/dashboard" style={{ textDecoration: "none", color: "inherit" }}>App</Link>
+          <Link href="/stats" style={{ textDecoration: "none", color: "inherit" }}>Stats</Link>
+          <Link href="/templates" style={{ textDecoration: "none", color: "inherit" }}>Templates</Link>
+          <Link href="/backup" style={{ textDecoration: "none", color: "inherit" }}>Backup</Link>
+        </div>
+      </div>
+
+      {/* Responsive */}
+      <style jsx>{`
+        @media (max-width: 980px) {
+          div[style*="grid-template-columns: 1.2fr 1fr"] {
+            grid-template-columns: 1fr !important;
+          }
+          div[style*="grid-template-columns: repeat(3, 1fr)"] {
+            grid-template-columns: 1fr !important;
+          }
+        }
+      `}</style>
+    </Page>
   );
 }
