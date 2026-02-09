@@ -1,21 +1,28 @@
 "use client";
 
-import { useMemo } from "react";
 import Link from "next/link";
+import { useMemo } from "react";
 import { useParams, useRouter } from "next/navigation";
 
 import { deleteTrade, getTradeById } from "@/lib/tradeStore";
 import { calcPlannedRR, calcRMultiple } from "@/lib/tradeMath";
 import { tradeR } from "@/lib/stats";
 
-import { Page, HeaderRow, Row, Grid2, Grid5 } from "@/app/components/ui/Layout";
+import { Page, Row } from "@/app/components/ui/Layout";
 import { Card } from "@/app/components/ui/Card";
 import { Button } from "@/app/components/ui/Button";
 import { ui } from "@/app/components/ui/styles";
 
+/* ---------- utils ---------- */
+
+function safeNum(n: number | null | undefined) {
+  return typeof n === "number" && Number.isFinite(n) ? n : null;
+}
+
 function fmt(n: number | null | undefined, digits = 2) {
-  if (n === null || n === undefined || !Number.isFinite(n)) return "—";
-  return n.toFixed(digits);
+  const v = safeNum(n);
+  if (v === null) return "—";
+  return v.toFixed(digits);
 }
 
 function dt(iso: string | null | undefined) {
@@ -25,11 +32,21 @@ function dt(iso: string | null | undefined) {
   return `${d.toLocaleDateString()} ${d.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}`;
 }
 
-function pill(text: string, tone: "neutral" | "green" | "red" = "neutral") {
+function Pill({
+  text,
+  tone = "neutral",
+}: {
+  text: string;
+  tone?: "neutral" | "green" | "red";
+}) {
   const color =
     tone === "green" ? "#4ade80" : tone === "red" ? "#f87171" : "rgba(255,255,255,0.85)";
   const border =
-    tone === "green" ? "rgba(74,222,128,0.35)" : tone === "red" ? "rgba(248,113,113,0.35)" : "#222";
+    tone === "green"
+      ? "rgba(74,222,128,0.35)"
+      : tone === "red"
+      ? "rgba(248,113,113,0.35)"
+      : "#222";
 
   return (
     <span
@@ -51,6 +68,67 @@ function pill(text: string, tone: "neutral" | "green" | "red" = "neutral") {
   );
 }
 
+function Info({
+  label,
+  value,
+  bold,
+  color,
+}: {
+  label: string;
+  value: any;
+  bold?: boolean;
+  color?: string;
+}) {
+  const v = value === null || value === undefined || value === "" ? "—" : String(value);
+  return (
+    <div style={{ display: "grid", gap: 6, minWidth: 0 }}>
+      <div style={{ fontSize: 13, fontWeight: 900, opacity: 0.8 }}>{label}</div>
+      <div
+        style={{
+          fontSize: 16,
+          fontWeight: bold ? 900 : 700,
+          color: color || "inherit",
+          wordBreak: "break-word",
+        }}
+      >
+        {v}
+      </div>
+    </div>
+  );
+}
+
+function Block({ label, text }: { label: string; text?: string | null }) {
+  const v = (text ?? "").trim();
+  return (
+    <div style={{ display: "grid", gap: 6 }}>
+      <div style={{ fontSize: 13, fontWeight: 900, opacity: 0.8 }}>{label}</div>
+      <div
+        style={{
+          border: "1px solid #222",
+          borderRadius: 14,
+          padding: 12,
+          opacity: v ? 0.95 : 0.6,
+          lineHeight: 1.5,
+          whiteSpace: "pre-wrap",
+        }}
+      >
+        {v || "—"}
+      </div>
+    </div>
+  );
+}
+
+function Score({ label, value }: { label: string; value?: number | null }) {
+  return (
+    <div style={{ display: "grid", gap: 6, minWidth: 0 }}>
+      <div style={{ fontSize: 13, fontWeight: 900, opacity: 0.8 }}>{label}</div>
+      <div style={{ fontSize: 20, fontWeight: 900 }}>{value ?? "—"}</div>
+    </div>
+  );
+}
+
+/* ---------- page ---------- */
+
 export default function TradeDetailsPage() {
   const { id } = useParams<{ id: string }>();
   const router = useRouter();
@@ -59,25 +137,29 @@ export default function TradeDetailsPage() {
 
   const plannedRR = useMemo(() => {
     if (!trade) return null;
-    if (trade.stopLoss === null || trade.takeProfit === null || trade.entry <= 0) return null;
+    const sl = safeNum(trade.stopLoss);
+    const tp = safeNum(trade.takeProfit);
+    if (sl === null || tp === null || !(trade.entry > 0)) return null;
 
     return calcPlannedRR({
       direction: trade.direction,
       entry: trade.entry,
-      stopLoss: trade.stopLoss,
-      takeProfit: trade.takeProfit,
+      stopLoss: sl,
+      takeProfit: tp,
     });
   }, [trade]);
 
   const factR = useMemo(() => {
     if (!trade) return null;
-    if (trade.stopLoss === null || trade.exit === null || trade.entry <= 0) return null;
+    const sl = safeNum(trade.stopLoss);
+    const ex = safeNum(trade.exit);
+    if (sl === null || ex === null || !(trade.entry > 0)) return null;
 
     return calcRMultiple({
       direction: trade.direction,
       entry: trade.entry,
-      exit: trade.exit,
-      stopLoss: trade.stopLoss,
+      exit: ex,
+      stopLoss: sl,
     });
   }, [trade]);
 
@@ -107,60 +189,78 @@ export default function TradeDetailsPage() {
   return (
     <Page>
       {/* Header */}
-      <HeaderRow>
-        <div>
-          <h1 style={{ fontSize: 34, fontWeight: 900, marginBottom: 8 }}>
-            {trade.symbol} {pill(trade.direction, sideTone)}
-          </h1>
-          <div style={{ ...ui.subtle, fontSize: 13 }}>
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "space-between",
+          gap: 16,
+          alignItems: "center",
+          flexWrap: "wrap",
+          marginBottom: 14,
+        }}
+      >
+        <div style={{ minWidth: 260 }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 10, flexWrap: "wrap" }}>
+            <h1 style={{ fontSize: 34, fontWeight: 900, margin: 0 }}>{trade.symbol}</h1>
+            <Pill text={trade.direction} tone={sideTone} />
+          </div>
+
+          <div style={{ ...ui.subtle, fontSize: 13, marginTop: 6 }}>
             Opened: <b>{dt(trade.openedAt)}</b> · Closed: <b>{dt(trade.closedAt)}</b>
           </div>
         </div>
 
-        <Row>
+        <Row style={{ gap: 10, justifyContent: "flex-end" }}>
           <Button onClick={() => router.push("/trades")}>Back</Button>
 
           <Link href={`/trades/${trade.id}/edit`}>
-            <Button>Edit</Button>
+            <Button variant="primary">Edit</Button>
           </Link>
 
           <Button variant="danger" onClick={onDelete}>
             Delete
           </Button>
         </Row>
-      </HeaderRow>
+      </div>
 
-      {/* Metrics */}
+      {/* Summary pills */}
       <Row style={{ marginBottom: 14, gap: 10 }}>
-        {pill(`Planned R:R ${fmt(plannedRR, 2)}`, "neutral")}
-        {pill(`Fact R ${fmt(factR, 2)}`, "neutral")}
-        {pill(`R ${r === null ? "—" : fmt(r, 2)}`, rTone)}
+        <Pill text={`Planned R:R ${fmt(plannedRR, 2)}`} tone="neutral" />
+        <Pill text={`Fact R ${fmt(factR, 2)}`} tone="neutral" />
+        <Pill text={`R ${r === null ? "—" : fmt(r, 2)}`} tone={rTone} />
       </Row>
 
-      {/* Trade */}
-      <Card title="Trade">
-        <Grid2>
-          <Info label="Symbol" value={trade.symbol} bold />
-          <Info label="Direction" value={trade.direction} color={trade.direction === "LONG" ? "#4ade80" : "#f87171"} bold />
-
-          <Info label="Entry" value={trade.entry} />
-          <Info label="Exit" value={trade.exit} />
-
+      {/* Summary Card */}
+      <Card title="Summary">
+        <div
+          style={{
+            display: "grid",
+            gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))",
+            gap: 14,
+          }}
+        >
+          <Info label="Entry" value={trade.entry} bold />
+          <Info label="Exit" value={trade.exit} bold />
           <Info label="Stop Loss" value={trade.stopLoss} />
           <Info label="Take Profit" value={trade.takeProfit} />
-
-          <Info label="Opened At" value={dt(trade.openedAt)} />
-          <Info label="Closed At" value={dt(trade.closedAt)} />
-
-          <Info label="Setup tag" value={trade.setupTag || "—"} />
-          <Info label="Psych tags" value={(trade.psychTags ?? []).length ? (trade.psychTags ?? []).join(", ") : "—"} />
-        </Grid2>
+          <Info label="Setup" value={trade.setupTag || "—"} />
+          <Info
+            label="Psych tags"
+            value={(trade.psychTags ?? []).length ? (trade.psychTags ?? []).join(", ") : "—"}
+          />
+        </div>
       </Card>
 
       {/* Notes */}
       <div style={{ marginTop: 16 }}>
         <Card title="Notes">
-          <div style={{ display: "grid", gap: 12 }}>
+          <div
+            style={{
+              display: "grid",
+              gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))",
+              gap: 12,
+            }}
+          >
             <Block label="Thesis" text={trade.notes?.thesis} />
             <Block label="What went well" text={trade.notes?.whatWentWell} />
             <Block label="Improve next time" text={trade.notes?.improve} />
@@ -171,35 +271,48 @@ export default function TradeDetailsPage() {
       {/* Psychology */}
       <div style={{ marginTop: 16 }}>
         <Card title="Psychology">
-          <div style={{ display: "grid", gap: 12 }}>
+          <div
+            style={{
+              display: "grid",
+              gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))",
+              gap: 12,
+            }}
+          >
             <Block label="Before" text={trade.psych?.before} />
             <Block label="During" text={trade.psych?.during} />
             <Block label="After" text={trade.psych?.after} />
           </div>
 
           <div style={{ marginTop: 14 }}>
-            <Grid5>
+            <div
+              style={{
+                display: "grid",
+                gridTemplateColumns: "repeat(auto-fit, minmax(140px, 1fr))",
+                gap: 12,
+              }}
+            >
               <Score label="Focus" value={trade.psych?.focus} />
               <Score label="Fear" value={trade.psych?.fear} />
               <Score label="Greed" value={trade.psych?.greed} />
               <Score label="Confidence" value={trade.psych?.confidence} />
               <Score label="Fatigue" value={trade.psych?.fatigue} />
-            </Grid5>
+            </div>
           </div>
 
           <div style={{ marginTop: 14 }}>
             <div style={{ fontWeight: 900, marginBottom: 6 }}>Rules</div>
-            <div style={{ opacity: 0.85 }}>
+            <div style={{ opacity: 0.9, display: "flex", gap: 10, alignItems: "center", flexWrap: "wrap" }}>
               {trade.psych?.ruleBroken ? (
                 <>
-                  {pill("Rule broken", "red")}{" "}
-                  <span style={{ marginLeft: 8 }}>
+                  <Pill text="Rule broken" tone="red" />
+                  <span style={{ opacity: 0.9 }}>
                     {trade.psych?.ruleText?.trim() ? trade.psych.ruleText : "—"}
                   </span>
                 </>
               ) : (
                 <>
-                  {pill("No rule broken", "green")} <span style={{ marginLeft: 8 }}>Good discipline.</span>
+                  <Pill text="No rule broken" tone="green" />
+                  <span style={{ opacity: 0.8 }}>Good discipline.</span>
                 </>
               )}
             </div>
@@ -211,55 +324,5 @@ export default function TradeDetailsPage() {
         Tip: If R is “—”, fill <b>Stop Loss</b> and <b>Exit</b> (then your stats will include this trade).
       </div>
     </Page>
-  );
-}
-
-function Info({
-  label,
-  value,
-  bold,
-  color,
-}: {
-  label: string;
-  value: any;
-  bold?: boolean;
-  color?: string;
-}) {
-  const v = value === null || value === undefined || value === "" ? "—" : String(value);
-  return (
-    <div style={{ display: "grid", gap: 6 }}>
-      <div style={{ fontSize: 13, fontWeight: 900, opacity: 0.8 }}>{label}</div>
-      <div style={{ fontSize: 16, fontWeight: bold ? 900 : 700, color: color || "inherit" }}>{v}</div>
-    </div>
-  );
-}
-
-function Block({ label, text }: { label: string; text?: string | null }) {
-  const v = (text ?? "").trim();
-  return (
-    <div style={{ display: "grid", gap: 6 }}>
-      <div style={{ fontSize: 13, fontWeight: 900, opacity: 0.8 }}>{label}</div>
-      <div
-        style={{
-          border: "1px solid #222",
-          borderRadius: 14,
-          padding: 12,
-          opacity: v ? 0.95 : 0.6,
-          lineHeight: 1.5,
-          whiteSpace: "pre-wrap",
-        }}
-      >
-        {v || "—"}
-      </div>
-    </div>
-  );
-}
-
-function Score({ label, value }: { label: string; value?: number | null }) {
-  return (
-    <div style={{ display: "grid", gap: 6 }}>
-      <div style={{ fontSize: 13, fontWeight: 900, opacity: 0.8 }}>{label}</div>
-      <div style={{ fontSize: 20, fontWeight: 900 }}>{value ?? "—"}</div>
-    </div>
   );
 }

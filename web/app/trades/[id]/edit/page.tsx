@@ -6,7 +6,7 @@ import { useParams, useRouter } from "next/navigation";
 import { getTradeById, updateTrade, type Trade } from "@/lib/tradeStore";
 import { calcPlannedRR, calcRMultiple, type Direction } from "@/lib/tradeMath";
 
-import { Page, HeaderRow, Row, Grid2, Grid5 } from "@/app/components/ui/Layout";
+import { Page, Row } from "@/app/components/ui/Layout";
 import { Card } from "@/app/components/ui/Card";
 import { Button } from "@/app/components/ui/Button";
 import { Input } from "@/app/components/ui/Input";
@@ -18,10 +18,15 @@ import { ui } from "@/app/components/ui/styles";
 function toLocalInputValue(iso: string | null) {
   if (!iso) return "";
   const d = new Date(iso);
+  if (Number.isNaN(d.getTime())) return "";
   const pad = (n: number) => String(n).padStart(2, "0");
-  return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T${pad(
-    d.getHours()
-  )}:${pad(d.getMinutes())}`;
+  return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(
+    d.getMinutes()
+  )}`;
+}
+
+function safeNum(n: number | null | undefined) {
+  return typeof n === "number" && Number.isFinite(n) ? n : null;
 }
 
 export default function EditTradePage() {
@@ -34,7 +39,9 @@ export default function EditTradePage() {
     return (
       <Page>
         <h1 style={{ fontSize: 24, fontWeight: 900 }}>Trade not found</h1>
-        <Button onClick={() => router.push("/trades")}>← Back to trades</Button>
+        <Row style={{ marginTop: 12 }}>
+          <Button onClick={() => router.push("/trades")}>← Back to trades</Button>
+        </Row>
       </Page>
     );
   }
@@ -74,7 +81,7 @@ export default function EditTradePage() {
 
   // --- derived ---
   const plannedRR = useMemo(() => {
-    if (stopLoss === "" || takeProfit === "" || entry <= 0) return null;
+    if (stopLoss === "" || takeProfit === "" || !(entry > 0)) return null;
     return calcPlannedRR({
       direction,
       entry,
@@ -84,7 +91,7 @@ export default function EditTradePage() {
   }, [direction, entry, stopLoss, takeProfit]);
 
   const rMultiple = useMemo(() => {
-    if (stopLoss === "" || exit === "" || entry <= 0) return null;
+    if (stopLoss === "" || exit === "" || !(entry > 0)) return null;
     return calcRMultiple({
       direction,
       entry,
@@ -95,7 +102,7 @@ export default function EditTradePage() {
 
   function handleSave() {
     if (!symbol.trim()) return alert("Вкажи symbol (наприклад ETHUSDT)");
-    if (!(entry > 0)) return alert("Entry має бути > 0");
+    if (!(safeNum(entry) !== null && entry > 0)) return alert("Entry має бути > 0");
     if (!openedAt) return alert("Opened At обовʼязкове");
 
     const tags = psychTagsRaw
@@ -147,36 +154,51 @@ export default function EditTradePage() {
   return (
     <Page>
       {/* Header */}
-      <HeaderRow>
-        <div>
-          <h1 style={{ fontSize: 34, fontWeight: 900, marginBottom: 6 }}>Edit Trade</h1>
-          <div style={{ ...ui.subtle, fontSize: 13 }}>
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "space-between",
+          gap: 16,
+          alignItems: "center",
+          flexWrap: "wrap",
+          marginBottom: 14,
+        }}
+      >
+        <div style={{ minWidth: 260 }}>
+          <h1 style={{ fontSize: 34, fontWeight: 900, margin: 0 }}>Edit Trade</h1>
+          <div style={{ ...ui.subtle, fontSize: 13, marginTop: 6 }}>
             {trade.symbol} · {trade.direction}
           </div>
         </div>
 
-        <Row>
+        <Row style={{ gap: 10, justifyContent: "flex-end" }}>
           <Button onClick={() => router.push(`/trades/${id}`)}>Back</Button>
           <Button variant="primary" onClick={handleSave} type="button">
             Save
           </Button>
         </Row>
-      </HeaderRow>
+      </div>
 
       {/* RR */}
-      <Row style={{ marginBottom: 14, opacity: 0.9 }}>
+      <Row style={{ marginBottom: 14, opacity: 0.9, gap: 18 }}>
         <div>
-          <b>Planned R:R:</b> {plannedRR ? plannedRR.toFixed(2) : "—"}
+          <b>Planned R:R:</b> {plannedRR === null ? "—" : plannedRR.toFixed(2)}
         </div>
         <div>
-          <b>Fact R:</b> {rMultiple ? rMultiple.toFixed(2) : "—"}
+          <b>Fact R:</b> {rMultiple === null ? "—" : rMultiple.toFixed(2)}
         </div>
       </Row>
 
       <form onSubmit={onSubmit} style={{ display: "grid", gap: 16 }}>
         {/* Trade */}
         <Card title="Trade">
-          <Grid2>
+          <div
+            style={{
+              display: "grid",
+              gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))",
+              gap: 14,
+            }}
+          >
             <Field label="Symbol">
               <Input value={symbol} onChange={(e) => setSymbol(e.target.value)} />
             </Field>
@@ -239,7 +261,7 @@ export default function EditTradePage() {
             <Field label="Psych tags (comma)">
               <Input value={psychTagsRaw} onChange={(e) => setPsychTagsRaw(e.target.value)} />
             </Field>
-          </Grid2>
+          </div>
         </Card>
 
         {/* Notes */}
@@ -276,7 +298,13 @@ export default function EditTradePage() {
           </div>
 
           <div style={{ marginTop: 14 }}>
-            <Grid5>
+            <div
+              style={{
+                display: "grid",
+                gridTemplateColumns: "repeat(auto-fit, minmax(140px, 1fr))",
+                gap: 12,
+              }}
+            >
               <Field label="Focus">
                 <Input type="number" min={1} max={5} value={focus} onChange={(e) => setFocus(Number(e.target.value))} />
               </Field>
@@ -298,7 +326,7 @@ export default function EditTradePage() {
               <Field label="Fatigue">
                 <Input type="number" min={1} max={5} value={fatigue} onChange={(e) => setFatigue(Number(e.target.value))} />
               </Field>
-            </Grid5>
+            </div>
           </div>
 
           <div style={{ marginTop: 12 }}>
