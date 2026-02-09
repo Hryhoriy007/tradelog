@@ -49,32 +49,30 @@ function Pill({
 type Theme = "dark" | "light";
 const THEME_KEY = "tradelog_theme_v1";
 
-function getTheme(): Theme {
-  if (typeof window === "undefined") return "dark";
-  const v = (localStorage.getItem(THEME_KEY) || "").toLowerCase();
-  return v === "light" ? "light" : "dark";
-}
-
-function applyTheme(t: Theme) {
-  if (typeof window === "undefined") return;
-  localStorage.setItem(THEME_KEY, t);
-  document.documentElement.dataset.theme = t;
-}
-
 function ThemeToggleMini() {
-  const [theme, setTheme] = useState<"dark" | "light">("dark");
+  const [theme, setTheme] = useState<Theme>("dark");
 
+  // ✅ read theme only on client AFTER mount to avoid hydration mismatch
   useEffect(() => {
-    const t =
-      document.documentElement.dataset.theme === "light" ? "light" : "dark";
-    setTheme(t);
+    try {
+      const stored = (localStorage.getItem(THEME_KEY) || "").toLowerCase();
+      const t: Theme = stored === "light" ? "light" : "dark";
+      setTheme(t);
+      document.documentElement.dataset.theme = t;
+    } catch {
+      // ignore
+    }
   }, []);
 
   const onToggle = () => {
-    const next = theme === "dark" ? "light" : "dark";
+    const next: Theme = theme === "dark" ? "light" : "dark";
     setTheme(next);
-    document.documentElement.dataset.theme = next;
-    localStorage.setItem("tradelog_theme_v1", next);
+    try {
+      document.documentElement.dataset.theme = next;
+      localStorage.setItem(THEME_KEY, next);
+    } catch {
+      // ignore
+    }
   };
 
   return (
@@ -82,7 +80,12 @@ function ThemeToggleMini() {
       role="button"
       tabIndex={0}
       onClick={onToggle}
-      onKeyDown={(e) => (e.key === "Enter" ? onToggle() : null)}
+      onKeyDown={(e) => {
+        if (e.key === "Enter" || e.key === " ") {
+          e.preventDefault();
+          onToggle();
+        }
+      }}
       title="Toggle theme"
       style={{
         height: 26,
@@ -103,7 +106,6 @@ function ThemeToggleMini() {
     </div>
   );
 }
-
 
 export function DashboardWindow({
   children,
@@ -131,13 +133,11 @@ export function DashboardWindow({
     const px = (e.clientX - r.left) / r.width; // 0..1
     const py = (e.clientY - r.top) / r.height; // 0..1
 
-    // tilt around center
     const ry = (px - 0.5) * 10;
     const rx = -(py - 0.5) * 10;
 
     setTilt({ rx, ry, s: 1.01 });
 
-    // parallax glow anchor (in % for CSS gradients)
     setGlow({
       x: Math.max(0, Math.min(100, px * 100)),
       y: Math.max(0, Math.min(100, py * 100)),
@@ -146,7 +146,7 @@ export function DashboardWindow({
 
   const onLeave = () => {
     setTilt({ rx: 0, ry: 0, s: 1 });
-    setGlow({ x: 70, y: 12 }); // back to nice default
+    setGlow({ x: 70, y: 12 });
   };
 
   return (
@@ -158,32 +158,31 @@ export function DashboardWindow({
         style={{
           transform: `rotateX(${tilt.rx}deg) rotateY(${tilt.ry}deg) scale(${tilt.s})`,
           transformStyle: "preserve-3d",
-          transition: supportsFinePointer ? "transform 120ms ease" : "none",
+          transition: supportsFinePointer ? "transform 140ms ease" : "none",
           willChange: "transform",
           borderRadius: 22,
           border: "1px solid rgba(255,255,255,0.12)",
           overflow: "hidden",
-          boxShadow: "0 40px 90px rgba(0,0,0,0.55), inset 0 1px 0 rgba(255,255,255,0.04)",
+          boxShadow:
+            "0 40px 90px rgba(0,0,0,0.55), inset 0 1px 0 rgba(255,255,255,0.04)",
           position: "relative",
-          background:
-            `
+          background: `
             linear-gradient(180deg, rgba(255,255,255,0.04), rgba(0,0,0,0.15)),
             url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='120' height='120' filter='url(%23n)' opacity='.035'/%3E%3C/svg%3E")
-            `,
+          `,
         }}
       >
-        {/* Parallax glow (moves with cursor) */}
+        {/* Parallax glow */}
         <div
           style={{
             position: "absolute",
             inset: -80,
             pointerEvents: "none",
             background: `radial-gradient(650px 240px at ${glow.x}% ${glow.y}%, rgba(140,80,255,0.26), transparent 60%)`,
-            transition: supportsFinePointer ? "background 60ms linear" : "none",
           }}
         />
 
-        {/* Specular highlight (soft glassy shine) */}
+        {/* Specular highlight */}
         <div
           style={{
             position: "absolute",
@@ -195,7 +194,6 @@ export function DashboardWindow({
             )}% ${Math.max(0, glow.y - 10)}%, rgba(255,255,255,0.10), transparent 65%)`,
             mixBlendMode: "screen",
             opacity: 0.7,
-            transition: supportsFinePointer ? "background 60ms linear" : "none",
           }}
         />
 
@@ -234,7 +232,14 @@ export function DashboardWindow({
           <Dot color="#ffbd2e" />
           <Dot color="#27c93f" />
 
-          <div style={{ marginLeft: 10, display: "flex", gap: 8, alignItems: "center" }}>
+          <div
+            style={{
+              marginLeft: 10,
+              display: "flex",
+              gap: 8,
+              alignItems: "center",
+            }}
+          >
             <Pill tone="win">Win</Pill>
             <Pill tone="loss">Loss</Pill>
             <Pill tone="be">BE</Pill>

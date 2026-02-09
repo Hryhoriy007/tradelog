@@ -1,16 +1,8 @@
 "use client";
 
-import { Card } from "@/app/components/ui/Card";
-
 export function MockDashboard() {
   return (
-    <div
-      style={{
-        position: "relative",
-        borderRadius: 22,
-        padding: 0,
-      }}
-    >
+    <div style={{ position: "relative", borderRadius: 22, padding: 0 }}>
       <div style={{ display: "grid", gap: 12 }}>
         {/* Top cards */}
         <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 10 }}>
@@ -21,24 +13,12 @@ export function MockDashboard() {
         </div>
 
         {/* Equity curve mock */}
-        <Card title="Equity curve (R)" subtitle="Last 30 trades">
+        <MockCard title="Equity curve (R)" subtitle="Last 30 trades">
           <div style={{ position: "relative" }}>
             <svg width="100%" height="120" viewBox="0 0 400 120">
-              {/* subtle baseline */}
               <line x1="0" y1="100" x2="400" y2="100" stroke="rgba(255,255,255,0.10)" strokeWidth="1" />
 
-              {/* animated line */}
-              <polyline
-                className="eqLine"
-                points="0,80 40,90 80,70 120,75 160,55 200,60 240,40 280,45 320,30 360,20"
-                fill="none"
-                stroke="rgba(255,255,255,0.92)"
-                strokeWidth="2.6"
-                strokeLinejoin="round"
-                strokeLinecap="round"
-              />
-
-              {/* glow line (soft) */}
+              {/* glow line (soft, behind) */}
               <polyline
                 className="eqGlow"
                 points="0,80 40,90 80,70 120,75 160,55 200,60 240,40 280,45 320,30 360,20"
@@ -49,8 +29,20 @@ export function MockDashboard() {
                 strokeLinecap="round"
                 opacity="0.35"
               />
+
+              {/* main line */}
+              <polyline
+                className="eqLine"
+                points="0,80 40,90 80,70 120,75 160,55 200,60 240,40 280,45 320,30 360,20"
+                fill="none"
+                stroke="rgba(255,255,255,0.92)"
+                strokeWidth="2.6"
+                strokeLinejoin="round"
+                strokeLinecap="round"
+              />
             </svg>
 
+            {/* ✅ important: keep style OUTSIDE of <svg> tags, but inside component is OK */}
             <style jsx>{`
               .eqLine {
                 stroke-dasharray: 520;
@@ -70,17 +62,51 @@ export function MockDashboard() {
               }
             `}</style>
           </div>
-        </Card>
+        </MockCard>
 
         {/* Last trades */}
-        <Card title="Last trades" subtitle="Preview">
+        <MockCard title="Last trades" subtitle="Preview">
           <div style={{ display: "grid", gap: 6 }}>
             <TradeRow pair="ETHUSDT" side="SHORT" r="+2.1R" tone="win" />
             <TradeRow pair="BTCUSDT" side="LONG" r="-1.0R" tone="loss" />
             <TradeRow pair="ETHUSDT" side="LONG" r="+1.4R" tone="win" />
           </div>
-        </Card>
+        </MockCard>
       </div>
+    </div>
+  );
+}
+
+function MockCard({
+  title,
+  subtitle,
+  children,
+}: {
+  title: string;
+  subtitle?: string;
+  children: React.ReactNode;
+}) {
+  return (
+    <div
+      style={{
+        borderRadius: 18,
+        border: "1px solid rgba(255,255,255,0.10)",
+        background: "rgba(255,255,255,0.02)",
+        overflow: "hidden",
+      }}
+    >
+      <div
+        style={{
+          padding: "12px 14px 0 14px",
+          display: "grid",
+          gap: 4,
+        }}
+      >
+        <div style={{ fontWeight: 900 }}>{title}</div>
+        {subtitle ? <div style={{ fontSize: 12, opacity: 0.7 }}>{subtitle}</div> : null}
+      </div>
+
+      <div style={{ padding: 14 }}>{children}</div>
     </div>
   );
 }
