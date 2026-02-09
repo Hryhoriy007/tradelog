@@ -9,6 +9,7 @@ import { Button } from "@/app/components/ui/Button";
 import { ui } from "@/app/components/ui/styles";
 
 import { MockDashboard } from "@/app/components/marketing/MockDashboard";
+import { DashboardWindow } from "@/app/components/marketing/DashboardWindow";
 
 function Badge({ children }: { children: React.ReactNode }) {
   return (
@@ -172,9 +173,11 @@ export default function HomePage() {
           </div>
         </div>
 
-        {/* Right: dashboard mock */}
+        {/* Right: dashboard mock (with macOS header + noise + soft Win/Loss badges) */}
         <div>
-          <MockDashboard />
+          <DashboardWindow>
+            <MockDashboard />
+          </DashboardWindow>
         </div>
       </div>
 
