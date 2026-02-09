@@ -1,6 +1,7 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 
 import { addTrade, type Trade } from "@/lib/tradeStore";
@@ -15,6 +16,8 @@ import { Textarea } from "@/app/components/ui/Textarea";
 import { Field } from "@/app/components/ui/Field";
 import { ui } from "@/app/components/ui/styles";
 
+import { getPresets, type TradePreset } from "@/lib/presetStore";
+
 function toLocalInputValue(iso: string | null) {
   if (!iso) return "";
   const d = new Date(iso);
@@ -25,7 +28,6 @@ function toLocalInputValue(iso: string | null) {
 }
 
 function uid() {
-  // достатньо для localStorage
   if (typeof crypto !== "undefined" && "randomUUID" in crypto) return crypto.randomUUID();
   return `t_${Date.now()}_${Math.random().toString(16).slice(2)}`;
 }
@@ -69,6 +71,40 @@ export default function NewTradePage() {
 
   const [ruleBroken, setRuleBroken] = useState(false);
   const [ruleText, setRuleText] = useState("");
+
+  // --- presets ---
+  const [presets, setPresets] = useState<TradePreset[]>([]);
+  const [presetId, setPresetId] = useState("");
+
+  useEffect(() => {
+    setPresets(getPresets());
+  }, []);
+
+  const selectedPreset = useMemo(
+    () => presets.find((p) => p.id === presetId) ?? null,
+    [presets, presetId]
+  );
+
+  function applyPreset() {
+    const p = selectedPreset;
+    if (!p) return;
+
+    // map preset -> your form fields
+    if (p.pair) setSymbol(String(p.pair).trim().toUpperCase());
+
+    if (p.side) {
+      // preset uses Long/Short, your form uses LONG/SHORT
+      const d = p.side.toUpperCase() as "LONG" | "SHORT";
+      setDirection(d);
+    }
+
+    if (p.setup) setSetupTag(p.setup);
+
+    // optional extras:
+    // p.risk / p.notes are optional in store; you can decide where to use them.
+    // I’ll put notes into Thesis only if thesis is empty (so it won’t overwrite).
+    if (p.notes) setThesis((prev) => (prev ? prev : p.notes));
+  }
 
   // --- derived ---
   const plannedRR = useMemo(() => {
@@ -170,6 +206,42 @@ export default function NewTradePage() {
           </Button>
         </Row>
       </HeaderRow>
+
+      {/* Presets */}
+      <Card
+        title="Preset"
+        subtitle="Швидко підстав значення (symbol / direction / setup)"
+        style={{ marginBottom: 14 }}
+      >
+        <div style={{ display: "flex", gap: 10, alignItems: "center", flexWrap: "wrap" }}>
+          <div style={{ minWidth: 240 }}>
+            <Select value={presetId} onChange={(e) => setPresetId(e.target.value)}>
+              <option value="">(none)</option>
+              {presets.map((p) => (
+                <option key={p.id} value={p.id}>
+                  {p.name}
+                </option>
+              ))}
+            </Select>
+          </div>
+
+          <Button variant="secondary" onClick={applyPreset} disabled={!presetId}>
+            Apply
+          </Button>
+
+          <Link href="/templates" style={{ textDecoration: "none" }}>
+            <Button variant="secondary">Manage presets</Button>
+          </Link>
+
+          {selectedPreset ? (
+            <div style={{ marginLeft: "auto", display: "flex", gap: 8, flexWrap: "wrap" }}>
+              {selectedPreset.pair ? <Pill>{selectedPreset.pair}</Pill> : null}
+              {selectedPreset.side ? <Pill>{selectedPreset.side}</Pill> : null}
+              {selectedPreset.setup ? <Pill>{selectedPreset.setup}</Pill> : null}
+            </div>
+          ) : null}
+        </div>
+      </Card>
 
       {/* RR */}
       <Row style={{ marginBottom: 14, opacity: 0.9 }}>
@@ -343,5 +415,24 @@ export default function NewTradePage() {
         </Button>
       </form>
     </Page>
+  );
+}
+
+function Pill({ children }: { children: React.ReactNode }) {
+  return (
+    <span
+      style={{
+        display: "inline-flex",
+        alignItems: "center",
+        padding: "4px 10px",
+        borderRadius: 999,
+        border: "1px solid rgba(255,255,255,0.10)",
+        background: "rgba(255,255,255,0.02)",
+        fontSize: 12,
+        opacity: 0.9,
+      }}
+    >
+      {children}
+    </span>
   );
 }
