@@ -13,11 +13,11 @@ export type Trade = {
   stopLoss: number | null;
   takeProfit: number | null;
 
-  openedAt: string;   // ISO
+  openedAt: string; // ISO
   closedAt: string | null;
 
-  setupTag: string;   // напр. "breakout"
-  psychTags: string[]; // напр. ["FOMO","revenge"]
+  setupTag: string; // e.g. "breakout"
+  psychTags: string[]; // e.g. ["FOMO", "revenge"]
 
   notes: {
     thesis: string;
@@ -30,11 +30,11 @@ export type Trade = {
     during: string;
     after: string;
 
-    focus: number;      // 1-5
-    fear: number;       // 1-5
-    greed: number;      // 1-5
+    focus: number; // 1-5
+    fear: number; // 1-5
+    greed: number; // 1-5
     confidence: number; // 1-5
-    fatigue: number;    // 1-5
+    fatigue: number; // 1-5
 
     ruleBroken: boolean;
     ruleText: string;
@@ -49,13 +49,14 @@ export function getTrades(): Trade[] {
     const raw = localStorage.getItem(KEY);
     if (!raw) return [];
     const parsed = JSON.parse(raw);
-    return Array.isArray(parsed) ? parsed : [];
+    return Array.isArray(parsed) ? (parsed as Trade[]) : [];
   } catch {
     return [];
   }
 }
 
 export function saveTrades(trades: Trade[]) {
+  if (typeof window === "undefined") return;
   localStorage.setItem(KEY, JSON.stringify(trades));
 }
 
@@ -67,7 +68,7 @@ export function addTrade(trade: Trade) {
 
 export function getTradeById(id: string) {
   const trades = getTrades();
-  return trades.find(t => t.id === id) || null;
+  return trades.find((t) => t.id === id) || null;
 }
 
 export function updateTrade(id: string, patch: Partial<Trade>) {
