@@ -5,19 +5,19 @@ const PUBLIC_PATHS = ["/", "/login", "/register"];
 
 export function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl;
-
-  // пропускаємо public сторінки
-  const isPublic = PUBLIC_PATHS.some((p) => pathname === p || pathname.startsWith(p + "/"));
-
   const session = req.cookies.get("session")?.value;
 
-  // якщо немає cookie і це НЕ public → редірект на login
+  const isPublic = PUBLIC_PATHS.includes(pathname);
+
+  // ❌ без cookie — не пускаємо на закриті сторінки
   if (!session && !isPublic) {
-    return NextResponse.redirect(new URL("/login", req.url));
+    const url = new URL("/login", req.url);
+    url.searchParams.set("next", pathname);
+    return NextResponse.redirect(url);
   }
 
-  // якщо є cookie і користувач на login/register → редірект на dashboard
-  if (session && (pathname.startsWith("/login") || pathname.startsWith("/register"))) {
+  // ✅ з cookie — не пускаємо на login/register
+  if (session && (pathname === "/login" || pathname === "/register")) {
     return NextResponse.redirect(new URL("/dashboard", req.url));
   }
 
