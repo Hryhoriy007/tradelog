@@ -51,15 +51,16 @@ export const ui = {
   } as CSSProperties,
 
   control: {
-    width: "100%",
-    height: 44,
-    padding: "0 12px",
-    borderRadius: 12,
-    border: "1px solid #222",
-    background: "transparent",
-    color: "inherit",
-    outline: "none",
-  } as CSSProperties,
+  width: "100%",
+  minWidth: 0,          // ✅ додаємо
+  height: 44,
+  padding: "0 12px",
+  borderRadius: 12,
+  border: "1px solid #222",
+  background: "transparent",
+  color: "inherit",
+  outline: "none",
+} as CSSProperties,
 
   textarea: (minHeight = 110) =>
     ({
@@ -132,4 +133,12 @@ export const ui = {
     borderBottom: "1px solid #161616",
     verticalAlign: "middle",
   } as CSSProperties,
+
+  grid4Fit: {
+  display: "grid",
+  gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))",
+  gap: 14,
+} as CSSProperties,
 };
+
+
