@@ -64,3 +64,8 @@ export function addTrade(trade: Trade) {
   trades.unshift(trade);
   saveTrades(trades);
 }
+
+export function getTradeById(id: string) {
+  const trades = getTrades();
+  return trades.find(t => t.id === id) || null;
+}

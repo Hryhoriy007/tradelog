@@ -3,6 +3,7 @@
   @supports (((-webkit-hyphens: none)) and (not (margin-trim: inline))) or ((-moz-orient: inline) and (not (color: rgb(from red r g b)))) {
     *, :before, :after, ::backdrop {
       --tw-border-style: solid;
+      --tw-outline-style: solid;
     }
   }
 }
@@ -29,6 +30,11 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+.outline {
+  outline-style: var(--tw-outline-style);
+  outline-width: 1px;
+}
+
 :root {
   --background: #fff;
   --foreground: #171717;
@@ -48,6 +54,12 @@ body {
 }
 
 @property --tw-border-style {
+  syntax: "*";
+  inherits: false;
+  initial-value: solid;
+}
+
+@property --tw-outline-style {
   syntax: "*";
   inherits: false;
   initial-value: solid;
