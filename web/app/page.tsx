@@ -246,7 +246,7 @@ export default function HomePage() {
         </div>
 
         {/* FEATURES */}
-        <div style={{ marginTop: 28 }}>
+        <div style={{ marginTop: 44 }}>
           <div style={{ fontSize: 20, fontWeight: 950, marginBottom: 14, paddingLeft: 4 }}>{t.featuresTitle}</div>
 
           <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 12, alignItems: "stretch" }}>
