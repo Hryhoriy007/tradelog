@@ -3,14 +3,21 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 
-import { Page, HeaderRow, Row, Grid2 } from "@/app/components/ui/Layout";
+import { Page, HeaderRow, Row } from "@/app/components/ui/Layout";
 import { Card } from "@/app/components/ui/Card";
 import { Button } from "@/app/components/ui/Button";
 import { Select } from "@/app/components/ui/Select";
 import { Field } from "@/app/components/ui/Field";
 import { ui } from "@/app/components/ui/styles";
 
-import { buildBackup, downloadJson, downloadText, importBackup, type ImportMode, type BackupV1 } from "@/lib/backup";
+import {
+  buildBackup,
+  downloadJson,
+  downloadText,
+  importBackup,
+  type ImportMode,
+  type BackupV1,
+} from "@/lib/backup";
 import { getTrades } from "@/lib/tradeStore";
 import { tradesToCsv } from "@/lib/exportCsv";
 
@@ -46,7 +53,6 @@ export default function BackupPage() {
       const res = importBackup(parsed, mode);
       setStatus(`Imported ✅ trades=${res.trades}, presets=${res.presets}`);
 
-      // reload page data (simple approach)
       setTimeout(() => window.location.reload(), 300);
     } catch (e: any) {
       alert(e?.message ?? "Import failed");
@@ -92,7 +98,7 @@ export default function BackupPage() {
         <Card title="Export" subtitle="Download your data">
           <div style={{ display: "grid", gap: 10 }}>
             <div style={{ ...ui.subtle, fontSize: 13 }}>
-              JSON backup — повне збереження (trades + presets). CSV — для Excel/Google Sheets.
+              JSON backup includes everything (trades + presets). CSV is for Excel/Google Sheets.
             </div>
 
             <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
@@ -131,7 +137,7 @@ export default function BackupPage() {
             </Field>
 
             <div style={{ opacity: 0.7, fontSize: 12 }}>
-              Replace: перезапише всі дані. Merge: додасть нові записи (по <b>id</b>), дублікати заміняться останнім.
+              Replace: overwrites all data. Merge: adds new records (by <b>id</b>), duplicates are replaced by the latest.
             </div>
           </div>
         </Card>

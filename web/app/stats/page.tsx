@@ -133,15 +133,7 @@ function RHistogram({
           const y = padT + (plotH - h);
           const w = Math.max(2, barW - 4);
           return (
-            <rect
-              key={i}
-              x={x}
-              y={y}
-              width={w}
-              height={h}
-              rx="6"
-              fill="rgba(255,255,255,0.16)"
-            />
+            <rect key={i} x={x} y={y} width={w} height={h} rx="6" fill="rgba(255,255,255,0.16)" />
           );
         })}
 
@@ -216,7 +208,7 @@ function WinLossBar({ wins, losses, be }: { wins: number; losses: number; be: nu
       </div>
 
       <div style={{ opacity: 0.6, fontSize: 12 }}>
-        Порада: якщо Win rate високий, але Avg R низький — значить профіт маленький, лоси великі.
+        Tip: if Win rate is high but Avg R is low, you probably take small profits and large losses.
       </div>
     </div>
   );
@@ -235,7 +227,6 @@ export default function StatsPage() {
   const [bins, setBins] = useState<Bins>(18);
   const [histSetup, setHistSetup] = useState<string>("ALL");
 
-  // ✅ for scroll target
   const histRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
@@ -298,7 +289,6 @@ export default function StatsPage() {
   }, [filtered]);
 
   const histSetups = useMemo(() => {
-    // setups available in CURRENT filtered scope
     const s = new Set<string>();
     for (const t of filtered as any[]) {
       s.add(normSetup(t?.setupTag ?? t?.setup) || "(no setup)");
@@ -306,7 +296,6 @@ export default function StatsPage() {
     return ["ALL", ...Array.from(s).sort((a, b) => a.localeCompare(b))];
   }, [filtered]);
 
-  // keep histSetup valid when filters change
   useEffect(() => {
     if (!histSetups.includes(histSetup)) setHistSetup("ALL");
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -316,7 +305,9 @@ export default function StatsPage() {
     const scoped =
       histSetup === "ALL"
         ? filtered
-        : (filtered as any[]).filter((t) => (normSetup(t?.setupTag ?? t?.setup) || "(no setup)") === histSetup);
+        : (filtered as any[]).filter(
+            (t) => (normSetup(t?.setupTag ?? t?.setup) || "(no setup)") === histSetup
+          );
 
     return scoped.map((t) => tradeR(t)).filter((x) => Number.isFinite(x)) as number[];
   }, [filtered, histSetup]);
@@ -372,7 +363,6 @@ export default function StatsPage() {
 
   const titleHint = (text: string) => ({ title: text, style: { cursor: "help" as const } });
 
-  // ✅ click row -> set histSetup + scroll
   const jumpToHistogram = (setupName: string) => {
     setHistSetup(setupName);
     setTimeout(() => {
@@ -400,7 +390,6 @@ export default function StatsPage() {
         }
       />
 
-      {/* Filters */}
       <Card title="Filters" subtitle="Pair / side / setup / date range">
         <div style={{ display: "grid", gap: 12 }}>
           <Row style={{ gap: 8 }}>
@@ -411,14 +400,22 @@ export default function StatsPage() {
                 setFrom("");
                 setTo("");
               }}
-              {...titleHint("Без обмеження по даті")}
+              {...titleHint("No date limit")}
             >
               All
             </Button>
-            <Button variant={range === "30" ? "primary" : "secondary"} onClick={() => setRange("30")} {...titleHint("Останні 30 днів")}>
+            <Button
+              variant={range === "30" ? "primary" : "secondary"}
+              onClick={() => setRange("30")}
+              {...titleHint("Last 30 days")}
+            >
               Last 30
             </Button>
-            <Button variant={range === "7" ? "primary" : "secondary"} onClick={() => setRange("7")} {...titleHint("Останні 7 днів")}>
+            <Button
+              variant={range === "7" ? "primary" : "secondary"}
+              onClick={() => setRange("7")}
+              {...titleHint("Last 7 days")}
+            >
               Last 7
             </Button>
 
@@ -483,18 +480,16 @@ export default function StatsPage() {
         </div>
       </Card>
 
-      {/* Summary */}
       <Row cols={4} style={{ marginTop: 14 }}>
-        <Card title="Total R" subtitle="Сумарно" right={<span style={{ fontWeight: 800 }}>{fmt(summary.total, 2)}R</span>} />
-        <Card title="Avg R" subtitle="Середнє за угоду" right={<span style={{ fontWeight: 800 }}>{fmt(summary.avg, 2)}R</span>} />
-        <Card title="Win rate" subtitle="Відсоток Win" right={<span style={{ fontWeight: 800 }}>{pct(summary.winRate, 1)}</span>} />
-        <Card title="W / L / BE" subtitle="Розподіл" right={<span style={{ fontWeight: 800 }}>{summary.wins} / {summary.losses} / {summary.be}</span>} />
+        <Card title="Total R" subtitle="Cumulative" right={<span style={{ fontWeight: 800 }}>{fmt(summary.total, 2)}R</span>} />
+        <Card title="Avg R" subtitle="Per trade" right={<span style={{ fontWeight: 800 }}>{fmt(summary.avg, 2)}R</span>} />
+        <Card title="Win rate" subtitle="Winning trades %" right={<span style={{ fontWeight: 800 }}>{pct(summary.winRate, 1)}</span>} />
+        <Card title="W / L / BE" subtitle="Distribution" right={<span style={{ fontWeight: 800 }}>{summary.wins} / {summary.losses} / {summary.be}</span>} />
       </Row>
 
-      {/* Charts */}
       <Row cols={2} style={{ marginTop: 14 }}>
         <div ref={histRef}>
-          <Card title="R distribution" subtitle="Гістограма результатів у R">
+          <Card title="R distribution" subtitle="Histogram of results in R">
             <div style={{ display: "grid", gap: 12 }}>
               <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}>
                 <Field label="Bins">
@@ -523,7 +518,7 @@ export default function StatsPage() {
               </div>
 
               {histRs.length === 0 ? (
-                <div style={{ opacity: 0.7 }}>Немає даних для гістограми під ці фільтри/сетап.</div>
+                <div style={{ opacity: 0.7 }}>No histogram data for these filters/setup.</div>
               ) : (
                 <RHistogram
                   rs={histRs}
@@ -545,16 +540,15 @@ export default function StatsPage() {
           </Card>
         </div>
 
-        <Card title="Win / Loss / BE" subtitle="Розподіл результатів">
+        <Card title="Win / Loss / BE" subtitle="Outcome distribution">
           <WinLossBar wins={summary.wins} losses={summary.losses} be={summary.be} />
         </Card>
       </Row>
 
-      {/* Top setups + filtered trades */}
       <Row cols={2} style={{ marginTop: 14 }}>
-        <Card title="Top setups by Avg R" subtitle="Клікни рядок → histogram по цьому setup">
+        <Card title="Top setups by Avg R" subtitle="Click a row → histogram for that setup">
           {topSetups.length === 0 ? (
-            <div style={{ opacity: 0.7 }}>Немає даних для таблиці. Додай трейди або зміни фільтри.</div>
+            <div style={{ opacity: 0.7 }}>No data for the table. Add trades or change filters.</div>
           ) : (
             <div style={{ overflowX: "auto" }}>
               <table style={{ width: "100%", borderCollapse: "separate", borderSpacing: "0 8px" }}>
@@ -587,7 +581,9 @@ export default function StatsPage() {
                         <td style={{ padding: "10px 10px", fontWeight: 800 }}>{fmt(r.avg, 2)}R</td>
                         <td style={{ padding: "10px 10px" }}>{fmt(r.total, 2)}R</td>
                         <td style={{ padding: "10px 10px" }}>{pct(r.winRate, 1)}</td>
-                        <td style={{ padding: "10px 10px" }}>{r.wins}/{r.losses}/{r.be}</td>
+                        <td style={{ padding: "10px 10px" }}>
+                          {r.wins}/{r.losses}/{r.be}
+                        </td>
                       </tr>
                     );
                   })}
@@ -597,9 +593,9 @@ export default function StatsPage() {
           )}
         </Card>
 
-        <Card title="Filtered trades" subtitle="Останні угоди за фільтром">
+        <Card title="Filtered trades" subtitle="Most recent trades in current filter">
           {lastTrades.length === 0 ? (
-            <div style={{ opacity: 0.7 }}>Немає угод під ці фільтри.</div>
+            <div style={{ opacity: 0.7 }}>No trades for these filters.</div>
           ) : (
             <div style={{ display: "grid", gap: 8 }}>
               {lastTrades.map((t: any) => {
