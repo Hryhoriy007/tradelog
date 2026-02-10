@@ -164,6 +164,10 @@
   display: none;
 }
 
+.inline {
+  display: inline;
+}
+
 .inline-flex {
   display: inline-flex;
 }
@@ -240,9 +244,27 @@ body {
   --muted: #0a0a0c99;
 }
 
+:root {
+  --tl-bg: #07070a;
+  --tl-fg: #ffffffeb;
+  --tl-subtle: #ffffffb3;
+  --tl-card: #ffffff08;
+  --tl-card-2: #ffffff05;
+  --tl-border: #ffffff1a;
+}
+
+html[data-theme="light"] {
+  --tl-bg: #f6f6fb;
+  --tl-fg: #000000e0;
+  --tl-subtle: #0000009e;
+  --tl-card: #00000008;
+  --tl-card-2: #00000005;
+  --tl-border: #0000001a;
+}
+
 html, body {
-  background: var(--bg);
-  color: var(--fg);
+  background: var(--tl-bg);
+  color: var(--tl-fg);
 }
 
 @property --tw-rotate-x {

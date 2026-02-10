@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { LanguageProvider } from "./components/LanguageProvider";
+import { ThemeToggle } from "@/app/components/ui/ThemeToggle";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -18,28 +19,34 @@ export const metadata: Metadata = {
   description: "Journal your crypto trades",
 };
 
-export default function RootLayout({
-  children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en">
+    <html lang="en" data-theme="dark" suppressHydrationWarning>
+      <head>
+        {/* Init theme BEFORE hydration (avoid flash + avoid mismatch via suppressHydrationWarning) */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+(function () {
+  try {
+    var key = "tradelog_theme_v1";
+    var t = (localStorage.getItem(key) || "").toLowerCase();
+    document.documentElement.dataset.theme = (t === "light") ? "light" : "dark";
+  } catch (e) {
+    document.documentElement.dataset.theme = "dark";
+  }
+})();
+            `.trim(),
+          }}
+        />
+      </head>
+
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
         <LanguageProvider>{children}</LanguageProvider>
+
+        {/* Global floating theme toggle */}
+        <ThemeToggle variant="floating" />
       </body>
     </html>
   );
 }
-
-<script
-  dangerouslySetInnerHTML={{
-    __html: `
-(function () {
-  try {
-    var t = localStorage.getItem("tradelog_theme_v1") || "dark";
-    document.documentElement.dataset.theme = (t === "light") ? "light" : "dark";
-  } catch (e) {}
-})();`,
-  }}
-/>
