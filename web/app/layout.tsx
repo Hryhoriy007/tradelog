@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import { LanguageProvider } from "./components/LanguageProvider";
 import { ThemeToggle } from "@/app/components/ui/ThemeToggle";
 
 const geistSans = Geist({
@@ -42,7 +41,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       </head>
 
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
-        <LanguageProvider>{children}</LanguageProvider>
+        {children}
 
         {/* Global floating theme toggle */}
         <ThemeToggle variant="floating" />
