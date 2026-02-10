@@ -236,7 +236,7 @@ export default function HomePage() {
         </div>
 
         {/* HOW IT WORKS */}
-        <div style={{ marginTop: 18 }}>
+        <div style={{ marginTop: 10 }}>
           <div style={{ fontSize: 18, fontWeight: 950, marginBottom: 10 }}>How it works</div>
           <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 12, alignItems: "stretch" }}>
             <Step n="1" title={t.how1} text={t.how1Text} />
