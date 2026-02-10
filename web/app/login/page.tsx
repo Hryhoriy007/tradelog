@@ -1,13 +1,10 @@
 "use client";
 
 import { useState } from "react";
-import LangSwitch from "../components/LangSwitch";
-import { useLang } from "../components/LanguageProvider";
 import { dict } from "../lib/i18n";
 
 export default function LoginPage() {
-  const { lang } = useLang();
-  const t = dict[lang];
+  const t = dict;
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -28,12 +25,11 @@ export default function LoginPage() {
       setLoading(false);
 
       if (res.ok && data?.ok) {
-        // ✅ логін успішний → cookie поставлена сервером
         window.location.href = "/dashboard";
       } else {
         alert(data?.error || "Login failed");
       }
-    } catch (err) {
+    } catch {
       setLoading(false);
       alert("Network error. Try again.");
     }
@@ -41,20 +37,13 @@ export default function LoginPage() {
 
   return (
     <main style={{ padding: 40 }}>
-      <div style={{ display: "flex", justifyContent: "flex-end" }}>
-        <LangSwitch />
-      </div>
-
       <h1>{t.loginTitle}</h1>
       <p>{t.loginSubtitle}</p>
 
-      <form
-        onSubmit={handleSubmit}
-        style={{ display: "grid", gap: 12, maxWidth: 320, marginTop: 16 }}
-      >
+      <form onSubmit={handleSubmit} style={{ display: "grid", gap: 12, maxWidth: 320, marginTop: 16 }}>
         <input
           type="email"
-          placeholder="Email"
+          placeholder={t.email}
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           required
@@ -63,7 +52,7 @@ export default function LoginPage() {
 
         <input
           type="password"
-          placeholder="Password"
+          placeholder={t.password}
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           required
@@ -71,12 +60,12 @@ export default function LoginPage() {
         />
 
         <button type="submit" disabled={loading}>
-          {loading ? "Loading..." : "Sign in"}
+          {loading ? t.loading : t.signIn}
         </button>
       </form>
 
       <p style={{ marginTop: 16 }}>
-        No account? <a href="/register">Create one</a>
+        {t.noAccount} <a href="/register">{t.createAccount}</a>
       </p>
     </main>
   );
