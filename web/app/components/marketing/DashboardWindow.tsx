@@ -113,7 +113,7 @@ function ThemeToggleMini() {
  */
 export function DashboardWindow({
   children,
-  watermark = "Demo data",
+  watermark = "",
 }: {
   children: React.ReactNode;
   watermark?: string;
