@@ -1183,7 +1183,7 @@ if (typeof globalThis.$RefreshHelpers$ === 'object' && globalThis.$RefreshHelper
 }),
 "[project]/web/app/page.tsx [app-client] (ecmascript)", ((__turbopack_context__, module, exports) => {
 
-const e = new Error("Could not parse module '[project]/web/app/page.tsx'\n\nExpected corresponding JSX closing tag for <Page>");
+const e = new Error("Could not parse module '[project]/web/app/page.tsx'\n\nReturn statement is not allowed here");
 e.code = 'MODULE_UNPARSABLE';
 throw e;
 }),

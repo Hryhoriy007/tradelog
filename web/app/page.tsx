@@ -10,6 +10,7 @@ import { ui } from "@/app/components/ui/styles";
 
 import { MockDashboard } from "@/app/components/marketing/MockDashboard";
 import { DashboardWindow } from "@/app/components/marketing/DashboardWindow";
+import { Background3D } from "@/app/components/marketing/Background3D";
 
 type Lang = "en" | "ua";
 
@@ -181,7 +182,6 @@ function Feature({
   subtitle: string;
   points: string[];
 }) {
-  // wrapper height 100% → щоб 3 картки були симетричні
   return (
     <div style={{ height: "100%" }}>
       <Card title={title} subtitle={subtitle}>
@@ -234,7 +234,9 @@ function Step({ n, title, text }: { n: string; title: string; text: string }) {
         </div>
         <div style={{ fontWeight: 900 }}>{title}</div>
       </div>
-      <div style={{ opacity: 0.75, fontSize: 13, lineHeight: 1.5 }}>{text}</div>
+      <div style={{ opacity: 0.75, fontSize: 13, lineHeight: 1.5 }}>
+        {text}
+      </div>
     </div>
   );
 }
@@ -257,235 +259,324 @@ export default function HomePage() {
 
   return (
     <Page>
-      {/* Top bar */}
-      <HeaderRow
-        title="TradeLog"
-        subtitle="Journal your crypto trades. Trade with data, not emotions."
-        right={
-          <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
-            <Link href="/dashboard" style={{ textDecoration: "none" }}>
-              <Button variant="secondary">Open app</Button>
-            </Link>
-            <Link href="/login" style={{ textDecoration: "none" }}>
-              <Button variant="secondary">Login</Button>
-            </Link>
-            <Link href="/signup" style={{ textDecoration: "none" }}>
-              <Button variant="primary">Start free trial</Button>
-            </Link>
-          </div>
-        }
-      />
+      {/* 3D background behind everything */}
+      <Background3D />
 
-      {/* HERO */}
-      <div
-        style={{
-          display: "grid",
-          gridTemplateColumns: "1.2fr 1fr",
-          gap: 16,
-          alignItems: "stretch",
-          marginTop: 10,
-        }}
-      >
-        {/* Left hero */}
+      {/* Content above background */}
+      <div style={{ position: "relative", zIndex: 1 }}>
+        {/* Top bar */}
+        <HeaderRow
+          title="TradeLog"
+          subtitle="Journal your crypto trades. Trade with data, not emotions."
+          right={
+            <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
+              <Link href="/dashboard" style={{ textDecoration: "none" }}>
+                <Button variant="secondary">Open app</Button>
+              </Link>
+              <Link href="/login" style={{ textDecoration: "none" }}>
+                <Button variant="secondary">Login</Button>
+              </Link>
+              <Link href="/signup" style={{ textDecoration: "none" }}>
+                <Button variant="primary">Start free trial</Button>
+              </Link>
+            </div>
+          }
+        />
+
+        {/* HERO */}
         <div
           style={{
-            padding: 22,
+            display: "grid",
+            gridTemplateColumns: "1.2fr 1fr",
+            gap: 16,
+            alignItems: "stretch",
+            marginTop: 10,
+          }}
+        >
+          {/* Left hero */}
+          <div
+            style={{
+              padding: 22,
+              borderRadius: 22,
+              border: "1px solid rgba(255,255,255,0.10)",
+              background:
+                "radial-gradient(1200px 400px at 10% 10%, rgba(140,80,255,0.16), transparent 50%), rgba(255,255,255,0.02)",
+            }}
+          >
+            <div
+              style={{
+                display: "flex",
+                gap: 8,
+                flexWrap: "wrap",
+                marginBottom: 12,
+                alignItems: "center",
+              }}
+            >
+              {/* Language switch */}
+              <div
+                style={{
+                  display: "inline-flex",
+                  gap: 6,
+                  padding: 2,
+                  borderRadius: 999,
+                  border: "1px solid rgba(255,255,255,0.10)",
+                  background: "rgba(255,255,255,0.02)",
+                }}
+              >
+                <button
+                  type="button"
+                  onClick={() => switchLang("en")}
+                  style={{
+                    cursor: "pointer",
+                    border: "none",
+                    padding: "6px 10px",
+                    borderRadius: 999,
+                    fontSize: 12,
+                    fontWeight: 800,
+                    color: "inherit",
+                    background:
+                      lang === "en"
+                        ? "rgba(255,255,255,0.12)"
+                        : "transparent",
+                  }}
+                >
+                  EN
+                </button>
+                <button
+                  type="button"
+                  onClick={() => switchLang("ua")}
+                  style={{
+                    cursor: "pointer",
+                    border: "none",
+                    padding: "6px 10px",
+                    borderRadius: 999,
+                    fontSize: 12,
+                    fontWeight: 800,
+                    color: "inherit",
+                    background:
+                      lang === "ua"
+                        ? "rgba(255,255,255,0.12)"
+                        : "transparent",
+                  }}
+                >
+                  UA
+                </button>
+              </div>
+
+              <Badge>Crypto only</Badge>
+              <Badge>7-day free trial</Badge>
+              <Badge>No exchange API</Badge>
+            </div>
+
+            <div
+              style={{
+                fontSize: 44,
+                fontWeight: 950,
+                letterSpacing: -0.8,
+                lineHeight: 1.05,
+              }}
+            >
+              {t.heroTitle}
+            </div>
+
+            <div
+              style={{
+                marginTop: 12,
+                ...ui.subtle,
+                fontSize: 14,
+                lineHeight: 1.6,
+              }}
+            >
+              {t.heroSub}
+            </div>
+
+            <div
+              style={{
+                display: "flex",
+                gap: 10,
+                flexWrap: "wrap",
+                marginTop: 16,
+              }}
+            >
+              <Link href="/signup" style={{ textDecoration: "none" }}>
+                <Button variant="primary">Start free trial</Button>
+              </Link>
+              <Link href="/dashboard" style={{ textDecoration: "none" }}>
+                <Button variant="secondary">Try demo (no account)</Button>
+              </Link>
+              <Link href="/templates" style={{ textDecoration: "none" }}>
+                <Button variant="secondary">View templates</Button>
+              </Link>
+            </div>
+
+            <div
+              style={{
+                marginTop: 10,
+                opacity: 0.75,
+                fontSize: 12,
+                lineHeight: 1.5,
+              }}
+            >
+              No exchange connection • No spreadsheets • Your data stays yours
+            </div>
+
+            <div
+              style={{
+                marginTop: 14,
+                display: "flex",
+                gap: 10,
+                flexWrap: "wrap",
+                opacity: 0.85,
+              }}
+            >
+              <Badge>📈 R-based stats</Badge>
+              <Badge>Win / Loss / BE</Badge>
+              <Badge>🧠 Psychology notes</Badge>
+              <Badge>🔒 No exchange API</Badge>
+            </div>
+          </div>
+
+          {/* Right: dashboard mock */}
+          <div>
+            <DashboardWindow>
+              <MockDashboard />
+            </DashboardWindow>
+          </div>
+        </div>
+
+        {/* HOW IT WORKS */}
+        <div style={{ marginTop: 18 }}>
+          <div style={{ fontSize: 18, fontWeight: 950, marginBottom: 10 }}>
+            How it works
+          </div>
+          <div
+            style={{
+              display: "grid",
+              gridTemplateColumns: "repeat(3, 1fr)",
+              gap: 12,
+              alignItems: "stretch",
+            }}
+          >
+            <Step n="1" title={t.how1} text={t.how1Text} />
+            <Step n="2" title={t.how2} text={t.how2Text} />
+            <Step n="3" title={t.how3} text={t.how3Text} />
+          </div>
+        </div>
+
+        {/* FEATURES */}
+        <div style={{ marginTop: 18 }}>
+          <div style={{ fontSize: 18, fontWeight: 950, marginBottom: 10 }}>
+            {t.featuresTitle}
+          </div>
+
+          <div
+            style={{
+              display: "grid",
+              gridTemplateColumns: "repeat(3, 1fr)",
+              gap: 12,
+              alignItems: "stretch",
+            }}
+          >
+            {t.features.map((f) => (
+              <Feature
+                key={f.title}
+                title={f.title}
+                subtitle={f.subtitle}
+                points={f.points}
+              />
+            ))}
+          </div>
+        </div>
+
+        {/* CTA BOTTOM */}
+        <div
+          style={{
+            marginTop: 18,
+            padding: 18,
             borderRadius: 22,
             border: "1px solid rgba(255,255,255,0.10)",
             background:
-              "radial-gradient(1200px 400px at 10% 10%, rgba(140,80,255,0.16), transparent 50%), rgba(255,255,255,0.02)",
+              "radial-gradient(900px 300px at 90% 10%, rgba(140,80,255,0.14), transparent 55%), rgba(255,255,255,0.02)",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+            gap: 12,
+            flexWrap: "wrap",
           }}
         >
-          <div style={{ display: "flex", gap: 8, flexWrap: "wrap", marginBottom: 12, alignItems: "center" }}>
-            {/* Language switch */}
-            <div
-              style={{
-                display: "inline-flex",
-                gap: 6,
-                padding: 2,
-                borderRadius: 999,
-                border: "1px solid rgba(255,255,255,0.10)",
-                background: "rgba(255,255,255,0.02)",
-              }}
-            >
-              <button
-                type="button"
-                onClick={() => switchLang("en")}
-                style={{
-                  cursor: "pointer",
-                  border: "none",
-                  padding: "6px 10px",
-                  borderRadius: 999,
-                  fontSize: 12,
-                  fontWeight: 800,
-                  color: "inherit",
-                  background: lang === "en" ? "rgba(255,255,255,0.12)" : "transparent",
-                }}
-              >
-                EN
-              </button>
-              <button
-                type="button"
-                onClick={() => switchLang("ua")}
-                style={{
-                  cursor: "pointer",
-                  border: "none",
-                  padding: "6px 10px",
-                  borderRadius: 999,
-                  fontSize: 12,
-                  fontWeight: 800,
-                  color: "inherit",
-                  background: lang === "ua" ? "rgba(255,255,255,0.12)" : "transparent",
-                }}
-              >
-                UA
-              </button>
+          <div>
+            <div style={{ fontSize: 18, fontWeight: 950 }}>{t.bottomTitle}</div>
+            <div style={{ opacity: 0.75, marginTop: 6, fontSize: 13 }}>
+              {t.bottomSub}
             </div>
-
-            <Badge>Crypto only</Badge>
-            <Badge>7-day free trial</Badge>
-            <Badge>No exchange API</Badge>
           </div>
 
-          <div style={{ fontSize: 44, fontWeight: 950, letterSpacing: -0.8, lineHeight: 1.05 }}>
-            {t.heroTitle}
-          </div>
-
-          <div style={{ marginTop: 12, ...ui.subtle, fontSize: 14, lineHeight: 1.6 }}>
-            {t.heroSub}
-          </div>
-
-          <div style={{ display: "flex", gap: 10, flexWrap: "wrap", marginTop: 16 }}>
+          <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
             <Link href="/signup" style={{ textDecoration: "none" }}>
               <Button variant="primary">Start free trial</Button>
             </Link>
             <Link href="/dashboard" style={{ textDecoration: "none" }}>
-              <Button variant="secondary">Try demo (no account)</Button>
+              <Button variant="secondary">Open app</Button>
             </Link>
-            <Link href="/templates" style={{ textDecoration: "none" }}>
-              <Button variant="secondary">View templates</Button>
+            <Link href="/backup" style={{ textDecoration: "none" }}>
+              <Button variant="secondary">Backup</Button>
             </Link>
           </div>
+        </div>
 
-          <div style={{ marginTop: 10, opacity: 0.75, fontSize: 12, lineHeight: 1.5 }}>
-            No exchange connection • No spreadsheets • Your data stays yours
+        {/* Footer */}
+        <div
+          style={{
+            marginTop: 14,
+            opacity: 0.6,
+            fontSize: 12,
+            display: "flex",
+            justifyContent: "space-between",
+            gap: 10,
+            flexWrap: "wrap",
+          }}
+        >
+          <div>© {year} TradeLog</div>
+          <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
+            <Link
+              href="/dashboard"
+              style={{ textDecoration: "none", color: "inherit" }}
+            >
+              App
+            </Link>
+            <Link
+              href="/stats"
+              style={{ textDecoration: "none", color: "inherit" }}
+            >
+              Stats
+            </Link>
+            <Link
+              href="/templates"
+              style={{ textDecoration: "none", color: "inherit" }}
+            >
+              Templates
+            </Link>
+            <Link
+              href="/backup"
+              style={{ textDecoration: "none", color: "inherit" }}
+            >
+              Backup
+            </Link>
           </div>
-
-          <div style={{ marginTop: 14, display: "flex", gap: 10, flexWrap: "wrap", opacity: 0.85 }}>
-            <Badge>📈 R-based stats</Badge>
-            <Badge>Win / Loss / BE</Badge>
-            <Badge>🧠 Psychology notes</Badge>
-            <Badge>🔒 No exchange API</Badge>
-          </div>
         </div>
 
-        {/* Right: dashboard mock */}
-        <div>
-          <DashboardWindow>
-            <MockDashboard />
-          </DashboardWindow>
-        </div>
-      </div>
-
-      {/* HOW IT WORKS */}
-      <div style={{ marginTop: 18 }}>
-        <div style={{ fontSize: 18, fontWeight: 950, marginBottom: 10 }}>
-          How it works
-        </div>
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 12, alignItems: "stretch" }}>
-          <Step n="1" title={t.how1} text={t.how1Text} />
-          <Step n="2" title={t.how2} text={t.how2Text} />
-          <Step n="3" title={t.how3} text={t.how3Text} />
-        </div>
-      </div>
-
-      {/* FEATURES (grid like How it works) */}
-      <div style={{ marginTop: 18 }}>
-        <div style={{ fontSize: 18, fontWeight: 950, marginBottom: 10 }}>
-          {t.featuresTitle}
-        </div>
-
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 12, alignItems: "stretch" }}>
-          {t.features.map((f) => (
-            <Feature key={f.title} title={f.title} subtitle={f.subtitle} points={f.points} />
-          ))}
-        </div>
-      </div>
-
-      {/* CTA BOTTOM */}
-      <div
-        style={{
-          marginTop: 18,
-          padding: 18,
-          borderRadius: 22,
-          border: "1px solid rgba(255,255,255,0.10)",
-          background:
-            "radial-gradient(900px 300px at 90% 10%, rgba(140,80,255,0.14), transparent 55%), rgba(255,255,255,0.02)",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "space-between",
-          gap: 12,
-          flexWrap: "wrap",
-        }}
-      >
-        <div>
-          <div style={{ fontSize: 18, fontWeight: 950 }}>{t.bottomTitle}</div>
-          <div style={{ opacity: 0.75, marginTop: 6, fontSize: 13 }}>{t.bottomSub}</div>
-        </div>
-
-        <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
-          <Link href="/signup" style={{ textDecoration: "none" }}>
-            <Button variant="primary">Start free trial</Button>
-          </Link>
-          <Link href="/dashboard" style={{ textDecoration: "none" }}>
-            <Button variant="secondary">Open app</Button>
-          </Link>
-          <Link href="/backup" style={{ textDecoration: "none" }}>
-            <Button variant="secondary">Backup</Button>
-          </Link>
-        </div>
-      </div>
-
-      {/* Footer */}
-      <div
-        style={{
-          marginTop: 14,
-          opacity: 0.6,
-          fontSize: 12,
-          display: "flex",
-          justifyContent: "space-between",
-          gap: 10,
-          flexWrap: "wrap",
-        }}
-      >
-        <div>© {year} TradeLog</div>
-        <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
-          <Link href="/dashboard" style={{ textDecoration: "none", color: "inherit" }}>
-            App
-          </Link>
-          <Link href="/stats" style={{ textDecoration: "none", color: "inherit" }}>
-            Stats
-          </Link>
-          <Link href="/templates" style={{ textDecoration: "none", color: "inherit" }}>
-            Templates
-          </Link>
-          <Link href="/backup" style={{ textDecoration: "none", color: "inherit" }}>
-            Backup
-          </Link>
-        </div>
-      </div>
-
-      {/* Responsive */}
-      <style jsx>{`
-        @media (max-width: 980px) {
-          div[style*="grid-template-columns: 1.2fr 1fr"] {
-            grid-template-columns: 1fr !important;
+        {/* Responsive */}
+        <style jsx>{`
+          @media (max-width: 980px) {
+            div[style*="grid-template-columns: 1.2fr 1fr"] {
+              grid-template-columns: 1fr !important;
+            }
+            div[style*="grid-template-columns: repeat(3, 1fr)"] {
+              grid-template-columns: 1fr !important;
+            }
           }
-          div[style*="grid-template-columns: repeat(3, 1fr)"] {
-            grid-template-columns: 1fr !important;
-          }
-        }
-      `}</style>
+        `}</style>
+      </div>
     </Page>
   );
 }
