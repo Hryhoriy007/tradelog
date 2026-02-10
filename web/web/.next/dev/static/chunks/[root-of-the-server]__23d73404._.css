@@ -172,6 +172,10 @@
   display: inline;
 }
 
+.inline-block {
+  display: inline-block;
+}
+
 .inline-flex {
   display: inline-flex;
 }
@@ -254,7 +258,7 @@ html, body {
 }
 
 @media (max-width: 980px) {
-  .mockPricingGrid {
+  .mockPricingGrid, .beforeAfterGrid {
     grid-template-columns: 1fr !important;
   }
 }

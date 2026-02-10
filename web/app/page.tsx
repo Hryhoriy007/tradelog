@@ -369,11 +369,12 @@ export default function HomePage() {
         <div style={{ marginTop: 18 }}>
           <Card title="FAQ" subtitle="Quick answers before you start.">
             <div
-              style={{
-                display: "grid",
-                gridTemplateColumns: "repeat(2, 1fr)",
-                gap: 12,
-                alignItems: "stretch",
+              className="faqGrid"
+  style={{
+    display: "grid",
+    gridTemplateColumns: "repeat(2, 1fr)",
+    gap: 12,
+    alignItems: "stretch",
               }}
             >
               <div
@@ -504,6 +505,248 @@ export default function HomePage() {
   </Card>
 </div>
 
+{/* PnL vs R (SVG) — improved */}
+<div style={{ marginTop: 18 }}>
+  <Card title="PnL vs R" subtitle="PnL is noisy. R shows execution quality.">
+    <div
+      className="pnlRGrid"
+      style={{
+        display: "grid",
+        gridTemplateColumns: "1.25fr 0.75fr",
+        gap: 14,
+        alignItems: "stretch",
+      }}
+    >
+      {/* Chart */}
+      <div
+        style={{
+          borderRadius: 16,
+          border: "1px solid rgba(255,255,255,0.10)",
+          background:
+            "radial-gradient(900px 260px at 20% 0%, rgba(140,80,255,0.12), transparent 55%), rgba(255,255,255,0.02)",
+          padding: 14,
+          overflow: "hidden",
+        }}
+      >
+        <div style={{ display: "flex", justifyContent: "space-between", gap: 10, alignItems: "center" }}>
+          <div style={{ fontSize: 12, opacity: 0.65 }}>Better ↑</div>
+          <div style={{ fontSize: 12, opacity: 0.65 }}>Worse ↓</div>
+        </div>
+
+        <div style={{ marginTop: 8 }}>
+          <svg width="100%" height="190" viewBox="0 0 560 190" role="img" aria-label="PnL vs R chart">
+            <defs>
+              <linearGradient id="fade" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stopColor="rgba(255,255,255,0.10)" />
+                <stop offset="100%" stopColor="rgba(255,255,255,0.03)" />
+              </linearGradient>
+              <filter id="glow">
+                <feGaussianBlur stdDeviation="4" result="blur" />
+                <feMerge>
+                  <feMergeNode in="blur" />
+                  <feMergeNode in="SourceGraphic" />
+                </feMerge>
+              </filter>
+            </defs>
+
+            {/* grid */}
+            <rect x="0" y="0" width="560" height="190" fill="transparent" />
+            <line x1="0" y1="150" x2="560" y2="150" stroke="rgba(255,255,255,0.10)" strokeWidth="1" />
+            <line x1="0" y1="110" x2="560" y2="110" stroke="rgba(255,255,255,0.06)" strokeWidth="1" />
+            <line x1="0" y1="70" x2="560" y2="70" stroke="rgba(255,255,255,0.06)" strokeWidth="1" />
+            <line x1="0" y1="30" x2="560" y2="30" stroke="rgba(255,255,255,0.06)" strokeWidth="1" />
+
+            {/* baseline soft fill */}
+            <rect x="0" y="150" width="560" height="40" fill="url(#fade)" opacity="0.6" />
+
+            {/* PnL (noisy) — subtle */}
+            <polyline
+              points="10,120 60,95 110,140 160,88 210,145 260,82 310,155 360,74 410,150 460,66 510,132 550,54"
+              fill="none"
+              stroke="rgba(255,255,255,0.35)"
+              strokeWidth="2"
+              strokeLinejoin="round"
+              strokeLinecap="round"
+            />
+
+            {/* R (smooth) — glow + main */}
+            <polyline
+              points="10,145 60,140 110,133 160,128 210,120 260,112 310,104 360,96 410,86 460,78 510,68 550,58"
+              fill="none"
+              stroke="rgba(140,80,255,0.35)"
+              strokeWidth="7"
+              strokeLinejoin="round"
+              strokeLinecap="round"
+              filter="url(#glow)"
+              opacity="0.55"
+            />
+            <polyline
+              points="10,145 60,140 110,133 160,128 210,120 260,112 310,104 360,96 410,86 460,78 510,68 550,58"
+              fill="none"
+              stroke="rgba(140,80,255,0.95)"
+              strokeWidth="3"
+              strokeLinejoin="round"
+              strokeLinecap="round"
+            />
+
+            {/* points on R */}
+            {[
+              [10, 145],
+              [60, 140],
+              [110, 133],
+              [160, 128],
+              [210, 120],
+              [260, 112],
+              [310, 104],
+              [360, 96],
+              [410, 86],
+              [460, 78],
+              [510, 68],
+              [550, 58],
+            ].map(([x, y]) => (
+              <circle key={`${x}-${y}`} cx={x} cy={y} r="3.2" fill="rgba(140,80,255,0.95)" opacity="0.9" />
+            ))}
+          </svg>
+        </div>
+
+        {/* Legend (outside chart) */}
+        <div style={{ display: "flex", gap: 14, flexWrap: "wrap", marginTop: 10, alignItems: "center" }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 8, fontSize: 12, opacity: 0.8 }}>
+            <span style={{ width: 20, height: 2, background: "rgba(255,255,255,0.35)", display: "inline-block" }} />
+            PnL (size & luck)
+          </div>
+          <div style={{ display: "flex", alignItems: "center", gap: 8, fontSize: 12, opacity: 0.85 }}>
+            <span style={{ width: 20, height: 3, background: "rgba(140,80,255,0.95)", display: "inline-block" }} />
+            R (discipline)
+          </div>
+        </div>
+
+        <div style={{ marginTop: 10, fontSize: 12, opacity: 0.72, lineHeight: 1.5 }}>
+          PnL swings when position size changes. R stays comparable across trades — it shows execution quality.
+        </div>
+      </div>
+
+      {/* Example */}
+      <div
+        style={{
+          borderRadius: 16,
+          border: "1px solid rgba(255,255,255,0.10)",
+          background: "rgba(255,255,255,0.02)",
+          padding: 14,
+          display: "grid",
+          gap: 10,
+        }}
+      >
+        <div style={{ fontWeight: 900 }}>Example</div>
+
+        <div style={{ fontSize: 13, opacity: 0.78, lineHeight: 1.6 }}>
+          Trade A: +$200 looks great.
+          <br />
+          If risk was $400 → <b>+0.5R</b>.
+        </div>
+
+        <div style={{ fontSize: 13, opacity: 0.78, lineHeight: 1.6 }}>
+          Trade B: -$50 looks small.
+          <br />
+          If risk was $25 → <b>-2R</b>.
+        </div>
+
+        <div
+          style={{
+            marginTop: 4,
+            padding: 10,
+            borderRadius: 14,
+            border: "1px solid rgba(140,80,255,0.22)",
+            background: "rgba(140,80,255,0.08)",
+            fontSize: 12,
+            opacity: 0.9,
+            lineHeight: 1.5,
+          }}
+        >
+          R makes results honest — and improvement measurable.
+        </div>
+      </div>
+    </div>       
+  </Card>
+</div>
+
+{/* BEFORE / AFTER */}
+<div style={{ marginTop: 18 }}>
+  <Card title="Before vs After TradeLog" subtitle="Same trader. Different behavior.">
+    <div
+      style={{
+        display: "grid",
+        gridTemplateColumns: "1fr 1fr",
+        gap: 14,
+        alignItems: "stretch",
+      }}
+      className="beforeAfterGrid"
+    >
+      {/* BEFORE */}
+      <div
+        style={{
+          padding: 16,
+          borderRadius: 18,
+          border: "1px solid rgba(255,100,100,0.25)",
+          background: "rgba(255,100,100,0.06)",
+          display: "grid",
+          gap: 10,
+        }}
+      >
+        <div style={{ fontWeight: 900, fontSize: 16 }}>Before</div>
+
+        <ul
+          style={{
+            margin: 0,
+            paddingLeft: 18,
+            display: "grid",
+            gap: 8,
+            fontSize: 13,
+            opacity: 0.85,
+          }}
+        >
+          <li>Trading without a written plan</li>
+          <li>Revenge trades after losses</li>
+          <li>Moving stop-loss emotionally</li>
+          <li>Judging performance by random PnL</li>
+          <li>Repeating the same mistakes</li>
+        </ul>
+      </div>
+
+      {/* AFTER */}
+      <div
+        style={{
+          padding: 16,
+          borderRadius: 18,
+          border: "1px solid rgba(80,200,120,0.25)",
+          background: "rgba(80,200,120,0.06)",
+          display: "grid",
+          gap: 10,
+        }}
+      >
+        <div style={{ fontWeight: 900, fontSize: 16 }}>After</div>
+
+        <ul
+          style={{
+            margin: 0,
+            paddingLeft: 18,
+            display: "grid",
+            gap: 8,
+            fontSize: 13,
+            opacity: 0.9,
+          }}
+        >
+          <li>Clear rules before every trade</li>
+          <li>Losses tracked and reviewed in R</li>
+          <li>Stops respected, risk controlled</li>
+          <li>Consistency measured, not luck</li>
+          <li>Patterns identified and improved</li>
+        </ul>
+      </div>
+    </div>
+  </Card>
+</div>
+
         {/* CTA BOTTOM */}
         <div
           style={{
@@ -549,42 +792,46 @@ export default function HomePage() {
         </div>
 
         {/* Hide "demo data" text inside MockDashboard */}
-        <style jsx>{`
-          .mockDashboardWrap :global(*) {
-            /* no-op wrapper to scope selectors */
-          }
-          .mockDashboardWrap :global(*:not(script)) {
-            /* we keep safe baseline */
-          }
-          /* Hide any element that contains the exact "demo data" label (common in mock UIs) */
-          .mockDashboardWrap :global([class*="demo"]),
-          .mockDashboardWrap :global([data-demo]),
-          .mockDashboardWrap :global(.demo),
-          .mockDashboardWrap :global(.demoData) {
-            display: none !important;
-          }
+       <style jsx>{`
+  .mockDashboardWrap :global(*) {
+    /* no-op wrapper to scope selectors */
+  }
+  .mockDashboardWrap :global(*:not(script)) {
+    /* we keep safe baseline */
+  }
+  /* Hide any element that contains the exact "demo data" label (common in mock UIs) */
+  .mockDashboardWrap :global([class*="demo"]),
+  .mockDashboardWrap :global([data-demo]),
+  .mockDashboardWrap :global(.demo),
+  .mockDashboardWrap :global(.demoData) {
+    display: none !important;
+  }
 
-          @media (max-width: 980px) {
-            .pricingGrid {
-              grid-template-columns: 1fr !important;
-            }
-            .faqGrid {
-              grid-template-columns: 1fr !important;
-            }
-          }
-        `}</style>
+  @media (max-width: 980px) {
+    /* hero columns */
+    div[style*="grid-template-columns: 1.2fr 1fr"] {
+      grid-template-columns: 1fr !important;
+    }
+    /* 3 columns sections */
+    div[style*="grid-template-columns: repeat(3, 1fr)"] {
+      grid-template-columns: 1fr !important;
+    }
 
-        {/* Responsive */}
-        <style jsx>{`
-          @media (max-width: 980px) {
-            div[style*="grid-template-columns: 1.2fr 1fr"] {
-              grid-template-columns: 1fr !important;
-            }
-            div[style*="grid-template-columns: repeat(3, 1fr)"] {
-              grid-template-columns: 1fr !important;
-            }
-          }
-        `}</style>
+    /* custom grids */
+    .pricingGrid {
+      grid-template-columns: 1fr !important;
+    }
+    .faqGrid {
+      grid-template-columns: 1fr !important;
+    }
+    .pnlRGrid {
+      grid-template-columns: 1fr !important;
+    }
+    .beforeAfterGrid {
+      grid-template-columns: 1fr !important;
+    }
+  }
+`}</style>
       </div>
     </Page>
   );
