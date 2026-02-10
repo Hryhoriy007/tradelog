@@ -1,3 +1,4 @@
+// web/app/page.tsx
 "use client";
 
 import Link from "next/link";
@@ -70,7 +71,7 @@ const copy: {
   ],
 
   bottomTitle: "Ready to stop repeating the same mistakes?",
-  bottomSub: "Start a free trial or open the app locally — no account required.",
+  bottomSub: "Create an account and start logging trades in minutes.",
 };
 
 function Badge({ children }: { children: React.ReactNode }) {
@@ -163,14 +164,11 @@ export default function HomePage() {
           subtitle="Journal your crypto trades. Trade with data, not emotions."
           right={
             <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
-              <Link href="/dashboard" style={{ textDecoration: "none" }}>
-                <Button variant="secondary">Open app</Button>
-              </Link>
               <Link href="/login" style={{ textDecoration: "none" }}>
                 <Button variant="secondary">Login</Button>
               </Link>
-              <Link href="/signup" style={{ textDecoration: "none" }}>
-                <Button variant="primary">Start free trial</Button>
+              <Link href="/register" style={{ textDecoration: "none" }}>
+                <Button variant="primary">Registration</Button>
               </Link>
             </div>
           }
@@ -209,14 +207,11 @@ export default function HomePage() {
             <div style={{ marginTop: 12, ...ui.subtle, fontSize: 14, lineHeight: 1.6 }}>{t.heroSub}</div>
 
             <div style={{ display: "flex", gap: 10, flexWrap: "wrap", marginTop: 16 }}>
-              <Link href="/signup" style={{ textDecoration: "none" }}>
-                <Button variant="primary">Start free trial</Button>
+              <Link href="/register" style={{ textDecoration: "none" }}>
+                <Button variant="primary">Registration</Button>
               </Link>
-              <Link href="/dashboard" style={{ textDecoration: "none" }}>
-                <Button variant="secondary">Try demo (no account)</Button>
-              </Link>
-              <Link href="/templates" style={{ textDecoration: "none" }}>
-                <Button variant="secondary">View templates</Button>
+              <Link href="/login" style={{ textDecoration: "none" }}>
+                <Button variant="secondary">Login</Button>
               </Link>
             </div>
 
@@ -282,14 +277,11 @@ export default function HomePage() {
           </div>
 
           <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
-            <Link href="/signup" style={{ textDecoration: "none" }}>
-              <Button variant="primary">Start free trial</Button>
+            <Link href="/register" style={{ textDecoration: "none" }}>
+              <Button variant="primary">Registration</Button>
             </Link>
-            <Link href="/dashboard" style={{ textDecoration: "none" }}>
-              <Button variant="secondary">Open app</Button>
-            </Link>
-            <Link href="/backup" style={{ textDecoration: "none" }}>
-              <Button variant="secondary">Backup</Button>
+            <Link href="/login" style={{ textDecoration: "none" }}>
+              <Button variant="secondary">Login</Button>
             </Link>
           </div>
         </div>
