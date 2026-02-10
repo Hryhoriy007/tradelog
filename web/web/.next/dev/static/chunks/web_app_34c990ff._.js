@@ -1194,7 +1194,7 @@ var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$react$2d$t
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$react$2d$three$2f$fiber$2f$dist$2f$events$2d$5a94e5eb$2e$esm$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__D__as__useFrame$3e$__ = __turbopack_context__.i("[project]/node_modules/@react-three/fiber/dist/events-5a94e5eb.esm.js [app-client] (ecmascript) <export D as useFrame>");
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$three$2f$build$2f$three$2e$core$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/three/build/three.core.js [app-client] (ecmascript)");
 ;
-var _s = __turbopack_context__.k.signature(), _s1 = __turbopack_context__.k.signature(), _s2 = __turbopack_context__.k.signature(), _s3 = __turbopack_context__.k.signature(), _s4 = __turbopack_context__.k.signature();
+var _s = __turbopack_context__.k.signature(), _s1 = __turbopack_context__.k.signature(), _s2 = __turbopack_context__.k.signature(), _s3 = __turbopack_context__.k.signature();
 "use client";
 ;
 ;
@@ -1218,44 +1218,117 @@ function usePrefersReducedMotion() {
     return reduced;
 }
 _s(usePrefersReducedMotion, "PAG4zvF6+IsK2eHB7xTPE8NJ12w=");
-function Particles({ count = 900 }) {
+/**
+ * Theme detection:
+ * - html/body class "dark"
+ * - data-theme="dark" / data-mode="dark" / data-color-scheme="dark"
+ * - fallback: prefers-color-scheme
+ */ function useIsDarkTheme() {
     _s1();
+    const [isDark, setIsDark] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(false);
+    (0, __TURBOPACK__imported__module__$5b$project$5d2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useEffect"])({
+        "useIsDarkTheme.useEffect": ()=>{
+            const read = {
+                "useIsDarkTheme.useEffect.read": ()=>{
+                    const html = document.documentElement;
+                    const body = document.body;
+                    const hasDarkClass = html.classList.contains("dark") || body?.classList?.contains("dark");
+                    const attr = {
+                        "useIsDarkTheme.useEffect.read.attr": (name)=>html.getAttribute(name) || body?.getAttribute?.(name)
+                    }["useIsDarkTheme.useEffect.read.attr"];
+                    const themeAttr = attr("data-theme") || attr("data-mode") || attr("data-color-scheme");
+                    const isDarkAttr = themeAttr?.toLowerCase() === "dark";
+                    const prefersDark = window.matchMedia?.("(prefers-color-scheme: dark)")?.matches ?? false;
+                    setIsDark(hasDarkClass || isDarkAttr || prefersDark);
+                }
+            }["useIsDarkTheme.useEffect.read"];
+            read();
+            const obs = new MutationObserver(read);
+            obs.observe(document.documentElement, {
+                attributes: true,
+                attributeFilter: [
+                    "class",
+                    "data-theme",
+                    "data-mode",
+                    "data-color-scheme"
+                ]
+            });
+            if (document.body) {
+                obs.observe(document.body, {
+                    attributes: true,
+                    attributeFilter: [
+                        "class",
+                        "data-theme",
+                        "data-mode",
+                        "data-color-scheme"
+                    ]
+                });
+            }
+            const mq = window.matchMedia?.("(prefers-color-scheme: dark)");
+            const onMq = {
+                "useIsDarkTheme.useEffect.onMq": ()=>read()
+            }["useIsDarkTheme.useEffect.onMq"];
+            mq?.addEventListener?.("change", onMq);
+            return ({
+                "useIsDarkTheme.useEffect": ()=>{
+                    obs.disconnect();
+                    mq?.removeEventListener?.("change", onMq);
+                }
+            })["useIsDarkTheme.useEffect"];
+        }
+    }["useIsDarkTheme.useEffect"], []);
+    return isDark;
+}
+_s1(useIsDarkTheme, "q9ovQTvwIdpxeVii6kJLTuTYpwE=");
+function MarketDust({ count = 900, isDark }) {
+    _s2();
     const pointsRef = (0, __TURBOPACK__imported__module__$5b$project$5d2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useRef"])(null);
-    const { positions, speeds } = (0, __TURBOPACK__imported__module__$5b$project$5d2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useMemo"])({
-        "Particles.useMemo": ()=>{
+    const { positions, base, speeds } = (0, __TURBOPACK__imported__module__$5b$project$5d2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useMemo"])({
+        "MarketDust.useMemo": ()=>{
             const positions = new Float32Array(count * 3);
+            const base = new Float32Array(count * 3);
             const speeds = new Float32Array(count);
             for(let i = 0; i < count; i++){
-                const x = __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$three$2f$build$2f$three$2e$core$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["MathUtils"].randFloatSpread(18); // -9..9
-                const y = __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$three$2f$build$2f$three$2e$core$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["MathUtils"].randFloat(0.5, 9);
-                const z = __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$three$2f$build$2f$three$2e$core$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["MathUtils"].randFloat(-18, 4);
+                // spread across viewport, slightly in front of content
+                const x = __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$three$2f$build$2f$three$2e$core$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["MathUtils"].randFloatSpread(22); // -11..11
+                const y = __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$three$2f$build$2f$three$2e$core$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["MathUtils"].randFloat(0.5, 10.5);
+                const z = __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$three$2f$build$2f$three$2e$core$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["MathUtils"].randFloat(-14, 4); // behind/in-front mix
                 positions[i * 3 + 0] = x;
                 positions[i * 3 + 1] = y;
                 positions[i * 3 + 2] = z;
-                speeds[i] = __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$three$2f$build$2f$three$2e$core$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["MathUtils"].randFloat(0.25, 1.1);
+                base[i * 3 + 0] = x;
+                base[i * 3 + 1] = y;
+                base[i * 3 + 2] = z;
+                speeds[i] = __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$three$2f$build$2f$three$2e$core$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["MathUtils"].randFloat(0.6, 1.35);
             }
             return {
                 positions,
+                base,
                 speeds
             };
         }
-    }["Particles.useMemo"], [
+    }["MarketDust.useMemo"], [
         count
     ]);
     (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$react$2d$three$2f$fiber$2f$dist$2f$events$2d$5a94e5eb$2e$esm$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__D__as__useFrame$3e$__["useFrame"])({
-        "Particles.useFrame": (_state, delta)=>{
+        "MarketDust.useFrame": (state)=>{
             const pts = pointsRef.current;
             if (!pts) return;
+            const t = state.clock.getElapsedTime();
             const arr = pts.geometry.attributes.position.array;
             for(let i = 0; i < count; i++){
-                arr[i * 3 + 1] += speeds[i] * delta * 0.15;
-                arr[i * 3 + 2] -= speeds[i] * delta * 0.08;
-                if (arr[i * 3 + 1] > 10) arr[i * 3 + 1] = 0.5;
-                if (arr[i * 3 + 2] < -22) arr[i * 3 + 2] = 4;
+                const bx = base[i * 3 + 0];
+                const by = base[i * 3 + 1];
+                const bz = base[i * 3 + 2];
+                const s = speeds[i];
+                // subtle "market dust" drift (not falling)
+                arr[i * 3 + 0] = bx + Math.sin(t * 0.22 * s + i * 0.7) * 0.10;
+                arr[i * 3 + 1] = by + Math.cos(t * 0.18 * s + i * 0.9) * 0.08;
+                arr[i * 3 + 2] = bz + Math.sin(t * 0.16 * s + i * 0.5) * 0.12;
             }
             pts.geometry.attributes.position.needsUpdate = true;
         }
-    }["Particles.useFrame"]);
+    }["MarketDust.useFrame"]);
     return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("points", {
         ref: pointsRef,
         children: [
@@ -1267,182 +1340,47 @@ function Particles({ count = 900 }) {
                     count: count
                 }, void 0, false, {
                     fileName: "[project]/web/app/components/marketing/Background3D.tsx",
-                    lineNumber: 63,
+                    lineNumber: 143,
                     columnNumber: 9
                 }, this)
             }, void 0, false, {
                 fileName: "[project]/web/app/components/marketing/Background3D.tsx",
-                lineNumber: 62,
+                lineNumber: 142,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("pointsMaterial", {
-                size: 0.035,
+                size: isDark ? 0.03 : 0.028,
                 transparent: true,
-                opacity: 0.55,
+                opacity: isDark ? 0.42 : 0.28,
                 depthWrite: false,
-                color: "#c7b8ff"
+                blending: __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$three$2f$build$2f$three$2e$core$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["AdditiveBlending"],
+                color: isDark ? "#d7ccff" : "#8d74ff"
             }, void 0, false, {
                 fileName: "[project]/web/app/components/marketing/Background3D.tsx",
-                lineNumber: 70,
+                lineNumber: 152,
                 columnNumber: 7
             }, this)
         ]
     }, void 0, true, {
         fileName: "[project]/web/app/components/marketing/Background3D.tsx",
-        lineNumber: 61,
+        lineNumber: 141,
         columnNumber: 5
     }, this);
 }
-_s1(Particles, "JtiLAhgmbjsC5bYNk8OSRm7aZ0Q=", false, function() {
+_s2(MarketDust, "AkmgRQMgv/m6pQ9+STzsXQlDGWw=", false, function() {
     return [
         __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$react$2d$three$2f$fiber$2f$dist$2f$events$2d$5a94e5eb$2e$esm$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__D__as__useFrame$3e$__["useFrame"]
     ];
 });
-_c = Particles;
-function EquityLine() {
-    _s2();
-    const lineRef = (0, __TURBOPACK__imported__module__$5b$project$5d2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useRef"])(null);
-    const { geometry } = (0, __TURBOPACK__imported__module__$5b$project$5d2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useMemo"])({
-        "EquityLine.useMemo": ()=>{
-            const pts = [];
-            let y = 1.6;
-            for(let i = 0; i < 42; i++){
-                const x = -7.5 + i * 0.38;
-                const wave = Math.sin(i * 0.28) * 0.18;
-                const pullback = (i % 9 === 0 ? -0.22 : 0) + (i % 13 === 0 ? -0.15 : 0);
-                y += 0.02 + wave * 0.05 + pullback * 0.02;
-                const z = -8.5 + Math.cos(i * 0.18) * 0.25;
-                pts.push(new __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$three$2f$build$2f$three$2e$core$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Vector3"](x, y, z));
-            }
-            const geometry = new __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$three$2f$build$2f$three$2e$core$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["BufferGeometry"]().setFromPoints(pts);
-            return {
-                geometry
-            };
-        }
-    }["EquityLine.useMemo"], []);
-    (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$react$2d$three$2f$fiber$2f$dist$2f$events$2d$5a94e5eb$2e$esm$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__D__as__useFrame$3e$__["useFrame"])({
-        "EquityLine.useFrame": (state)=>{
-            const obj = lineRef.current;
-            if (!obj) return;
-            const t = state.clock.getElapsedTime();
-            obj.position.y = Math.sin(t * 0.35) * 0.05;
-            obj.rotation.y = Math.sin(t * 0.18) * 0.03;
-        }
-    }["EquityLine.useFrame"]);
-    return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("line", {
-        ref: lineRef,
-        geometry: geometry,
-        children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("lineBasicMaterial", {
-            color: "#ffffff",
-            transparent: true,
-            opacity: 0.85
-        }, void 0, false, {
-            fileName: "[project]/web/app/components/marketing/Background3D.tsx",
-            lineNumber: 113,
-            columnNumber: 7
-        }, this)
-    }, void 0, false, {
-        fileName: "[project]/web/app/components/marketing/Background3D.tsx",
-        lineNumber: 112,
-        columnNumber: 5
-    }, this);
-}
-_s2(EquityLine, "YlsQ0NOMdqrB0zlyrtuXtt4vw6Y=", false, function() {
-    return [
-        __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$react$2d$three$2f$fiber$2f$dist$2f$events$2d$5a94e5eb$2e$esm$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__D__as__useFrame$3e$__["useFrame"]
-    ];
-});
-_c1 = EquityLine;
-function GridFloor() {
-    _s3();
-    // Легка “підлога” з line segments (без drei Grid)
-    const linesRef = (0, __TURBOPACK__imported__module__$5b$project$5d2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useRef"])(null);
-    const geometry = (0, __TURBOPACK__imported__module__$5b$project$5d2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useMemo"])({
-        "GridFloor.useMemo[geometry]": ()=>{
-            const size = 40;
-            const step = 0.7;
-            const vertices = [];
-            const half = size / 2;
-            for(let i = -half; i <= half; i += step){
-                // lines parallel to X (varying Z)
-                vertices.push(-half, 0, i, half, 0, i);
-                // lines parallel to Z (varying X)
-                vertices.push(i, 0, -half, i, 0, half);
-            }
-            const geo = new __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$three$2f$build$2f$three$2e$core$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["BufferGeometry"]();
-            geo.setAttribute("position", new __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$three$2f$build$2f$three$2e$core$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Float32BufferAttribute"](vertices, 3));
-            return geo;
-        }
-    }["GridFloor.useMemo[geometry]"], []);
-    (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$react$2d$three$2f$fiber$2f$dist$2f$events$2d$5a94e5eb$2e$esm$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__D__as__useFrame$3e$__["useFrame"])({
-        "GridFloor.useFrame": (state)=>{
-            // дуже легке "дихання" brightness через opacity (імітація живого фону)
-            const obj = linesRef.current;
-            if (!obj) return;
-            const t = state.clock.getElapsedTime();
-            obj.material.opacity = 0.22 + Math.sin(t * 0.25) * 0.03;
-        }
-    }["GridFloor.useFrame"]);
-    return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("group", {
-        position: [
-            0,
-            0,
-            -8
-        ],
-        rotation: [
-            -Math.PI / 2,
-            0,
-            0
-        ],
-        children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("lineSegments", {
-            ref: linesRef,
-            geometry: geometry,
-            children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("lineBasicMaterial", {
-                color: "#6d4cff",
-                transparent: true,
-                opacity: 0.22
-            }, void 0, false, {
-                fileName: "[project]/web/app/components/marketing/Background3D.tsx",
-                lineNumber: 152,
-                columnNumber: 9
-            }, this)
-        }, void 0, false, {
-            fileName: "[project]/web/app/components/marketing/Background3D.tsx",
-            lineNumber: 151,
-            columnNumber: 7
-        }, this)
-    }, void 0, false, {
-        fileName: "[project]/web/app/components/marketing/Background3D.tsx",
-        lineNumber: 150,
-        columnNumber: 5
-    }, this);
-}
-_s3(GridFloor, "2+MMVNwSy6wQyLLwIZ3vhNeT7oo=", false, function() {
-    return [
-        __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$react$2d$three$2f$fiber$2f$dist$2f$events$2d$5a94e5eb$2e$esm$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__D__as__useFrame$3e$__["useFrame"]
-    ];
-});
-_c2 = GridFloor;
-function Scene() {
+_c = MarketDust;
+function Scene({ isDark }) {
     return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Fragment"], {
         children: [
-            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("fog", {
-                attach: "fog",
-                args: [
-                    "#000000",
-                    6,
-                    22
-                ]
-            }, void 0, false, {
-                fileName: "[project]/web/app/components/marketing/Background3D.tsx",
-                lineNumber: 161,
-                columnNumber: 7
-            }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("ambientLight", {
                 intensity: 0.35
             }, void 0, false, {
                 fileName: "[project]/web/app/components/marketing/Background3D.tsx",
-                lineNumber: 163,
+                lineNumber: 168,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("directionalLight", {
@@ -1454,44 +1392,28 @@ function Scene() {
                 intensity: 0.55
             }, void 0, false, {
                 fileName: "[project]/web/app/components/marketing/Background3D.tsx",
-                lineNumber: 164,
+                lineNumber: 169,
                 columnNumber: 7
             }, this),
-            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(GridFloor, {}, void 0, false, {
-                fileName: "[project]/web/app/components/marketing/Background3D.tsx",
-                lineNumber: 166,
-                columnNumber: 7
-            }, this),
-            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(Particles, {
-                count: 900
+            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(MarketDust, {
+                count: 900,
+                isDark: isDark
             }, void 0, false, {
                 fileName: "[project]/web/app/components/marketing/Background3D.tsx",
-                lineNumber: 167,
-                columnNumber: 7
-            }, this),
-            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("group", {
-                position: [
-                    0,
-                    0.2,
-                    0
-                ],
-                children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(EquityLine, {}, void 0, false, {
-                    fileName: "[project]/web/app/components/marketing/Background3D.tsx",
-                    lineNumber: 169,
-                    columnNumber: 9
-                }, this)
-            }, void 0, false, {
-                fileName: "[project]/web/app/components/marketing/Background3D.tsx",
-                lineNumber: 168,
+                lineNumber: 172,
                 columnNumber: 7
             }, this)
         ]
     }, void 0, true);
 }
-_c3 = Scene;
+_c1 = Scene;
 function Background3D() {
-    _s4();
+    _s3();
     const reducedMotion = usePrefersReducedMotion();
+    const isDark = useIsDarkTheme();
+    // lighter overlays so particles remain visible
+    const overlayLinear = isDark ? "linear-gradient(to bottom, rgba(0,0,0,0.35), rgba(0,0,0,0.18), rgba(0,0,0,0.40))" : "linear-gradient(to bottom, rgba(255,255,255,0.28), rgba(255,255,255,0.14), rgba(255,255,255,0.22))";
+    const overlayRadials = isDark ? "radial-gradient(1200px 500px at 15% 10%, rgba(140,80,255,0.16), transparent 62%), radial-gradient(900px 380px at 85% 80%, rgba(140,80,255,0.10), transparent 62%)" : "radial-gradient(1200px 500px at 15% 10%, rgba(140,80,255,0.10), transparent 62%), radial-gradient(900px 380px at 85% 80%, rgba(140,80,255,0.06), transparent 62%)";
     if (reducedMotion) {
         return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
             "aria-hidden": true,
@@ -1500,11 +1422,11 @@ function Background3D() {
                 inset: 0,
                 zIndex: 0,
                 pointerEvents: "none",
-                background: "radial-gradient(900px 380px at 20% 15%, rgba(140,80,255,0.18), transparent 55%), radial-gradient(900px 380px at 80% 85%, rgba(140,80,255,0.10), transparent 60%), rgba(0,0,0,0.55)"
+                background: isDark ? "radial-gradient(900px 380px at 20% 15%, rgba(140,80,255,0.16), transparent 60%), radial-gradient(900px 380px at 80% 85%, rgba(140,80,255,0.10), transparent 62%), rgba(0,0,0,0.45)" : "radial-gradient(900px 380px at 20% 15%, rgba(140,80,255,0.12), transparent 60%), radial-gradient(900px 380px at 80% 85%, rgba(140,80,255,0.08), transparent 62%), rgba(255,255,255,0.40)"
             }
         }, void 0, false, {
             fileName: "[project]/web/app/components/marketing/Background3D.tsx",
-            lineNumber: 180,
+            lineNumber: 192,
             columnNumber: 7
         }, this);
     }
@@ -1525,7 +1447,7 @@ function Background3D() {
                 camera: {
                     position: [
                         0,
-                        5.5,
+                        6.2,
                         10
                     ],
                     fov: 45,
@@ -1537,58 +1459,59 @@ function Background3D() {
                     alpha: true,
                     powerPreference: "high-performance"
                 },
-                children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(Scene, {}, void 0, false, {
+                children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(Scene, {
+                    isDark: isDark
+                }, void 0, false, {
                     fileName: "[project]/web/app/components/marketing/Background3D.tsx",
-                    lineNumber: 209,
+                    lineNumber: 226,
                     columnNumber: 9
                 }, this)
             }, void 0, false, {
                 fileName: "[project]/web/app/components/marketing/Background3D.tsx",
-                lineNumber: 204,
+                lineNumber: 217,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                 style: {
                     position: "absolute",
                     inset: 0,
-                    backgroundImage: "radial-gradient(1200px 500px at 15% 10%, rgba(140,80,255,0.18), transparent 60%), radial-gradient(900px 380px at 85% 80%, rgba(140,80,255,0.10), transparent 60%)",
-                    opacity: 0.9
+                    backgroundImage: overlayRadials,
+                    opacity: 0.95
                 }
             }, void 0, false, {
                 fileName: "[project]/web/app/components/marketing/Background3D.tsx",
-                lineNumber: 213,
+                lineNumber: 230,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                 style: {
                     position: "absolute",
                     inset: 0,
-                    background: "linear-gradient(to bottom, rgba(0,0,0,0.65), rgba(0,0,0,0.35), rgba(0,0,0,0.75))"
+                    background: overlayLinear
                 }
             }, void 0, false, {
                 fileName: "[project]/web/app/components/marketing/Background3D.tsx",
-                lineNumber: 222,
+                lineNumber: 238,
                 columnNumber: 7
             }, this)
         ]
     }, void 0, true, {
         fileName: "[project]/web/app/components/marketing/Background3D.tsx",
-        lineNumber: 195,
+        lineNumber: 208,
         columnNumber: 5
     }, this);
 }
-_s4(Background3D, "MQhwWx22ofJm/oN8X4ZgCkxD48I=", false, function() {
+_s3(Background3D, "QF2RGj7sEKtoSePWovmdAWXa78Y=", false, function() {
     return [
-        usePrefersReducedMotion
+        usePrefersReducedMotion,
+        useIsDarkTheme
     ];
 });
-_c4 = Background3D;
-var _c, _c1, _c2, _c3, _c4;
-__turbopack_context__.k.register(_c, "Particles");
-__turbopack_context__.k.register(_c1, "EquityLine");
-__turbopack_context__.k.register(_c2, "GridFloor");
-__turbopack_context__.k.register(_c3, "Scene");
-__turbopack_context__.k.register(_c4, "Background3D");
+_c2 = Background3D;
+var _c, _c1, _c2;
+__turbopack_context__.k.register(_c, "MarketDust");
+__turbopack_context__.k.register(_c1, "Scene");
+__turbopack_context__.k.register(_c2, "Background3D");
 if (typeof globalThis.$RefreshHelpers$ === 'object' && globalThis.$RefreshHelpers !== null) {
     __turbopack_context__.k.registerExports(__turbopack_context__.m, globalThis.$RefreshHelpers$);
 }

@@ -18,40 +18,120 @@ function usePrefersReducedMotion() {
   return reduced;
 }
 
-function Particles({ count = 900 }: { count?: number }) {
+/**
+ * Theme detection:
+ * - html/body class "dark"
+ * - data-theme="dark" / data-mode="dark" / data-color-scheme="dark"
+ * - fallback: prefers-color-scheme
+ */
+function useIsDarkTheme() {
+  const [isDark, setIsDark] = useState(false);
+
+  useEffect(() => {
+    const read = () => {
+      const html = document.documentElement;
+      const body = document.body;
+
+      const hasDarkClass =
+        html.classList.contains("dark") || body?.classList?.contains("dark");
+
+      const attr = (name: string) =>
+        html.getAttribute(name) || body?.getAttribute?.(name);
+
+      const themeAttr =
+        attr("data-theme") || attr("data-mode") || attr("data-color-scheme");
+
+      const isDarkAttr = themeAttr?.toLowerCase() === "dark";
+
+      const prefersDark =
+        window.matchMedia?.("(prefers-color-scheme: dark)")?.matches ?? false;
+
+      setIsDark(hasDarkClass || isDarkAttr || prefersDark);
+    };
+
+    read();
+
+    const obs = new MutationObserver(read);
+    obs.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ["class", "data-theme", "data-mode", "data-color-scheme"],
+    });
+    if (document.body) {
+      obs.observe(document.body, {
+        attributes: true,
+        attributeFilter: [
+          "class",
+          "data-theme",
+          "data-mode",
+          "data-color-scheme",
+        ],
+      });
+    }
+
+    const mq = window.matchMedia?.("(prefers-color-scheme: dark)");
+    const onMq = () => read();
+    mq?.addEventListener?.("change", onMq);
+
+    return () => {
+      obs.disconnect();
+      mq?.removeEventListener?.("change", onMq);
+    };
+  }, []);
+
+  return isDark;
+}
+
+function MarketDust({
+  count = 900,
+  isDark,
+}: {
+  count?: number;
+  isDark: boolean;
+}) {
   const pointsRef = useRef<THREE.Points>(null);
 
-  const { positions, speeds } = useMemo(() => {
+  const { positions, base, speeds } = useMemo(() => {
     const positions = new Float32Array(count * 3);
+    const base = new Float32Array(count * 3);
     const speeds = new Float32Array(count);
 
     for (let i = 0; i < count; i++) {
-      const x = THREE.MathUtils.randFloatSpread(18); // -9..9
-      const y = THREE.MathUtils.randFloat(0.5, 9);
-      const z = THREE.MathUtils.randFloat(-18, 4);
+      // spread across viewport, slightly in front of content
+      const x = THREE.MathUtils.randFloatSpread(22); // -11..11
+      const y = THREE.MathUtils.randFloat(0.5, 10.5);
+      const z = THREE.MathUtils.randFloat(-14, 4); // behind/in-front mix
 
       positions[i * 3 + 0] = x;
       positions[i * 3 + 1] = y;
       positions[i * 3 + 2] = z;
 
-      speeds[i] = THREE.MathUtils.randFloat(0.25, 1.1);
+      base[i * 3 + 0] = x;
+      base[i * 3 + 1] = y;
+      base[i * 3 + 2] = z;
+
+      speeds[i] = THREE.MathUtils.randFloat(0.6, 1.35);
     }
 
-    return { positions, speeds };
+    return { positions, base, speeds };
   }, [count]);
 
-  useFrame((_state, delta) => {
+  useFrame((state) => {
     const pts = pointsRef.current;
     if (!pts) return;
 
+    const t = state.clock.getElapsedTime();
     const arr = pts.geometry.attributes.position.array as Float32Array;
 
     for (let i = 0; i < count; i++) {
-      arr[i * 3 + 1] += speeds[i] * delta * 0.15;
-      arr[i * 3 + 2] -= speeds[i] * delta * 0.08;
+      const bx = base[i * 3 + 0];
+      const by = base[i * 3 + 1];
+      const bz = base[i * 3 + 2];
+      const s = speeds[i];
 
-      if (arr[i * 3 + 1] > 10) arr[i * 3 + 1] = 0.5;
-      if (arr[i * 3 + 2] < -22) arr[i * 3 + 2] = 4;
+      // subtle "market dust" drift (not falling)
+      arr[i * 3 + 0] = bx + Math.sin(t * 0.22 * s + i * 0.7) * 0.10;
+      arr[i * 3 + 1] = by + Math.cos(t * 0.18 * s + i * 0.9) * 0.08;
+      arr[i * 3 + 2] = bz + Math.sin(t * 0.16 * s + i * 0.5) * 0.12;
     }
 
     pts.geometry.attributes.position.needsUpdate = true;
@@ -67,113 +147,45 @@ function Particles({ count = 900 }: { count?: number }) {
           count={count}
         />
       </bufferGeometry>
+
+      {/* IMPORTANT: additive blending so dust stays visible even with overlays */}
       <pointsMaterial
-        size={0.035}
+        size={isDark ? 0.03 : 0.028}
         transparent
-        opacity={0.55}
+        opacity={isDark ? 0.42 : 0.28}
         depthWrite={false}
-        color="#c7b8ff"
+        blending={THREE.AdditiveBlending}
+        color={isDark ? "#d7ccff" : "#8d74ff"}
       />
     </points>
   );
 }
 
-function EquityLine() {
-  const lineRef = useRef<THREE.Line>(null);
-
-  const { geometry } = useMemo(() => {
-    const pts: THREE.Vector3[] = [];
-    let y = 1.6;
-
-    for (let i = 0; i < 42; i++) {
-      const x = -7.5 + i * 0.38;
-      const wave = Math.sin(i * 0.28) * 0.18;
-      const pullback = (i % 9 === 0 ? -0.22 : 0) + (i % 13 === 0 ? -0.15 : 0);
-      y += 0.02 + wave * 0.05 + pullback * 0.02;
-      const z = -8.5 + Math.cos(i * 0.18) * 0.25;
-
-      pts.push(new THREE.Vector3(x, y, z));
-    }
-
-    const geometry = new THREE.BufferGeometry().setFromPoints(pts);
-    return { geometry };
-  }, []);
-
-  useFrame((state) => {
-    const obj = lineRef.current;
-    if (!obj) return;
-
-    const t = state.clock.getElapsedTime();
-    obj.position.y = Math.sin(t * 0.35) * 0.05;
-    obj.rotation.y = Math.sin(t * 0.18) * 0.03;
-  });
-
-  return (
-    <line ref={lineRef} geometry={geometry}>
-      <lineBasicMaterial color="#ffffff" transparent opacity={0.85} />
-    </line>
-  );
-}
-
-function GridFloor() {
-  // Легка “підлога” з line segments (без drei Grid)
-  const linesRef = useRef<THREE.LineSegments>(null);
-
-  const geometry = useMemo(() => {
-    const size = 40;
-    const step = 0.7;
-
-    const vertices: number[] = [];
-    const half = size / 2;
-
-    for (let i = -half; i <= half; i += step) {
-      // lines parallel to X (varying Z)
-      vertices.push(-half, 0, i, half, 0, i);
-      // lines parallel to Z (varying X)
-      vertices.push(i, 0, -half, i, 0, half);
-    }
-
-    const geo = new THREE.BufferGeometry();
-    geo.setAttribute("position", new THREE.Float32BufferAttribute(vertices, 3));
-    return geo;
-  }, []);
-
-  useFrame((state) => {
-    // дуже легке "дихання" brightness через opacity (імітація живого фону)
-    const obj = linesRef.current;
-    if (!obj) return;
-    const t = state.clock.getElapsedTime();
-    (obj.material as THREE.LineBasicMaterial).opacity = 0.22 + Math.sin(t * 0.25) * 0.03;
-  });
-
-  return (
-    <group position={[0, 0, -8]} rotation={[-Math.PI / 2, 0, 0]}>
-      <lineSegments ref={linesRef} geometry={geometry}>
-        <lineBasicMaterial color="#6d4cff" transparent opacity={0.22} />
-      </lineSegments>
-    </group>
-  );
-}
-
-function Scene() {
+function Scene({ isDark }: { isDark: boolean }) {
   return (
     <>
-      <fog attach="fog" args={["#000000", 6, 22]} />
-
+      {/* прибрали fog — він якраз “з’їдав” пил */}
       <ambientLight intensity={0.35} />
       <directionalLight position={[6, 10, 6]} intensity={0.55} />
 
-      <GridFloor />
-      <Particles count={900} />
-      <group position={[0, 0.2, 0]}>
-        <EquityLine />
-      </group>
+      {/* тільки пил */}
+      <MarketDust count={900} isDark={isDark} />
     </>
   );
 }
 
 export function Background3D() {
   const reducedMotion = usePrefersReducedMotion();
+  const isDark = useIsDarkTheme();
+
+  // lighter overlays so particles remain visible
+  const overlayLinear = isDark
+    ? "linear-gradient(to bottom, rgba(0,0,0,0.35), rgba(0,0,0,0.18), rgba(0,0,0,0.40))"
+    : "linear-gradient(to bottom, rgba(255,255,255,0.28), rgba(255,255,255,0.14), rgba(255,255,255,0.22))";
+
+  const overlayRadials = isDark
+    ? "radial-gradient(1200px 500px at 15% 10%, rgba(140,80,255,0.16), transparent 62%), radial-gradient(900px 380px at 85% 80%, rgba(140,80,255,0.10), transparent 62%)"
+    : "radial-gradient(1200px 500px at 15% 10%, rgba(140,80,255,0.10), transparent 62%), radial-gradient(900px 380px at 85% 80%, rgba(140,80,255,0.06), transparent 62%)";
 
   if (reducedMotion) {
     return (
@@ -184,8 +196,9 @@ export function Background3D() {
           inset: 0,
           zIndex: 0,
           pointerEvents: "none",
-          background:
-            "radial-gradient(900px 380px at 20% 15%, rgba(140,80,255,0.18), transparent 55%), radial-gradient(900px 380px at 80% 85%, rgba(140,80,255,0.10), transparent 60%), rgba(0,0,0,0.55)",
+          background: isDark
+            ? "radial-gradient(900px 380px at 20% 15%, rgba(140,80,255,0.16), transparent 60%), radial-gradient(900px 380px at 80% 85%, rgba(140,80,255,0.10), transparent 62%), rgba(0,0,0,0.45)"
+            : "radial-gradient(900px 380px at 20% 15%, rgba(140,80,255,0.12), transparent 60%), radial-gradient(900px 380px at 80% 85%, rgba(140,80,255,0.08), transparent 62%), rgba(255,255,255,0.40)",
         }}
       />
     );
@@ -203,28 +216,30 @@ export function Background3D() {
     >
       <Canvas
         dpr={[1, 1.5]}
-        camera={{ position: [0, 5.5, 10], fov: 45, near: 0.1, far: 60 }}
-        gl={{ antialias: true, alpha: true, powerPreference: "high-performance" }}
+        camera={{ position: [0, 6.2, 10], fov: 45, near: 0.1, far: 60 }}
+        gl={{
+          antialias: true,
+          alpha: true,
+          powerPreference: "high-performance",
+        }}
       >
-        <Scene />
+        <Scene isDark={isDark} />
       </Canvas>
 
-      {/* overlay gradients */}
+      {/* overlays */}
       <div
         style={{
           position: "absolute",
           inset: 0,
-          backgroundImage:
-            "radial-gradient(1200px 500px at 15% 10%, rgba(140,80,255,0.18), transparent 60%), radial-gradient(900px 380px at 85% 80%, rgba(140,80,255,0.10), transparent 60%)",
-          opacity: 0.9,
+          backgroundImage: overlayRadials,
+          opacity: 0.95,
         }}
       />
       <div
         style={{
           position: "absolute",
           inset: 0,
-          background:
-            "linear-gradient(to bottom, rgba(0,0,0,0.65), rgba(0,0,0,0.35), rgba(0,0,0,0.75))",
+          background: overlayLinear,
         }}
       />
     </div>
