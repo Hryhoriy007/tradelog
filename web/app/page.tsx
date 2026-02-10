@@ -365,6 +365,104 @@ export default function HomePage() {
           </Card>
         </div>
 
+        {/* MINI FAQ */}
+        <div style={{ marginTop: 18 }}>
+          <Card title="FAQ" subtitle="Quick answers before you start.">
+            <div
+              style={{
+                display: "grid",
+                gridTemplateColumns: "repeat(2, 1fr)",
+                gap: 12,
+                alignItems: "stretch",
+              }}
+            >
+              <div
+                style={{
+                  padding: 14,
+                  borderRadius: 16,
+                  border: "1px solid rgba(255,255,255,0.10)",
+                  background: "rgba(255,255,255,0.02)",
+                  display: "grid",
+                  gap: 8,
+                }}
+              >
+                <div style={{ fontWeight: 900 }}>Do I need exchange API keys?</div>
+                <div style={{ fontSize: 13, opacity: 0.75, lineHeight: 1.6 }}>
+                  No. TradeLog doesn’t require Binance/Bybit API keys. You log trades manually to stay intentional and
+                  reduce security risk.
+                </div>
+              </div>
+
+              <div
+                style={{
+                  padding: 14,
+                  borderRadius: 16,
+                  border: "1px solid rgba(255,255,255,0.10)",
+                  background: "rgba(255,255,255,0.02)",
+                  display: "grid",
+                  gap: 8,
+                }}
+              >
+                <div style={{ fontWeight: 900 }}>Spot & Futures supported?</div>
+                <div style={{ fontSize: 13, opacity: 0.75, lineHeight: 1.6 }}>
+                  Yes. Log spot or futures trades the same way — with entry, stop, target and the result measured in R.
+                </div>
+              </div>
+
+              <div
+                style={{
+                  padding: 14,
+                  borderRadius: 16,
+                  border: "1px solid rgba(255,255,255,0.10)",
+                  background: "rgba(255,255,255,0.02)",
+                  display: "grid",
+                  gap: 8,
+                }}
+              >
+                <div style={{ fontWeight: 900 }}>Why R instead of PnL?</div>
+                <div style={{ fontSize: 13, opacity: 0.75, lineHeight: 1.6 }}>
+                  PnL can lie when position size changes. R (risk units) shows discipline and consistency — comparable
+                  across trades.
+                </div>
+              </div>
+
+              <div
+                style={{
+                  padding: 14,
+                  borderRadius: 16,
+                  border: "1px solid rgba(255,255,255,0.10)",
+                  background: "rgba(255,255,255,0.02)",
+                  display: "grid",
+                  gap: 8,
+                }}
+              >
+                <div style={{ fontWeight: 900 }}>Can I export / backup?</div>
+                <div style={{ fontSize: 13, opacity: 0.75, lineHeight: 1.6 }}>
+                  Yes. Export CSV for spreadsheets and create JSON backups to restore or migrate your journal anytime.
+                </div>
+              </div>
+
+              <div
+                style={{
+                  padding: 14,
+                  borderRadius: 16,
+                  border: "1px solid rgba(255,255,255,0.10)",
+                  background: "rgba(255,255,255,0.02)",
+                  display: "grid",
+                  gap: 8,
+                  gridColumn: "1 / -1",
+                }}
+              >
+                <div style={{ fontWeight: 900 }}>Is my data private?</div>
+                <div style={{ fontSize: 13, opacity: 0.75, lineHeight: 1.6 }}>
+                  Yes. TradeLog is built around local-first principles. You keep control of your data and can export it
+                  whenever you want.
+                </div>
+              </div>
+            </div>
+          </Card>
+        </div>
+
         {/* CTA BOTTOM */}
         <div
           style={{
@@ -427,6 +525,9 @@ export default function HomePage() {
 
           @media (max-width: 980px) {
             .pricingGrid {
+              grid-template-columns: 1fr !important;
+            }
+            .faqGrid {
               grid-template-columns: 1fr !important;
             }
           }
