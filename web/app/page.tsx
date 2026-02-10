@@ -256,6 +256,115 @@ export default function HomePage() {
           </div>
         </div>
 
+        {/* PRICING mini-card */}
+        <div style={{ marginTop: 18 }}>
+          <Card title="Pricing" subtitle="Simple subscription. Cancel anytime.">
+            <div
+              className="pricingGrid"
+              style={{
+                display: "grid",
+                gridTemplateColumns: "1fr 1.4fr",
+                gap: 14,
+                alignItems: "stretch",
+              }}
+            >
+              {/* Price box */}
+              <div
+                style={{
+                  borderRadius: 16,
+                  border: "1px solid rgba(255,255,255,0.10)",
+                  background: "rgba(255,255,255,0.02)",
+                  padding: 14,
+                  display: "grid",
+                  gap: 10,
+                }}
+              >
+                <div style={{ display: "flex", alignItems: "baseline", gap: 10, flexWrap: "wrap" }}>
+                  <div style={{ fontSize: 28, fontWeight: 950, letterSpacing: -0.4 }}>
+                    $9<span style={{ fontSize: 12, opacity: 0.7, fontWeight: 700 }}>/mo</span>
+                  </div>
+                  <div style={{ fontSize: 12, opacity: 0.75 }}>or $79/year</div>
+                </div>
+
+                <div style={{ fontSize: 12, opacity: 0.75, lineHeight: 1.5 }}>
+                  One plan for traders who want consistency and accountability.
+                </div>
+
+                <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
+                  <Link href="/register" style={{ textDecoration: "none" }}>
+                    <Button variant="primary">Registration</Button>
+                  </Link>
+                  <Link href="/login" style={{ textDecoration: "none" }}>
+                    <Button variant="secondary">Login</Button>
+                  </Link>
+                </div>
+
+                <div style={{ fontSize: 11, opacity: 0.6 }}>No exchange API • Local-first • Export anytime</div>
+              </div>
+
+              {/* Included features */}
+              <div
+                style={{
+                  borderRadius: 16,
+                  border: "1px solid rgba(255,255,255,0.10)",
+                  background: "rgba(255,255,255,0.02)",
+                  padding: 14,
+                  display: "grid",
+                  gap: 10,
+                }}
+              >
+                <div style={{ fontWeight: 900 }}>Included in Pro</div>
+
+                <ul
+                  style={{
+                    margin: 0,
+                    paddingLeft: 18,
+                    display: "grid",
+                    gap: 8,
+                    opacity: 0.9,
+                    fontSize: 13,
+                  }}
+                >
+                  <li>R-based stats (expectancy, Avg R, streaks)</li>
+                  <li>Psychology notes + rule tracking</li>
+                  <li>Templates / presets for repeatable setups</li>
+                  <li>CSV export + JSON backup</li>
+                  <li>Import with merge / replace modes</li>
+                </ul>
+
+                <div style={{ display: "flex", gap: 8, flexWrap: "wrap", marginTop: 4 }}>
+                  <span
+                    style={{
+                      padding: "4px 10px",
+                      borderRadius: 999,
+                      border: "1px solid rgba(255,255,255,0.10)",
+                      background: "rgba(255,255,255,0.03)",
+                      fontSize: 12,
+                      opacity: 0.85,
+                      whiteSpace: "nowrap",
+                    }}
+                  >
+                    ✅ Cancel anytime
+                  </span>
+                  <span
+                    style={{
+                      padding: "4px 10px",
+                      borderRadius: 999,
+                      border: "1px solid rgba(255,255,255,0.10)",
+                      background: "rgba(255,255,255,0.03)",
+                      fontSize: 12,
+                      opacity: 0.85,
+                      whiteSpace: "nowrap",
+                    }}
+                  >
+                    ✅ No API keys
+                  </span>
+                </div>
+              </div>
+            </div>
+          </Card>
+        </div>
+
         {/* CTA BOTTOM */}
         <div
           style={{
@@ -314,6 +423,12 @@ export default function HomePage() {
           .mockDashboardWrap :global(.demo),
           .mockDashboardWrap :global(.demoData) {
             display: none !important;
+          }
+
+          @media (max-width: 980px) {
+            .pricingGrid {
+              grid-template-columns: 1fr !important;
+            }
           }
         `}</style>
 

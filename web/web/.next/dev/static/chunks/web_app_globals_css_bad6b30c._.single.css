@@ -60,10 +60,6 @@
   position: relative;
 }
 
-.mx-auto {
-  margin-inline: auto;
-}
-
 .block {
   display: block;
 }
@@ -92,14 +88,6 @@
   display: table;
 }
 
-.min-h-screen {
-  min-height: 100vh;
-}
-
-.w-full {
-  width: 100%;
-}
-
 .transform {
   transform: var(--tw-rotate-x, ) var(--tw-rotate-y, ) var(--tw-rotate-z, ) var(--tw-skew-x, ) var(--tw-skew-y, );
 }
@@ -108,29 +96,9 @@
   resize: both;
 }
 
-.grid-cols-1 {
-  grid-template-columns: repeat(1, minmax(0, 1fr));
-}
-
-.flex-wrap {
-  flex-wrap: wrap;
-}
-
-.rounded-full {
-  border-radius: 3.40282e38px;
-}
-
 .border {
   border-style: var(--tw-border-style);
   border-width: 1px;
-}
-
-.bg-transparent {
-  background-color: #0000;
-}
-
-.text-balance {
-  text-wrap: balance;
 }
 
 .antialiased {
@@ -156,12 +124,6 @@
   transition-property: color, background-color, border-color, outline-color, text-decoration-color, fill, stroke, --tw-gradient-from, --tw-gradient-via, --tw-gradient-to, opacity, box-shadow, transform, translate, scale, rotate, filter, -webkit-backdrop-filter, backdrop-filter, display, content-visibility, overlay, pointer-events;
   transition-timing-function: var(--tw-ease, ease);
   transition-duration: var(--tw-duration, 0s);
-}
-
-@media (hover: hover) {
-  .hover\:opacity-90:hover {
-    opacity: .9;
-  }
 }
 
 :root {
@@ -197,6 +159,12 @@ body {
 html, body {
   background: var(--bg);
   color: var(--fg);
+}
+
+@media (max-width: 980px) {
+  .mockPricingGrid {
+    grid-template-columns: 1fr !important;
+  }
 }
 
 @property --tw-rotate-x {

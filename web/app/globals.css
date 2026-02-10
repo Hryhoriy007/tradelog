@@ -29,17 +29,25 @@ body {
 
 :root[data-theme="dark"] {
   --bg: #0b0d10;
-  --fg: rgba(255,255,255,0.92);
-  --muted: rgba(255,255,255,0.65);
+  --fg: rgba(255, 255, 255, 0.92);
+  --muted: rgba(255, 255, 255, 0.65);
 }
 
 :root[data-theme="light"] {
   --bg: #f7f7fb;
-  --fg: rgba(10,10,12,0.92);
-  --muted: rgba(10,10,12,0.60);
+  --fg: rgba(10, 10, 12, 0.92);
+  --muted: rgba(10, 10, 12, 0.60);
 }
 
-html, body {
+html,
+body {
   background: var(--bg);
   color: var(--fg);
+}
+
+/* ✅ PRICING — mobile only */
+@media (max-width: 980px) {
+  .mockPricingGrid {
+    grid-template-columns: 1fr !important;
+  }
 }
