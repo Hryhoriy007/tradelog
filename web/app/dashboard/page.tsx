@@ -102,7 +102,7 @@ export default function DashboardPage() {
 
     // week start: Monday
     const day = now.getDay(); // 0=Sun
-    const diffToMon = (day === 0 ? 6 : day - 1);
+    const diffToMon = day === 0 ? 6 : day - 1;
     const startOfWeek = new Date(now.getFullYear(), now.getMonth(), now.getDate() - diffToMon, 0, 0, 0, 0).getTime();
 
     let todayR = 0;
@@ -223,22 +223,22 @@ export default function DashboardPage() {
 
       {/* Top cards */}
       <Row cols={4}>
-        <Card title="Total R" subtitle="Сумарний результат" right={<span style={{ fontWeight: 700 }}>{fmt(stats.total, 2)}R</span>} />
-        <Card title="Win rate" subtitle="Відсоток виграшних" right={<span style={{ fontWeight: 700 }}>{fmt(stats.winRate, 1)}%</span>} />
-        <Card title="Avg R" subtitle="Середня R на угоду" right={<span style={{ fontWeight: 700 }}>{fmt(stats.avg, 2)}R</span>} />
-        <Card title="W / L / BE" subtitle="Розподіл" right={<span style={{ fontWeight: 700 }}>{stats.wins} / {stats.losses} / {stats.be}</span>} />
+        <Card title="Total R" subtitle="Cumulative result" right={<span style={{ fontWeight: 700 }}>{fmt(stats.total, 2)}R</span>} />
+        <Card title="Win rate" subtitle="Winning trades %" right={<span style={{ fontWeight: 700 }}>{fmt(stats.winRate, 1)}%</span>} />
+        <Card title="Avg R" subtitle="Average per trade" right={<span style={{ fontWeight: 700 }}>{fmt(stats.avg, 2)}R</span>} />
+        <Card title="W / L / BE" subtitle="Distribution" right={<span style={{ fontWeight: 700 }}>{stats.wins} / {stats.losses} / {stats.be}</span>} />
       </Row>
 
       {/* New cards */}
       <Row cols={4}>
         <Card
           title="Today R"
-          subtitle="Сьогодні"
+          subtitle="Today"
           right={<span style={{ fontWeight: 700 }}>{fmt(todayThisWeek.todayR, 2)}R</span>}
         />
         <Card
           title="This week R"
-          subtitle="З понеділка"
+          subtitle="Since Monday"
           right={<span style={{ fontWeight: 700 }}>{fmt(todayThisWeek.weekR, 2)}R</span>}
         />
         <Card
@@ -251,7 +251,7 @@ export default function DashboardPage() {
           }
         />
         <Card
-          title="Best / Worst setup"
+          title="Best setup"
           subtitle="Avg R (min 3 trades)"
           right={
             <span style={{ fontWeight: 700 }}>
@@ -262,17 +262,17 @@ export default function DashboardPage() {
       </Row>
 
       <Row cols={2}>
-        <Card title="Equity curve (R)" subtitle="Кумулятивний результат">
+        <Card title="Equity curve (R)" subtitle="Cumulative performance">
           <div style={{ height: 260 }}>
             <EquityCurve data={stats.curve} />
           </div>
         </Card>
 
-        <Card title="Last trades" subtitle="Останні 10 угод">
+        <Card title="Last trades" subtitle="Most recent 10">
           <div style={{ display: "grid", gap: 8 }}>
             {lastTrades.length === 0 ? (
               <div style={{ opacity: 0.7 }}>
-                Поки що немає угод. Натисни <b>Add trade</b>.
+                No trades yet. Click <b>Add trade</b> to log your first one.
               </div>
             ) : (
               lastTrades.map((t: any) => {
