@@ -246,8 +246,18 @@ export default function HomePage() {
         </div>
 
         {/* FEATURES */}
-        <div style={{ marginTop: 18 }}>
-          <div style={{ fontSize: 18, fontWeight: 950, marginBottom: 10 }}>{t.featuresTitle}</div>
+        <div style={{ marginTop: 45 }}>
+          <div
+            style={{
+              fontSize: 20,
+              fontWeight: 950,
+              marginBottom: 14,
+              paddingLeft: 4,
+            }}
+          >
+            {t.featuresTitle}
+          </div>
+
           <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 12, alignItems: "stretch" }}>
             {t.features.map((f) => (
               <Feature key={f.title} title={f.title} subtitle={f.subtitle} points={f.points} />
@@ -286,33 +296,17 @@ export default function HomePage() {
           </div>
         </div>
 
-        {/* Footer */}
+        {/* Footer (clean, no links) */}
         <div
           style={{
             marginTop: 14,
             opacity: 0.6,
             fontSize: 12,
             display: "flex",
-            justifyContent: "space-between",
-            gap: 10,
-            flexWrap: "wrap",
+            justifyContent: "center",
           }}
         >
-          <div>© {year} TradeLog</div>
-          <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
-            <Link href="/dashboard" style={{ textDecoration: "none", color: "inherit" }}>
-              App
-            </Link>
-            <Link href="/stats" style={{ textDecoration: "none", color: "inherit" }}>
-              Stats
-            </Link>
-            <Link href="/templates" style={{ textDecoration: "none", color: "inherit" }}>
-              Templates
-            </Link>
-            <Link href="/backup" style={{ textDecoration: "none", color: "inherit" }}>
-              Backup
-            </Link>
-          </div>
+          © {year} TradeLog
         </div>
 
         {/* Responsive */}
