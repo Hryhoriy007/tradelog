@@ -463,6 +463,47 @@ export default function HomePage() {
           </Card>
         </div>
 
+{/* WHY R NOT PNL */}
+<div style={{ marginTop: 18 }}>
+  <Card title="Why R, not PnL?" subtitle="Because money alone doesn’t tell the truth.">
+    <div
+      style={{
+        display: "grid",
+        gap: 12,
+        lineHeight: 1.6,
+      }}
+    >
+      <div style={{ fontSize: 14, opacity: 0.8 }}>
+        PnL changes with position size and luck. A +$200 trade can still be a bad decision if you risked $400.
+      </div>
+
+      <div
+        style={{
+          fontSize: 14,
+          fontWeight: 600,
+          opacity: 0.9,
+        }}
+      >
+        R (risk units) measures discipline — how well you execute your plan, independent of account size.
+      </div>
+
+      <div
+        style={{
+          marginTop: 6,
+          padding: 12,
+          borderRadius: 14,
+          border: "1px solid rgba(255,255,255,0.10)",
+          background: "rgba(255,255,255,0.02)",
+          fontSize: 13,
+          opacity: 0.85,
+        }}
+      >
+        📌 A trader who respects risk stays consistent. R makes that visible.
+      </div>
+    </div>
+  </Card>
+</div>
+
         {/* CTA BOTTOM */}
         <div
           style={{
