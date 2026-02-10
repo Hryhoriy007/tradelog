@@ -411,7 +411,7 @@ export default function HomePage() {
             </div>
           </Card>
         </div>
-
+    
         {/* WHY R NOT PNL */}
         <div style={{ marginTop: 18 }}>
           <Card title="Why R, not PnL?" subtitle="Because money alone doesn’t tell the truth.">
