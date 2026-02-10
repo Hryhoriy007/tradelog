@@ -43,26 +43,3 @@ html, body {
   background: var(--bg);
   color: var(--fg);
 }
-
-:root {
-  --tl-bg: #07070a;
-  --tl-fg: rgba(255,255,255,0.92);
-  --tl-subtle: rgba(255,255,255,0.70);
-  --tl-card: rgba(255,255,255,0.03);
-  --tl-card-2: rgba(255,255,255,0.02);
-  --tl-border: rgba(255,255,255,0.10);
-}
-
-html[data-theme="light"] {
-  --tl-bg: #f6f6fb;
-  --tl-fg: rgba(0,0,0,0.88);
-  --tl-subtle: rgba(0,0,0,0.62);
-  --tl-card: rgba(0,0,0,0.03);
-  --tl-card-2: rgba(0,0,0,0.02);
-  --tl-border: rgba(0,0,0,0.10);
-}
-
-html, body {
-  background: var(--tl-bg);
-  color: var(--tl-fg);
-}
