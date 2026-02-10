@@ -196,7 +196,7 @@ export default function HomePage() {
           >
             <div style={{ display: "flex", gap: 8, flexWrap: "wrap", marginBottom: 12, alignItems: "center" }}>
               <Badge>Crypto only</Badge>
-              <Badge>7-day free trial</Badge>
+              {/* removed 7-day free trial */}
               <Badge>No exchange API</Badge>
             </div>
 
@@ -228,7 +228,7 @@ export default function HomePage() {
           </div>
 
           {/* Right: dashboard mock */}
-          <div>
+          <div className="mockDashboardWrap">
             <DashboardWindow>
               <MockDashboard />
             </DashboardWindow>
@@ -246,17 +246,8 @@ export default function HomePage() {
         </div>
 
         {/* FEATURES */}
-        <div style={{ marginTop: 45 }}>
-          <div
-            style={{
-              fontSize: 20,
-              fontWeight: 950,
-              marginBottom: 14,
-              paddingLeft: 4,
-            }}
-          >
-            {t.featuresTitle}
-          </div>
+        <div style={{ marginTop: 28 }}>
+          <div style={{ fontSize: 20, fontWeight: 950, marginBottom: 14, paddingLeft: 4 }}>{t.featuresTitle}</div>
 
           <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 12, alignItems: "stretch" }}>
             {t.features.map((f) => (
@@ -308,6 +299,23 @@ export default function HomePage() {
         >
           © {year} TradeLog
         </div>
+
+        {/* Hide "demo data" text inside MockDashboard */}
+        <style jsx>{`
+          .mockDashboardWrap :global(*) {
+            /* no-op wrapper to scope selectors */
+          }
+          .mockDashboardWrap :global(*:not(script)) {
+            /* we keep safe baseline */
+          }
+          /* Hide any element that contains the exact "demo data" label (common in mock UIs) */
+          .mockDashboardWrap :global([class*="demo"]),
+          .mockDashboardWrap :global([data-demo]),
+          .mockDashboardWrap :global(.demo),
+          .mockDashboardWrap :global(.demoData) {
+            display: none !important;
+          }
+        `}</style>
 
         {/* Responsive */}
         <style jsx>{`
