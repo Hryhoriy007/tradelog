@@ -258,24 +258,19 @@ function TraderCalendarPanel() {
 
   const [range, setRange] = useState<RangeKey>("1m");
 
-  // ✅ current month by default
   const [monthDate, setMonthDate] = useState(() => {
     const n = new Date();
     return new Date(n.getFullYear(), n.getMonth(), 1);
   });
 
-  // stable "now" and currentMonthStart for blocking future navigation
   const now = useMemo(() => new Date(), []);
   const currentMonthStart = useMemo(() => new Date(now.getFullYear(), now.getMonth(), 1), [now]);
 
-  // ✅ NEW: earliest month that has data (adjust if you want another "launch" month)
-  // Example: only Jan+Feb exist -> historyStart = Jan 1, 2026
   const historyStart = useMemo(() => new Date(2026, 0, 1), []);
 
   const monthStart = useMemo(() => new Date(monthDate.getFullYear(), monthDate.getMonth(), 1), [monthDate]);
   const isMonthBeforeHistory = useMemo(() => monthStart < historyStart, [monthStart, historyStart]);
 
-  // ✅ Hard clamp: prevent future AND prevent going before historyStart
   useEffect(() => {
     if (monthDate > currentMonthStart) {
       setMonthDate(currentMonthStart);
@@ -294,19 +289,16 @@ function TraderCalendarPanel() {
   const daysInMonth = useMemo(() => new Date(year, monthIndex + 1, 0).getDate(), [year, monthIndex]);
   const leadingEmpty = useMemo(() => new Date(year, monthIndex, 1).getDay(), [year, monthIndex]);
 
-  // for "today" highlight
   const isThisMonth = now.getFullYear() === year && now.getMonth() === monthIndex;
   const todayDay = now.getDate();
 
   const isCurrentMonth = isThisMonth;
-
-  // ✅ NEW: disable prev arrow when we're at historyStart month
   const isHistoryStartMonth = year === historyStart.getFullYear() && monthIndex === historyStart.getMonth();
 
   const goPrevMonth = () => {
     setMonthDate((d) => {
       const prev = new Date(d.getFullYear(), d.getMonth() - 1, 1);
-      if (prev < historyStart) return d; // 🚫 prevent earlier than history
+      if (prev < historyStart) return d;
       return prev;
     });
   };
@@ -314,7 +306,7 @@ function TraderCalendarPanel() {
   const goNextMonth = () => {
     setMonthDate((d) => {
       const next = new Date(d.getFullYear(), d.getMonth() + 1, 1);
-      if (next > currentMonthStart) return d; // 🚫 prevent future
+      if (next > currentMonthStart) return d;
       return next;
     });
   };
@@ -328,8 +320,6 @@ function TraderCalendarPanel() {
   });
 
   const sum = (xs: number[]) => xs.reduce((a, b) => a + b, 0);
-
-  // ✅ FIX: 7d/30d should be last 7/30 CALENDAR days (no-trade days count as 0)
   const asNum = (v: number | undefined) => (typeof v === "number" ? v : 0);
 
   const sumDays = (arr: Array<number | undefined>, fromDay: number, toDay: number) => {
@@ -340,7 +330,6 @@ function TraderCalendarPanel() {
     return s;
   };
 
-  // generate month pnl (raw full month) — but if month before historyStart, show empty
   const dailyPnl = useMemo(() => {
     if (isMonthBeforeHistory) {
       return Array.from({ length: daysInMonth }, () => undefined) as Array<number | undefined>;
@@ -353,13 +342,12 @@ function TraderCalendarPanel() {
       const r = rand01(seedBase + d * 101);
       const r2 = rand01(seedBase + d * 911);
 
-      // ~22% no trades
       if (r < 0.22) {
         arr.push(undefined);
         continue;
       }
 
-      let v = (r2 - 0.52) * 6; // -3..+3-ish
+      let v = (r2 - 0.52) * 6;
 
       const spike = rand01(seedBase + d * 333);
       if (spike > 0.92) v += (spike - 0.9) * 1500;
@@ -371,25 +359,20 @@ function TraderCalendarPanel() {
     return arr;
   }, [year, monthIndex, daysInMonth, isMonthBeforeHistory]);
 
-  // ✅ hide future days in CURRENT month
   const dailyPnlVisible = useMemo(() => {
-    if (!isThisMonth) return dailyPnl; // past months = show all
+    if (!isThisMonth) return dailyPnl;
     return dailyPnl.map((v, idx) => (idx + 1 > todayDay ? undefined : v));
   }, [dailyPnl, isThisMonth, todayDay]);
 
-  // ✅ maxAbs based on visible data (no future spikes)
   const maxAbs = useMemo(() => {
     return dailyPnlVisible.reduce((mx, v) => (v === undefined ? mx : Math.max(mx, Math.abs(v))), 0);
   }, [dailyPnlVisible]);
 
-  // ✅ available months since historyStart up to selected month (inclusive)
   const monthsAvailableUpToSelected = useMemo(() => {
-    const n =
-      (year - historyStart.getFullYear()) * 12 + (monthIndex - historyStart.getMonth()) + 1;
+    const n = (year - historyStart.getFullYear()) * 12 + (monthIndex - historyStart.getMonth()) + 1;
     return Math.max(0, n);
   }, [year, monthIndex, historyStart]);
 
-  // ✅ requested months, clamped to available history
   const rangeMonthsRequested = range === "1m" ? 1 : range === "3m" ? 3 : 12;
   const rangeMonths = Math.max(1, Math.min(rangeMonthsRequested, monthsAvailableUpToSelected || 1));
 
@@ -398,8 +381,6 @@ function TraderCalendarPanel() {
 
     for (let mOffset = rangeMonths - 1; mOffset >= 0; mOffset--) {
       const d = new Date(year, monthIndex - mOffset, 1);
-
-      // 🚫 do not include months before history
       const histMonthStart = new Date(historyStart.getFullYear(), historyStart.getMonth(), 1);
       if (d < histMonthStart) continue;
 
@@ -411,7 +392,6 @@ function TraderCalendarPanel() {
       const isCur = y === now.getFullYear() && mi === now.getMonth();
 
       for (let day = 1; day <= dim; day++) {
-        // 🚫 range also must not include future days in CURRENT month
         if (isCur && day > now.getDate()) break;
 
         const r = rand01(seedBase + day * 101);
@@ -446,15 +426,8 @@ function TraderCalendarPanel() {
     };
   }, [dailyPnlVisible, todayDay, isThisMonth, daysInMonth, rangeSeries]);
 
-  // ✅ label: if clicked "1y" but history < 12 months, show YTD instead (more honest)
   const rangeLabel =
-    range === "1m"
-      ? "1m"
-      : range === "3m"
-        ? "3m"
-        : monthsAvailableUpToSelected < 12
-          ? "YTD"
-          : "1y";
+    range === "1m" ? "1m" : range === "3m" ? "3m" : monthsAvailableUpToSelected < 12 ? "YTD" : "1y";
 
   return (
     <Card title="Trader snapshot" subtitle="Binance-style calendar (real month + intensity + tooltip).">
@@ -597,8 +570,7 @@ function TraderCalendarPanel() {
                 <div style={{ display: "flex", gap: 6, alignItems: "center" }}>
                   {(["1m", "3m", "1y"] as RangeKey[]).map((k) => {
                     const active = k === range;
-                    const effectiveLabel =
-                      k === "1y" && monthsAvailableUpToSelected < 12 ? "YTD" : k;
+                    const effectiveLabel = k === "1y" && monthsAvailableUpToSelected < 12 ? "YTD" : k;
 
                     return (
                       <button
@@ -839,6 +811,9 @@ export default function HomePage() {
             <div style={{ display: "flex", gap: 8, flexWrap: "wrap", marginBottom: 12, alignItems: "center" }}>
               <Badge>Crypto only</Badge>
               <Badge>No exchange API</Badge>
+              <Badge>📈 R-based stats</Badge>
+              <Badge>Win / Loss / BE</Badge>
+              <Badge>🧠 Psychology notes</Badge>
             </div>
 
             <div style={{ fontSize: 44, fontWeight: 950, letterSpacing: -0.8, lineHeight: 1.05 }}>{t.heroTitle}</div>
@@ -857,23 +832,19 @@ export default function HomePage() {
             <div style={{ marginTop: 10, opacity: 0.75, fontSize: 12, lineHeight: 1.5 }}>
               No exchange connection • No spreadsheets • Your data stays yours
             </div>
-
-            <div style={{ marginTop: 14, display: "flex", gap: 10, flexWrap: "wrap", opacity: 0.85 }}>
-              <Badge>📈 R-based stats</Badge>
-              <Badge>Win / Loss / BE</Badge>
-              <Badge>🧠 Psychology notes</Badge>
-              <Badge>🔒 No exchange API</Badge>
-            </div>
           </div>
 
-          <div className="mockDashboardWrap">
-            <DashboardWindow>
-              <MockDashboard />
-            </DashboardWindow>
+          {/* ✅ FIX: make right panel same height as left */}
+          <div className="mockDashboardWrap" style={{ height: "100%", display: "flex", minHeight: 0 }}>
+            <div style={{ flex: 1, display: "flex", minHeight: 0 }}>
+              <DashboardWindow>
+                <MockDashboard />
+              </DashboardWindow>
+            </div>
           </div>
         </div>
 
-        {/* ✅ TRADER PANEL (inserted before How it works) */}
+        {/* TRADER PANEL */}
         <div style={{ marginTop: 18 }}>
           <TraderCalendarPanel />
         </div>
@@ -897,388 +868,6 @@ export default function HomePage() {
             ))}
           </div>
         </div>
-   
-        {/* FAQ */}
-        <div style={{ marginTop: 18 }}>
-          <Card title="FAQ" subtitle="Quick answers before you start.">
-            <div
-              className="faqGrid"
-              style={{
-                display: "grid",
-                gridTemplateColumns: "repeat(2, 1fr)",
-                gap: 12,
-                alignItems: "stretch",
-              }}
-            >
-              {[
-                {
-                  q: "Do I need exchange API keys?",
-                  a: "No. TradeLog doesn’t require Binance/Bybit API keys. You log trades manually to stay intentional and reduce security risk.",
-                },
-                {
-                  q: "Spot & Futures supported?",
-                  a: "Yes. Log spot or futures trades the same way — with entry, stop, target and the result measured in R.",
-                },
-                {
-                  q: "Why R instead of PnL?",
-                  a: "PnL can lie when position size changes. R (risk units) shows discipline and consistency — comparable across trades.",
-                },
-                {
-                  q: "Can I export / backup?",
-                  a: "Yes. Export CSV for spreadsheets and create JSON backups to restore or migrate your journal anytime.",
-                },
-              ].map(({ q, a }) => (
-                <div
-                  key={q}
-                  style={{
-                    padding: 14,
-                    borderRadius: 16,
-                    border: "1px solid rgba(255,255,255,0.10)",
-                    background: "rgba(255,255,255,0.02)",
-                    display: "grid",
-                    gap: 8,
-                  }}
-                >
-                  <div style={{ fontWeight: 900 }}>{q}</div>
-                  <div style={{ fontSize: 13, opacity: 0.75, lineHeight: 1.6 }}>{a}</div>
-                </div>
-              ))}
-
-              <div
-                style={{
-                  padding: 14,
-                  borderRadius: 16,
-                  border: "1px solid rgba(255,255,255,0.10)",
-                  background: "rgba(255,255,255,0.02)",
-                  display: "grid",
-                  gap: 8,
-                  gridColumn: "1 / -1",
-                }}
-              >
-                <div style={{ fontWeight: 900 }}>Is my data private?</div>
-                <div style={{ fontSize: 13, opacity: 0.75, lineHeight: 1.6 }}>
-                  Yes. TradeLog is built around local-first principles. You keep control of your data and can export it
-                  whenever you want.
-                </div>
-              </div>
-            </div>
-          </Card>
-        </div>
-
-        {/* WHY R NOT PNL */}
-        <div style={{ marginTop: 18 }}>
-          <Card title="Why R, not PnL?" subtitle="Because money alone doesn’t tell the truth.">
-            <div style={{ display: "grid", gap: 12, lineHeight: 1.6 }}>
-              <div style={{ fontSize: 14, opacity: 0.8 }}>
-                PnL changes with position size and luck. A +$200 trade can still be a bad decision if you risked $400.
-              </div>
-              <div style={{ fontSize: 14, fontWeight: 600, opacity: 0.9 }}>
-                R (risk units) measures discipline — how well you execute your plan, independent of account size.
-              </div>
-              <div
-                style={{
-                  marginTop: 6,
-                  padding: 12,
-                  borderRadius: 14,
-                  border: "1px solid rgba(255,255,255,0.10)",
-                  background: "rgba(255,255,255,0.02)",
-                  fontSize: 13,
-                  opacity: 0.85,
-                }}
-              >
-                📌 A trader who respects risk stays consistent. R makes that visible.
-              </div>
-            </div>
-          </Card>
-        </div>
-
-        {/* PnL vs R (animated) */}
-        <div style={{ marginTop: 18 }}>
-          <Card title="PnL vs R" subtitle="PnL is noisy. R shows execution quality.">
-            <div
-              className="pnlRGrid"
-              style={{
-                display: "grid",
-                gridTemplateColumns: "1.25fr 0.75fr",
-                gap: 14,
-                alignItems: "stretch",
-              }}
-            >
-              {/* Chart */}
-              <div
-                style={{
-                  position: "relative",
-                  borderRadius: 16,
-                  border: "1px solid rgba(255,255,255,0.10)",
-                  background:
-                    "radial-gradient(900px 260px at 20% 0%, rgba(140,80,255,0.12), transparent 55%), rgba(255,255,255,0.02)",
-                  padding: 14,
-                  paddingTop: 18,
-                  paddingBottom: 18,
-                  overflow: "hidden",
-                }}
-              >
-                <div
-                  style={{
-                    display: "flex",
-                    justifyContent: "space-between",
-                    gap: 12,
-                    alignItems: "center",
-                    marginBottom: 8,
-                    fontSize: 12,
-                    opacity: 0.9,
-                  }}
-                >
-                  <div style={{ opacity: 0.75 }}>Better ↑</div>
-
-                  <div style={{ display: "flex", gap: 12, flexWrap: "wrap", alignItems: "center" }}>
-                    <div style={{ display: "flex", alignItems: "center", gap: 8, opacity: 0.75 }}>
-                      <span
-                        style={{
-                          width: 18,
-                          height: 2,
-                          background: "rgba(255,255,255,0.28)",
-                          display: "inline-block",
-                        }}
-                      />
-                      PnL (size & luck)
-                    </div>
-                    <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                      <span
-                        style={{
-                          width: 18,
-                          height: 3,
-                          background: "rgba(140,80,255,0.95)",
-                          display: "inline-block",
-                        }}
-                      />
-                      R (discipline)
-                    </div>
-                  </div>
-
-                  <div style={{ opacity: 0.65 }}>Worse ↓</div>
-                </div>
-
-                <svg width="100%" height="210" viewBox="0 0 560 210" role="img" aria-label="PnL vs R chart">
-                  <defs>
-                    <linearGradient id="fade2" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="0%" stopColor="rgba(255,255,255,0.10)" />
-                      <stop offset="100%" stopColor="rgba(255,255,255,0.02)" />
-                    </linearGradient>
-
-                    <filter id="glow2">
-                      <feGaussianBlur stdDeviation="4" result="blur" />
-                      <feMerge>
-                        <feMergeNode in="blur" />
-                        <feMergeNode in="SourceGraphic" />
-                      </feMerge>
-                    </filter>
-                  </defs>
-
-                  <rect x="0" y="0" width="560" height="210" fill="transparent" />
-
-                  {Array.from({ length: 5 }).map((_, i) => {
-                    const y = 40 + i * 35;
-                    return (
-                      <line
-                        key={i}
-                        x1="0"
-                        y1={y}
-                        x2="560"
-                        y2={y}
-                        stroke={i === 4 ? "rgba(255,255,255,0.10)" : "rgba(255,255,255,0.06)"}
-                        strokeWidth="1"
-                      />
-                    );
-                  })}
-
-                  <rect x="0" y="175" width="560" height="35" fill="url(#fade2)" opacity="0.55" />
-
-                  <polyline
-                    className="pnlLine"
-                    points="10,135 60,110 110,155 160,102 210,160 260,96 310,172 360,88 410,166 460,80 510,148 550,70"
-                    fill="none"
-                    stroke="rgba(255,255,255,0.26)"
-                    strokeWidth="1.7"
-                    strokeLinejoin="round"
-                    strokeLinecap="round"
-                  />
-
-                  <polyline
-                    className="rGlow"
-                    points="10,165 60,160 110,153 160,148 210,140 260,132 310,124 360,116 410,106 460,98 510,88 550,78"
-                    fill="none"
-                    stroke="rgba(140,80,255,0.35)"
-                    strokeWidth="7"
-                    strokeLinejoin="round"
-                    strokeLinecap="round"
-                    filter="url(#glow2)"
-                    opacity="0.55"
-                  />
-                  <polyline
-                    className="rLine"
-                    points="10,165 60,160 110,153 160,148 210,140 260,132 310,124 360,116 410,106 460,98 510,88 550,78"
-                    fill="none"
-                    stroke="rgba(140,80,255,0.95)"
-                    strokeWidth="3"
-                    strokeLinejoin="round"
-                    strokeLinecap="round"
-                  />
-
-                  {[
-                    [10, 165],
-                    [60, 160],
-                    [110, 153],
-                    [160, 148],
-                    [210, 140],
-                    [260, 132],
-                    [310, 124],
-                    [360, 116],
-                    [410, 106],
-                    [460, 98],
-                    [510, 88],
-                    [550, 78],
-                  ].map(([x, y]) => (
-                    <circle key={`${x}-${y}`} cx={x} cy={y} r="3.2" fill="rgba(140,80,255,0.95)" />
-                  ))}
-                </svg>
-
-                <div style={{ marginTop: 10, fontSize: 12, opacity: 0.72, lineHeight: 1.5 }}>
-                  PnL swings with size. <b>R stays comparable</b> — it reflects execution quality.
-                </div>
-              </div>
-
-              {/* Example */}
-              <div
-                style={{
-                  borderRadius: 16,
-                  border: "1px solid rgba(255,255,255,0.10)",
-                  background: "rgba(255,255,255,0.02)",
-                  padding: 14,
-                  display: "grid",
-                  gap: 10,
-                }}
-              >
-                <div style={{ fontWeight: 900 }}>Example</div>
-
-                <div style={{ fontSize: 13, opacity: 0.78, lineHeight: 1.6 }}>
-                  Trade A: +$200 looks great.
-                  <br />
-                  If risk was $400 → <b>+0.5R</b>.
-                </div>
-
-                <div style={{ fontSize: 13, opacity: 0.78, lineHeight: 1.6 }}>
-                  Trade B: -$50 looks small.
-                  <br />
-                  If risk was $25 → <b>-2R</b>.
-                </div>
-
-                <div
-                  style={{
-                    marginTop: 4,
-                    padding: 10,
-                    borderRadius: 14,
-                    border: "1px solid rgba(140,80,255,0.22)",
-                    background: "rgba(140,80,255,0.08)",
-                    fontSize: 12,
-                    opacity: 0.9,
-                    lineHeight: 1.5,
-                  }}
-                >
-                  R makes results honest — and improvement measurable.
-                </div>
-              </div>
-            </div>
-          </Card>
-        </div>
-
-        {/* BEFORE / AFTER */}
-        <div style={{ marginTop: 18 }}>
-          <Card title="Before vs After TradeLog" subtitle="Same trader. Different behavior.">
-            <div
-              className="beforeAfterGrid"
-              style={{
-                display: "grid",
-                gridTemplateColumns: "1fr 1fr",
-                gap: 14,
-                alignItems: "stretch",
-              }}
-            >
-              <div
-                style={{
-                  padding: 16,
-                  borderRadius: 18,
-                  border: "1px solid rgba(255,100,100,0.25)",
-                  background: "rgba(255,100,100,0.06)",
-                  display: "grid",
-                  gap: 10,
-                }}
-              >
-                <div style={{ fontWeight: 900, fontSize: 16 }}>Before</div>
-                <ul style={{ margin: 0, paddingLeft: 18, display: "grid", gap: 8, fontSize: 13, opacity: 0.85 }}>
-                  <li>Trading without a written plan</li>
-                  <li>Revenge trades after losses</li>
-                  <li>Moving stop-loss emotionally</li>
-                  <li>Judging performance by random PnL</li>
-                  <li>Repeating the same mistakes</li>
-                </ul>
-              </div>
-
-              <div
-                style={{
-                  padding: 16,
-                  borderRadius: 18,
-                  border: "1px solid rgba(80,200,120,0.25)",
-                  background: "rgba(80,200,120,0.06)",
-                  display: "grid",
-                  gap: 10,
-                }}
-              >
-                <div style={{ fontWeight: 900, fontSize: 16 }}>After</div>
-                <ul style={{ margin: 0, paddingLeft: 18, display: "grid", gap: 8, fontSize: 13, opacity: 0.9 }}>
-                  <li>Clear rules before every trade</li>
-                  <li>Losses tracked and reviewed in R</li>
-                  <li>Stops respected, risk controlled</li>
-                  <li>Consistency measured, not luck</li>
-                  <li>Patterns identified and improved</li>
-                </ul>
-              </div>
-            </div>
-          </Card>
-        </div>
-
-        {/* CTA */}
-        <div
-          style={{
-            marginTop: 18,
-            padding: 18,
-            borderRadius: 22,
-            border: "1px solid rgba(255,255,255,0.10)",
-            background:
-              "radial-gradient(900px 300px at 90% 10%, rgba(140,80,255,0.14), transparent 55%), rgba(255,255,255,0.02)",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "space-between",
-            gap: 12,
-            flexWrap: "wrap",
-          }}
-        >
-          <div>
-            <div style={{ fontSize: 18, fontWeight: 950 }}>{t.bottomTitle}</div>
-            <div style={{ opacity: 0.75, marginTop: 6, fontSize: 13 }}>
-              {t.bottomSub}
-            </div>
-          </div>
-
-          <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
-            <Link href="/register" style={{ textDecoration: "none" }}>
-              <Button variant="primary">Registration</Button>
-            </Link>
-            <Link href="/login" style={{ textDecoration: "none" }}>
-              <Button variant="secondary">Login</Button>
-            </Link>
-          </div>
-        </div>
 
         {/* Footer */}
         <div style={{ marginTop: 14, opacity: 0.6, fontSize: 12, display: "flex", justifyContent: "center" }}>
@@ -1286,6 +875,7 @@ export default function HomePage() {
         </div>
 
         <style jsx>{`
+          /* keep your "demo" hidden */
           .mockDashboardWrap :global([class*="demo"]),
           .mockDashboardWrap :global([data-demo]),
           .mockDashboardWrap :global(.demo),
@@ -1293,7 +883,15 @@ export default function HomePage() {
             display: none !important;
           }
 
-          /* PnL vs R line draw animation */
+          /* ✅ ensure the dashboard can stretch */
+          .mockDashboardWrap {
+            height: 100%;
+          }
+          .mockDashboardWrap :global(*) {
+            min-height: 0;
+          }
+
+          /* PnL vs R line draw animation (kept from your code) */
           .pnlLine,
           .rLine,
           .rGlow {
