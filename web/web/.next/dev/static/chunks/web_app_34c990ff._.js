@@ -1554,16 +1554,16 @@ const copy = {
             "Trade with data,",
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("br", {}, void 0, false, {
                 fileName: "[project]/web/app/page.tsx",
-                lineNumber: 40,
+                lineNumber: 39,
                 columnNumber: 7
             }, ("TURBOPACK compile-time value", void 0)),
-            "not emotions.",
+            "not emotions. ",
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("br", {}, void 0, false, {
                 fileName: "[project]/web/app/page.tsx",
-                lineNumber: 42,
-                columnNumber: 7
+                lineNumber: 40,
+                columnNumber: 21
             }, ("TURBOPACK compile-time value", void 0)),
-            "Stay consistent."
+            " Stay consistent."
         ]
     }, void 0, true),
     heroSub: "Log entries, exits, risk, emotions, and rules — so your results stop lying to you.",
@@ -1623,7 +1623,7 @@ function Badge({ children }) {
         children: children
     }, void 0, false, {
         fileName: "[project]/web/app/page.tsx",
-        lineNumber: 80,
+        lineNumber: 88,
         columnNumber: 5
     }, this);
 }
@@ -1653,27 +1653,27 @@ function Feature({ title, subtitle, points }) {
                             children: p
                         }, p, false, {
                             fileName: "[project]/web/app/page.tsx",
-                            lineNumber: 106,
+                            lineNumber: 130,
                             columnNumber: 15
                         }, this))
                 }, void 0, false, {
                     fileName: "[project]/web/app/page.tsx",
-                    lineNumber: 104,
+                    lineNumber: 120,
                     columnNumber: 11
                 }, this)
             }, void 0, false, {
                 fileName: "[project]/web/app/page.tsx",
-                lineNumber: 103,
+                lineNumber: 119,
                 columnNumber: 9
             }, this)
         }, void 0, false, {
             fileName: "[project]/web/app/page.tsx",
-            lineNumber: 102,
+            lineNumber: 118,
             columnNumber: 7
         }, this)
     }, void 0, false, {
         fileName: "[project]/web/app/page.tsx",
-        lineNumber: 101,
+        lineNumber: 117,
         columnNumber: 5
     }, this);
 }
@@ -1712,7 +1712,7 @@ function Step({ n, title, text }) {
                         children: n
                     }, void 0, false, {
                         fileName: "[project]/web/app/page.tsx",
-                        lineNumber: 129,
+                        lineNumber: 153,
                         columnNumber: 9
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1722,13 +1722,13 @@ function Step({ n, title, text }) {
                         children: title
                     }, void 0, false, {
                         fileName: "[project]/web/app/page.tsx",
-                        lineNumber: 144,
+                        lineNumber: 168,
                         columnNumber: 9
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "[project]/web/app/page.tsx",
-                lineNumber: 128,
+                lineNumber: 152,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1740,20 +1740,18 @@ function Step({ n, title, text }) {
                 children: text
             }, void 0, false, {
                 fileName: "[project]/web/app/page.tsx",
-                lineNumber: 146,
+                lineNumber: 171,
                 columnNumber: 7
             }, this)
         ]
     }, void 0, true, {
         fileName: "[project]/web/app/page.tsx",
-        lineNumber: 117,
+        lineNumber: 141,
         columnNumber: 5
     }, this);
 }
 _c2 = Step;
-/* =========================
-   Trader Panel (Binance-like)
-   ========================= */ function clamp01(x) {
+/* ========================= Trader Panel (Binance-like) ========================= */ function clamp01(x) {
     return Math.max(0, Math.min(1, x));
 }
 function fmtMoney(v) {
@@ -1809,29 +1807,27 @@ function rand01(seed) {
     };
 }
 // ✅ no file needed — embedded SVG placeholder image
-const TRADER_PLACEHOLDER = "data:image/svg+xml;charset=utf-8," + encodeURIComponent(`
-<svg xmlns="http://www.w3.org/2000/svg" width="900" height="675" viewBox="0 0 900 675">
-  <defs>
-    <radialGradient id="g" cx="30%" cy="0%" r="90%">
-      <stop offset="0%" stop-color="rgba(140,80,255,0.55)"/>
-      <stop offset="55%" stop-color="rgba(140,80,255,0.12)"/>
-      <stop offset="100%" stop-color="rgba(0,0,0,0.15)"/>
-    </radialGradient>
-    <linearGradient id="b" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0%" stop-color="#0b0b12"/>
-      <stop offset="100%" stop-color="#11131b"/>
-    </linearGradient>
-  </defs>
-  <rect width="900" height="675" fill="url(#b)"/>
-  <rect width="900" height="675" fill="url(#g)"/>
-  <circle cx="450" cy="310" r="150" fill="rgba(255,255,255,0.06)"/>
-  <circle cx="450" cy="270" r="70" fill="rgba(255,255,255,0.10)"/>
-  <path d="M290,530c35-90,115-135,160-135s125,45,160,135" fill="rgba(255,255,255,0.10)"/>
-  <text x="50%" y="92%" text-anchor="middle" fill="rgba(255,255,255,0.60)" font-family="Inter, Arial" font-size="28">
-    Trader profile (placeholder)
-  </text>
-</svg>
-`);
+const TRADER_PLACEHOLDER = "data:image/svg+xml;charset=utf-8," + encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" width="900" height="675" viewBox="0 0 900 675">
+      <defs>
+        <radialGradient id="g" cx="30%" cy="0%" r="90%">
+          <stop offset="0%" stop-color="rgba(140,80,255,0.55)"/>
+          <stop offset="55%" stop-color="rgba(140,80,255,0.12)"/>
+          <stop offset="100%" stop-color="rgba(0,0,0,0.15)"/>
+        </radialGradient>
+        <linearGradient id="b" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0%" stop-color="#0b0b12"/>
+          <stop offset="100%" stop-color="#11131b"/>
+        </linearGradient>
+      </defs>
+      <rect width="900" height="675" fill="url(#b)"/>
+      <rect width="900" height="675" fill="url(#g)"/>
+      <circle cx="450" cy="310" r="150" fill="rgba(255,255,255,0.06)"/>
+      <circle cx="450" cy="270" r="70" fill="rgba(255,255,255,0.10)"/>
+      <path d="M290,530c35-90,115-135,160-135s125,45,160,135" fill="rgba(255,255,255,0.10)"/>
+      <text x="50%" y="92%" text-anchor="middle" fill="rgba(255,255,255,0.60)" font-family="Inter, Arial" font-size="28">
+        Trader profile (placeholder)
+      </text>
+    </svg>`);
 function TraderCalendarPanel() {
     _s();
     const trader = {
@@ -1843,12 +1839,14 @@ function TraderCalendarPanel() {
         photoUrl: TRADER_PLACEHOLDER
     };
     const [range, setRange] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])("1m");
+    // ✅ current month by default
     const [monthDate, setMonthDate] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])({
         "TraderCalendarPanel.useState": ()=>{
             const n = new Date();
             return new Date(n.getFullYear(), n.getMonth(), 1);
         }
     }["TraderCalendarPanel.useState"]);
+    // stable "now" and currentMonthStart for blocking future navigation
     const now = (0, __TURBOPACK__imported__module__$5b$project$5d2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useMemo"])({
         "TraderCalendarPanel.useMemo[now]": ()=>new Date()
     }["TraderCalendarPanel.useMemo[now]"], []);
@@ -1857,6 +1855,8 @@ function TraderCalendarPanel() {
     }["TraderCalendarPanel.useMemo[currentMonthStart]"], [
         now
     ]);
+    // ✅ NEW: earliest month that has data (adjust if you want another "launch" month)
+    // Example: only Jan+Feb exist -> historyStart = Jan 1, 2026
     const historyStart = (0, __TURBOPACK__imported__module__$5b$project$5d2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useMemo"])({
         "TraderCalendarPanel.useMemo[historyStart]": ()=>new Date(2026, 0, 1)
     }["TraderCalendarPanel.useMemo[historyStart]"], []);
@@ -1871,6 +1871,7 @@ function TraderCalendarPanel() {
         monthStart,
         historyStart
     ]);
+    // ✅ Hard clamp: prevent future AND prevent going before historyStart
     (0, __TURBOPACK__imported__module__$5b$project$5d2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useEffect"])({
         "TraderCalendarPanel.useEffect": ()=>{
             if (monthDate > currentMonthStart) {
@@ -1903,21 +1904,23 @@ function TraderCalendarPanel() {
         year,
         monthIndex
     ]);
+    // for "today" highlight
     const isThisMonth = now.getFullYear() === year && now.getMonth() === monthIndex;
     const todayDay = now.getDate();
     const isCurrentMonth = isThisMonth;
+    // ✅ NEW: disable prev arrow when we're at historyStart month
     const isHistoryStartMonth = year === historyStart.getFullYear() && monthIndex === historyStart.getMonth();
     const goPrevMonth = ()=>{
         setMonthDate((d)=>{
             const prev = new Date(d.getFullYear(), d.getMonth() - 1, 1);
-            if (prev < historyStart) return d;
+            if (prev < historyStart) return d; // 🚫 prevent earlier than history
             return prev;
         });
     };
     const goNextMonth = ()=>{
         setMonthDate((d)=>{
             const next = new Date(d.getFullYear(), d.getMonth() + 1, 1);
-            if (next > currentMonthStart) return d;
+            if (next > currentMonthStart) return d; // 🚫 prevent future
             return next;
         });
     };
@@ -1929,6 +1932,7 @@ function TraderCalendarPanel() {
         value: ""
     });
     const sum = (xs)=>xs.reduce((a, b)=>a + b, 0);
+    // ✅ FIX: 7d/30d should be last 7/30 CALENDAR days (no-trade days count as 0)
     const asNum = (v)=>typeof v === "number" ? v : 0;
     const sumDays = (arr, fromDay, toDay)=>{
         const from = Math.max(1, fromDay);
@@ -1937,6 +1941,7 @@ function TraderCalendarPanel() {
         for(let d = from; d <= to; d++)s += asNum(arr[d - 1]);
         return s;
     };
+    // generate month pnl (raw full month) — but if month before historyStart, show empty
     const dailyPnl = (0, __TURBOPACK__imported__module__$5b$project$5d2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useMemo"])({
         "TraderCalendarPanel.useMemo[dailyPnl]": ()=>{
             if (isMonthBeforeHistory) {
@@ -1951,11 +1956,12 @@ function TraderCalendarPanel() {
             for(let d = 1; d <= daysInMonth; d++){
                 const r = rand01(seedBase + d * 101);
                 const r2 = rand01(seedBase + d * 911);
+                // ~22% no trades
                 if (r < 0.22) {
                     arr.push(undefined);
                     continue;
                 }
-                let v = (r2 - 0.52) * 6;
+                let v = (r2 - 0.52) * 6; // -3..+3-ish
                 const spike = rand01(seedBase + d * 333);
                 if (spike > 0.92) v += (spike - 0.9) * 1500;
                 if (spike < 0.06) v -= (0.08 - spike) * 900;
@@ -1969,9 +1975,10 @@ function TraderCalendarPanel() {
         daysInMonth,
         isMonthBeforeHistory
     ]);
+    // ✅ hide future days in CURRENT month
     const dailyPnlVisible = (0, __TURBOPACK__imported__module__$5b$project$5d2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useMemo"])({
         "TraderCalendarPanel.useMemo[dailyPnlVisible]": ()=>{
-            if (!isThisMonth) return dailyPnl;
+            if (!isThisMonth) return dailyPnl; // past months = show all
             return dailyPnl.map({
                 "TraderCalendarPanel.useMemo[dailyPnlVisible]": (v, idx)=>idx + 1 > todayDay ? undefined : v
             }["TraderCalendarPanel.useMemo[dailyPnlVisible]"]);
@@ -1981,6 +1988,7 @@ function TraderCalendarPanel() {
         isThisMonth,
         todayDay
     ]);
+    // ✅ maxAbs based on visible data (no future spikes)
     const maxAbs = (0, __TURBOPACK__imported__module__$5b$project$5d2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useMemo"])({
         "TraderCalendarPanel.useMemo[maxAbs]": ()=>{
             return dailyPnlVisible.reduce({
@@ -1990,6 +1998,7 @@ function TraderCalendarPanel() {
     }["TraderCalendarPanel.useMemo[maxAbs]"], [
         dailyPnlVisible
     ]);
+    // ✅ available months since historyStart up to selected month (inclusive)
     const monthsAvailableUpToSelected = (0, __TURBOPACK__imported__module__$5b$project$5d2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useMemo"])({
         "TraderCalendarPanel.useMemo[monthsAvailableUpToSelected]": ()=>{
             const n = (year - historyStart.getFullYear()) * 12 + (monthIndex - historyStart.getMonth()) + 1;
@@ -2000,6 +2009,7 @@ function TraderCalendarPanel() {
         monthIndex,
         historyStart
     ]);
+    // ✅ requested months, clamped to available history
     const rangeMonthsRequested = range === "1m" ? 1 : range === "3m" ? 3 : 12;
     const rangeMonths = Math.max(1, Math.min(rangeMonthsRequested, monthsAvailableUpToSelected || 1));
     const rangeSeries = (0, __TURBOPACK__imported__module__$5b$project$5d2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useMemo"])({
@@ -2007,6 +2017,7 @@ function TraderCalendarPanel() {
             const series = [];
             for(let mOffset = rangeMonths - 1; mOffset >= 0; mOffset--){
                 const d = new Date(year, monthIndex - mOffset, 1);
+                // 🚫 do not include months before history
                 const histMonthStart = new Date(historyStart.getFullYear(), historyStart.getMonth(), 1);
                 if (d < histMonthStart) continue;
                 const y = d.getFullYear();
@@ -2015,6 +2026,7 @@ function TraderCalendarPanel() {
                 const seedBase = hashSeed(`${y}-${mi}`);
                 const isCur = y === now.getFullYear() && mi === now.getMonth();
                 for(let day = 1; day <= dim; day++){
+                    // 🚫 range also must not include future days in CURRENT month
                     if (isCur && day > now.getDate()) break;
                     const r = rand01(seedBase + day * 101);
                     const r2 = rand01(seedBase + day * 911);
@@ -2056,6 +2068,7 @@ function TraderCalendarPanel() {
         daysInMonth,
         rangeSeries
     ]);
+    // ✅ label: if clicked "1y" but history < 12 months, show YTD instead (more honest)
     const rangeLabel = range === "1m" ? "1m" : range === "3m" ? "3m" : monthsAvailableUpToSelected < 12 ? "YTD" : "1y";
     return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$web$2f$app$2f$components$2f$ui$2f$Card$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Card"], {
         title: "Trader snapshot",
@@ -2098,7 +2111,7 @@ function TraderCalendarPanel() {
                                     }
                                 }, void 0, false, {
                                     fileName: "[project]/web/app/page.tsx",
-                                    lineNumber: 463,
+                                    lineNumber: 557,
                                     columnNumber: 13
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2124,7 +2137,7 @@ function TraderCalendarPanel() {
                                             children: trader.style
                                         }, void 0, false, {
                                             fileName: "[project]/web/app/page.tsx",
-                                            lineNumber: 470,
+                                            lineNumber: 579,
                                             columnNumber: 15
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -2140,19 +2153,19 @@ function TraderCalendarPanel() {
                                             children: "Risk-first"
                                         }, void 0, false, {
                                             fileName: "[project]/web/app/page.tsx",
-                                            lineNumber: 483,
+                                            lineNumber: 593,
                                             columnNumber: 15
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/web/app/page.tsx",
-                                    lineNumber: 469,
+                                    lineNumber: 569,
                                     columnNumber: 13
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/web/app/page.tsx",
-                            lineNumber: 453,
+                            lineNumber: 547,
                             columnNumber: 11
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2170,7 +2183,7 @@ function TraderCalendarPanel() {
                                     children: trader.name
                                 }, void 0, false, {
                                     fileName: "[project]/web/app/page.tsx",
-                                    lineNumber: 500,
+                                    lineNumber: 610,
                                     columnNumber: 13
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2186,7 +2199,7 @@ function TraderCalendarPanel() {
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/web/app/page.tsx",
-                                    lineNumber: 501,
+                                    lineNumber: 611,
                                     columnNumber: 13
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2203,27 +2216,27 @@ function TraderCalendarPanel() {
                                             children: "✅ Logs every trade (entry/stop/target)"
                                         }, void 0, false, {
                                             fileName: "[project]/web/app/page.tsx",
-                                            lineNumber: 506,
+                                            lineNumber: 625,
                                             columnNumber: 15
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                             children: "✅ Reviews mistakes weekly"
                                         }, void 0, false, {
                                             fileName: "[project]/web/app/page.tsx",
-                                            lineNumber: 507,
+                                            lineNumber: 626,
                                             columnNumber: 15
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                             children: "✅ Measures performance in R, not vibes"
                                         }, void 0, false, {
                                             fileName: "[project]/web/app/page.tsx",
-                                            lineNumber: 508,
+                                            lineNumber: 627,
                                             columnNumber: 15
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/web/app/page.tsx",
-                                    lineNumber: 505,
+                                    lineNumber: 615,
                                     columnNumber: 13
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2243,19 +2256,19 @@ function TraderCalendarPanel() {
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/web/app/page.tsx",
-                                    lineNumber: 511,
+                                    lineNumber: 630,
                                     columnNumber: 13
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/web/app/page.tsx",
-                            lineNumber: 499,
+                            lineNumber: 609,
                             columnNumber: 11
                         }, this)
                     ]
                 }, void 0, true, {
                     fileName: "[project]/web/app/page.tsx",
-                    lineNumber: 444,
+                    lineNumber: 538,
                     columnNumber: 9
                 }, this),
                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2298,7 +2311,7 @@ function TraderCalendarPanel() {
                                     children: tip.title
                                 }, void 0, false, {
                                     fileName: "[project]/web/app/page.tsx",
-                                    lineNumber: 558,
+                                    lineNumber: 677,
                                     columnNumber: 15
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2309,13 +2322,13 @@ function TraderCalendarPanel() {
                                     children: tip.value
                                 }, void 0, false, {
                                     fileName: "[project]/web/app/page.tsx",
-                                    lineNumber: 559,
+                                    lineNumber: 680,
                                     columnNumber: 15
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/web/app/page.tsx",
-                            lineNumber: 542,
+                            lineNumber: 661,
                             columnNumber: 13
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2340,7 +2353,7 @@ function TraderCalendarPanel() {
                                             children: "Futures PnL"
                                         }, void 0, false, {
                                             fileName: "[project]/web/app/page.tsx",
-                                            lineNumber: 566,
+                                            lineNumber: 694,
                                             columnNumber: 15
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2382,13 +2395,13 @@ function TraderCalendarPanel() {
                                                             children: effectiveLabel
                                                         }, k, false, {
                                                             fileName: "[project]/web/app/page.tsx",
-                                                            lineNumber: 576,
+                                                            lineNumber: 707,
                                                             columnNumber: 23
                                                         }, this);
                                                     })
                                                 }, void 0, false, {
                                                     fileName: "[project]/web/app/page.tsx",
-                                                    lineNumber: 570,
+                                                    lineNumber: 698,
                                                     columnNumber: 17
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -2410,7 +2423,7 @@ function TraderCalendarPanel() {
                                                     children: "←"
                                                 }, void 0, false, {
                                                     fileName: "[project]/web/app/page.tsx",
-                                                    lineNumber: 604,
+                                                    lineNumber: 739,
                                                     columnNumber: 17
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2427,7 +2440,7 @@ function TraderCalendarPanel() {
                                                     children: monthLabel
                                                 }, void 0, false, {
                                                     fileName: "[project]/web/app/page.tsx",
-                                                    lineNumber: 624,
+                                                    lineNumber: 759,
                                                     columnNumber: 17
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -2449,19 +2462,19 @@ function TraderCalendarPanel() {
                                                     children: "→"
                                                 }, void 0, false, {
                                                     fileName: "[project]/web/app/page.tsx",
-                                                    lineNumber: 639,
+                                                    lineNumber: 774,
                                                     columnNumber: 17
                                                 }, this)
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/web/app/page.tsx",
-                                            lineNumber: 568,
+                                            lineNumber: 696,
                                             columnNumber: 15
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/web/app/page.tsx",
-                                    lineNumber: 565,
+                                    lineNumber: 686,
                                     columnNumber: 13
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2507,7 +2520,7 @@ function TraderCalendarPanel() {
                                                     children: it.k
                                                 }, void 0, false, {
                                                     fileName: "[project]/web/app/page.tsx",
-                                                    lineNumber: 682,
+                                                    lineNumber: 826,
                                                     columnNumber: 21
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2519,25 +2532,25 @@ function TraderCalendarPanel() {
                                                     children: fmtMoney(it.v)
                                                 }, void 0, false, {
                                                     fileName: "[project]/web/app/page.tsx",
-                                                    lineNumber: 683,
+                                                    lineNumber: 827,
                                                     columnNumber: 21
                                                 }, this)
                                             ]
                                         }, it.k, true, {
                                             fileName: "[project]/web/app/page.tsx",
-                                            lineNumber: 671,
+                                            lineNumber: 815,
                                             columnNumber: 19
                                         }, this);
                                     })
                                 }, void 0, false, {
                                     fileName: "[project]/web/app/page.tsx",
-                                    lineNumber: 662,
+                                    lineNumber: 799,
                                     columnNumber: 13
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/web/app/page.tsx",
-                            lineNumber: 564,
+                            lineNumber: 685,
                             columnNumber: 11
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2559,7 +2572,7 @@ function TraderCalendarPanel() {
                                             children: "Daily PnL"
                                         }, void 0, false, {
                                             fileName: "[project]/web/app/page.tsx",
-                                            lineNumber: 693,
+                                            lineNumber: 852,
                                             columnNumber: 15
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2570,13 +2583,13 @@ function TraderCalendarPanel() {
                                             children: "S M T W T F S"
                                         }, void 0, false, {
                                             fileName: "[project]/web/app/page.tsx",
-                                            lineNumber: 694,
+                                            lineNumber: 855,
                                             columnNumber: 15
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/web/app/page.tsx",
-                                    lineNumber: 692,
+                                    lineNumber: 844,
                                     columnNumber: 13
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2600,7 +2613,7 @@ function TraderCalendarPanel() {
                                                 }
                                             }, `e-${i}`, false, {
                                                 fileName: "[project]/web/app/page.tsx",
-                                                lineNumber: 707,
+                                                lineNumber: 868,
                                                 columnNumber: 17
                                             }, this)),
                                         dailyPnlVisible.map((v, idx)=>{
@@ -2652,13 +2665,13 @@ function TraderCalendarPanel() {
                                                                 children: "• today"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/web/app/page.tsx",
-                                                                lineNumber: 750,
-                                                                columnNumber: 34
+                                                                lineNumber: 928,
+                                                                columnNumber: 25
                                                             }, this) : null
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/web/app/page.tsx",
-                                                        lineNumber: 748,
+                                                        lineNumber: 925,
                                                         columnNumber: 21
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2670,20 +2683,20 @@ function TraderCalendarPanel() {
                                                         children: displaySmall
                                                     }, void 0, false, {
                                                         fileName: "[project]/web/app/page.tsx",
-                                                        lineNumber: 752,
+                                                        lineNumber: 933,
                                                         columnNumber: 21
                                                     }, this)
                                                 ]
                                             }, day, true, {
                                                 fileName: "[project]/web/app/page.tsx",
-                                                lineNumber: 730,
+                                                lineNumber: 893,
                                                 columnNumber: 19
                                             }, this);
                                         })
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/web/app/page.tsx",
-                                    lineNumber: 697,
+                                    lineNumber: 858,
                                     columnNumber: 13
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2696,30 +2709,30 @@ function TraderCalendarPanel() {
                                     children: "The calendar reveals streaks, revenge days, and risk spikes — the stuff you actually need to fix."
                                 }, void 0, false, {
                                     fileName: "[project]/web/app/page.tsx",
-                                    lineNumber: 758,
+                                    lineNumber: 943,
                                     columnNumber: 13
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/web/app/page.tsx",
-                            lineNumber: 691,
+                            lineNumber: 843,
                             columnNumber: 11
                         }, this)
                     ]
                 }, void 0, true, {
                     fileName: "[project]/web/app/page.tsx",
-                    lineNumber: 529,
+                    lineNumber: 648,
                     columnNumber: 9
                 }, this)
             ]
         }, void 0, true, {
             fileName: "[project]/web/app/page.tsx",
-            lineNumber: 434,
+            lineNumber: 528,
             columnNumber: 7
         }, this)
     }, void 0, false, {
         fileName: "[project]/web/app/page.tsx",
-        lineNumber: 433,
+        lineNumber: 524,
         columnNumber: 5
     }, this);
 }
@@ -2735,7 +2748,7 @@ function HomePage() {
         children: [
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$web$2f$app$2f$components$2f$marketing$2f$Background3D$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Background3D"], {}, void 0, false, {
                 fileName: "[project]/web/app/page.tsx",
-                lineNumber: 774,
+                lineNumber: 967,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2743,7 +2756,7 @@ function HomePage() {
                     position: "relative",
                     zIndex: 1
                 },
-                className: "jsx-6fd383b431260eb2",
+                className: "jsx-910ace414c98bef2",
                 children: [
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$web$2f$app$2f$components$2f$ui$2f$Layout$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["HeaderRow"], {
                         title: "TradeLog",
@@ -2754,7 +2767,7 @@ function HomePage() {
                                 gap: 8,
                                 flexWrap: "wrap"
                             },
-                            className: "jsx-6fd383b431260eb2",
+                            className: "jsx-910ace414c98bef2",
                             children: [
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$web$2f$node_modules$2f$next$2f$dist$2f$client$2f$app$2d$dir$2f$link$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
                                     href: "/login",
@@ -2766,12 +2779,12 @@ function HomePage() {
                                         children: "Login"
                                     }, void 0, false, {
                                         fileName: "[project]/web/app/page.tsx",
-                                        lineNumber: 783,
+                                        lineNumber: 976,
                                         columnNumber: 17
                                     }, void 0)
                                 }, void 0, false, {
                                     fileName: "[project]/web/app/page.tsx",
-                                    lineNumber: 782,
+                                    lineNumber: 975,
                                     columnNumber: 15
                                 }, void 0),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$web$2f$node_modules$2f$next$2f$dist$2f$client$2f$app$2d$dir$2f$link$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
@@ -2784,23 +2797,23 @@ function HomePage() {
                                         children: "Registration"
                                     }, void 0, false, {
                                         fileName: "[project]/web/app/page.tsx",
-                                        lineNumber: 786,
+                                        lineNumber: 979,
                                         columnNumber: 17
                                     }, void 0)
                                 }, void 0, false, {
                                     fileName: "[project]/web/app/page.tsx",
-                                    lineNumber: 785,
+                                    lineNumber: 978,
                                     columnNumber: 15
                                 }, void 0)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/web/app/page.tsx",
-                            lineNumber: 781,
+                            lineNumber: 974,
                             columnNumber: 13
                         }, void 0)
                     }, void 0, false, {
                         fileName: "[project]/web/app/page.tsx",
-                        lineNumber: 777,
+                        lineNumber: 970,
                         columnNumber: 9
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2811,7 +2824,7 @@ function HomePage() {
                             alignItems: "stretch",
                             marginTop: 10
                         },
-                        className: "jsx-6fd383b431260eb2",
+                        className: "jsx-910ace414c98bef2",
                         children: [
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                 style: {
@@ -2820,7 +2833,7 @@ function HomePage() {
                                     border: "1px solid rgba(255,255,255,0.10)",
                                     background: "radial-gradient(1200px 400px at 10% 10%, rgba(140,80,255,0.16), transparent 50%), rgba(255,255,255,0.02)"
                                 },
-                                className: "jsx-6fd383b431260eb2",
+                                className: "jsx-910ace414c98bef2",
                                 children: [
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                         style: {
@@ -2830,47 +2843,26 @@ function HomePage() {
                                             marginBottom: 12,
                                             alignItems: "center"
                                         },
-                                        className: "jsx-6fd383b431260eb2",
+                                        className: "jsx-910ace414c98bef2",
                                         children: [
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(Badge, {
                                                 children: "Crypto only"
                                             }, void 0, false, {
                                                 fileName: "[project]/web/app/page.tsx",
-                                                lineNumber: 812,
+                                                lineNumber: 1013,
                                                 columnNumber: 15
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(Badge, {
                                                 children: "No exchange API"
                                             }, void 0, false, {
                                                 fileName: "[project]/web/app/page.tsx",
-                                                lineNumber: 813,
-                                                columnNumber: 15
-                                            }, this),
-                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(Badge, {
-                                                children: "📈 R-based stats"
-                                            }, void 0, false, {
-                                                fileName: "[project]/web/app/page.tsx",
-                                                lineNumber: 814,
-                                                columnNumber: 15
-                                            }, this),
-                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(Badge, {
-                                                children: "Win / Loss / BE"
-                                            }, void 0, false, {
-                                                fileName: "[project]/web/app/page.tsx",
-                                                lineNumber: 815,
-                                                columnNumber: 15
-                                            }, this),
-                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(Badge, {
-                                                children: "🧠 Psychology notes"
-                                            }, void 0, false, {
-                                                fileName: "[project]/web/app/page.tsx",
-                                                lineNumber: 816,
+                                                lineNumber: 1014,
                                                 columnNumber: 15
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/web/app/page.tsx",
-                                        lineNumber: 811,
+                                        lineNumber: 1004,
                                         columnNumber: 13
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2880,11 +2872,11 @@ function HomePage() {
                                             letterSpacing: -0.8,
                                             lineHeight: 1.05
                                         },
-                                        className: "jsx-6fd383b431260eb2",
+                                        className: "jsx-910ace414c98bef2",
                                         children: t.heroTitle
                                     }, void 0, false, {
                                         fileName: "[project]/web/app/page.tsx",
-                                        lineNumber: 819,
+                                        lineNumber: 1017,
                                         columnNumber: 13
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2894,11 +2886,11 @@ function HomePage() {
                                             fontSize: 14,
                                             lineHeight: 1.6
                                         },
-                                        className: "jsx-6fd383b431260eb2",
+                                        className: "jsx-910ace414c98bef2",
                                         children: t.heroSub
                                     }, void 0, false, {
                                         fileName: "[project]/web/app/page.tsx",
-                                        lineNumber: 821,
+                                        lineNumber: 1028,
                                         columnNumber: 13
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2908,7 +2900,7 @@ function HomePage() {
                                             flexWrap: "wrap",
                                             marginTop: 16
                                         },
-                                        className: "jsx-6fd383b431260eb2",
+                                        className: "jsx-910ace414c98bef2",
                                         children: [
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$web$2f$node_modules$2f$next$2f$dist$2f$client$2f$app$2d$dir$2f$link$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
                                                 href: "/register",
@@ -2920,12 +2912,12 @@ function HomePage() {
                                                     children: "Registration"
                                                 }, void 0, false, {
                                                     fileName: "[project]/web/app/page.tsx",
-                                                    lineNumber: 825,
+                                                    lineNumber: 1048,
                                                     columnNumber: 17
                                                 }, this)
                                             }, void 0, false, {
                                                 fileName: "[project]/web/app/page.tsx",
-                                                lineNumber: 824,
+                                                lineNumber: 1047,
                                                 columnNumber: 15
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$web$2f$node_modules$2f$next$2f$dist$2f$client$2f$app$2d$dir$2f$link$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
@@ -2938,18 +2930,18 @@ function HomePage() {
                                                     children: "Login"
                                                 }, void 0, false, {
                                                     fileName: "[project]/web/app/page.tsx",
-                                                    lineNumber: 828,
+                                                    lineNumber: 1051,
                                                     columnNumber: 17
                                                 }, this)
                                             }, void 0, false, {
                                                 fileName: "[project]/web/app/page.tsx",
-                                                lineNumber: 827,
+                                                lineNumber: 1050,
                                                 columnNumber: 15
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/web/app/page.tsx",
-                                        lineNumber: 823,
+                                        lineNumber: 1039,
                                         columnNumber: 13
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2959,80 +2951,107 @@ function HomePage() {
                                             fontSize: 12,
                                             lineHeight: 1.5
                                         },
-                                        className: "jsx-6fd383b431260eb2",
+                                        className: "jsx-910ace414c98bef2",
                                         children: "No exchange connection • No spreadsheets • Your data stays yours"
                                     }, void 0, false, {
                                         fileName: "[project]/web/app/page.tsx",
-                                        lineNumber: 832,
+                                        lineNumber: 1055,
+                                        columnNumber: 13
+                                    }, this),
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                        style: {
+                                            marginTop: 14,
+                                            display: "flex",
+                                            gap: 10,
+                                            flexWrap: "wrap",
+                                            opacity: 0.85
+                                        },
+                                        className: "jsx-910ace414c98bef2",
+                                        children: [
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(Badge, {
+                                                children: "📈 R-based stats"
+                                            }, void 0, false, {
+                                                fileName: "[project]/web/app/page.tsx",
+                                                lineNumber: 1075,
+                                                columnNumber: 15
+                                            }, this),
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(Badge, {
+                                                children: "Win / Loss / BE"
+                                            }, void 0, false, {
+                                                fileName: "[project]/web/app/page.tsx",
+                                                lineNumber: 1076,
+                                                columnNumber: 15
+                                            }, this),
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(Badge, {
+                                                children: "🧠 Psychology notes"
+                                            }, void 0, false, {
+                                                fileName: "[project]/web/app/page.tsx",
+                                                lineNumber: 1077,
+                                                columnNumber: 15
+                                            }, this),
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(Badge, {
+                                                children: "🔒 No exchange API"
+                                            }, void 0, false, {
+                                                fileName: "[project]/web/app/page.tsx",
+                                                lineNumber: 1078,
+                                                columnNumber: 15
+                                            }, this)
+                                        ]
+                                    }, void 0, true, {
+                                        fileName: "[project]/web/app/page.tsx",
+                                        lineNumber: 1066,
                                         columnNumber: 13
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/web/app/page.tsx",
-                                lineNumber: 802,
+                                lineNumber: 995,
                                 columnNumber: 11
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                style: {
-                                    height: "100%",
-                                    display: "flex",
-                                    minHeight: 0
-                                },
-                                className: "jsx-6fd383b431260eb2" + " " + "mockDashboardWrap",
-                                children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                    style: {
-                                        flex: 1,
-                                        display: "flex",
-                                        minHeight: 0
-                                    },
-                                    className: "jsx-6fd383b431260eb2",
-                                    children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$web$2f$app$2f$components$2f$marketing$2f$DashboardWindow$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["DashboardWindow"], {
-                                        children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$web$2f$app$2f$components$2f$marketing$2f$MockDashboard$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["MockDashboard"], {}, void 0, false, {
-                                            fileName: "[project]/web/app/page.tsx",
-                                            lineNumber: 841,
-                                            columnNumber: 17
-                                        }, this)
-                                    }, void 0, false, {
+                                className: "jsx-910ace414c98bef2" + " " + "mockDashboardWrap",
+                                children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$web$2f$app$2f$components$2f$marketing$2f$DashboardWindow$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["DashboardWindow"], {
+                                    children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$web$2f$app$2f$components$2f$marketing$2f$MockDashboard$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["MockDashboard"], {}, void 0, false, {
                                         fileName: "[project]/web/app/page.tsx",
-                                        lineNumber: 840,
+                                        lineNumber: 1084,
                                         columnNumber: 15
                                     }, this)
                                 }, void 0, false, {
                                     fileName: "[project]/web/app/page.tsx",
-                                    lineNumber: 839,
+                                    lineNumber: 1083,
                                     columnNumber: 13
                                 }, this)
                             }, void 0, false, {
                                 fileName: "[project]/web/app/page.tsx",
-                                lineNumber: 838,
+                                lineNumber: 1082,
                                 columnNumber: 11
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/web/app/page.tsx",
-                        lineNumber: 793,
+                        lineNumber: 986,
                         columnNumber: 9
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                         style: {
                             marginTop: 18
                         },
-                        className: "jsx-6fd383b431260eb2",
+                        className: "jsx-910ace414c98bef2",
                         children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(TraderCalendarPanel, {}, void 0, false, {
                             fileName: "[project]/web/app/page.tsx",
-                            lineNumber: 849,
+                            lineNumber: 1091,
                             columnNumber: 11
                         }, this)
                     }, void 0, false, {
                         fileName: "[project]/web/app/page.tsx",
-                        lineNumber: 848,
+                        lineNumber: 1090,
                         columnNumber: 9
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                         style: {
                             marginTop: 10
                         },
-                        className: "jsx-6fd383b431260eb2",
+                        className: "jsx-910ace414c98bef2",
                         children: [
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                 style: {
@@ -3040,11 +3059,11 @@ function HomePage() {
                                     fontWeight: 950,
                                     marginBottom: 10
                                 },
-                                className: "jsx-6fd383b431260eb2",
+                                className: "jsx-910ace414c98bef2",
                                 children: "How it works"
                             }, void 0, false, {
                                 fileName: "[project]/web/app/page.tsx",
-                                lineNumber: 854,
+                                lineNumber: 1096,
                                 columnNumber: 11
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3054,7 +3073,7 @@ function HomePage() {
                                     gap: 12,
                                     alignItems: "stretch"
                                 },
-                                className: "jsx-6fd383b431260eb2",
+                                className: "jsx-910ace414c98bef2",
                                 children: [
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(Step, {
                                         n: "1",
@@ -3062,7 +3081,7 @@ function HomePage() {
                                         text: t.how1Text
                                     }, void 0, false, {
                                         fileName: "[project]/web/app/page.tsx",
-                                        lineNumber: 856,
+                                        lineNumber: 1107,
                                         columnNumber: 13
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(Step, {
@@ -3071,7 +3090,7 @@ function HomePage() {
                                         text: t.how2Text
                                     }, void 0, false, {
                                         fileName: "[project]/web/app/page.tsx",
-                                        lineNumber: 857,
+                                        lineNumber: 1108,
                                         columnNumber: 13
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(Step, {
@@ -3080,26 +3099,26 @@ function HomePage() {
                                         text: t.how3Text
                                     }, void 0, false, {
                                         fileName: "[project]/web/app/page.tsx",
-                                        lineNumber: 858,
+                                        lineNumber: 1109,
                                         columnNumber: 13
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/web/app/page.tsx",
-                                lineNumber: 855,
+                                lineNumber: 1099,
                                 columnNumber: 11
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/web/app/page.tsx",
-                        lineNumber: 853,
+                        lineNumber: 1095,
                         columnNumber: 9
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                         style: {
                             marginTop: 44
                         },
-                        className: "jsx-6fd383b431260eb2",
+                        className: "jsx-910ace414c98bef2",
                         children: [
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                 style: {
@@ -3108,11 +3127,11 @@ function HomePage() {
                                     marginBottom: 14,
                                     paddingLeft: 4
                                 },
-                                className: "jsx-6fd383b431260eb2",
+                                className: "jsx-910ace414c98bef2",
                                 children: t.featuresTitle
                             }, void 0, false, {
                                 fileName: "[project]/web/app/page.tsx",
-                                lineNumber: 864,
+                                lineNumber: 1115,
                                 columnNumber: 11
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3122,25 +3141,232 @@ function HomePage() {
                                     gap: 12,
                                     alignItems: "stretch"
                                 },
-                                className: "jsx-6fd383b431260eb2",
+                                className: "jsx-910ace414c98bef2",
                                 children: t.features.map((f)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(Feature, {
                                         title: f.title,
                                         subtitle: f.subtitle,
                                         points: f.points
                                     }, f.title, false, {
                                         fileName: "[project]/web/app/page.tsx",
-                                        lineNumber: 867,
+                                        lineNumber: 1134,
                                         columnNumber: 15
                                     }, this))
                             }, void 0, false, {
                                 fileName: "[project]/web/app/page.tsx",
-                                lineNumber: 865,
+                                lineNumber: 1125,
                                 columnNumber: 11
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/web/app/page.tsx",
-                        lineNumber: 863,
+                        lineNumber: 1114,
+                        columnNumber: 9
+                    }, this),
+                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                        style: {
+                            marginTop: 18
+                        },
+                        className: "jsx-910ace414c98bef2",
+                        children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$web$2f$app$2f$components$2f$ui$2f$Card$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Card"], {
+                            title: "FAQ",
+                            subtitle: "Quick answers before you start.",
+                            children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                style: {
+                                    display: "grid",
+                                    gridTemplateColumns: "repeat(2, 1fr)",
+                                    gap: 12,
+                                    alignItems: "stretch"
+                                },
+                                className: "jsx-910ace414c98bef2" + " " + "faqGrid",
+                                children: [
+                                    [
+                                        {
+                                            q: "Do I need exchange API keys?",
+                                            a: "No. TradeLog doesn’t require Binance/Bybit API keys. You log trades manually to stay intentional and reduce security risk."
+                                        },
+                                        {
+                                            q: "Spot & Futures supported?",
+                                            a: "Yes. Log spot or futures trades the same way — with entry, stop, target and the result measured in R."
+                                        },
+                                        {
+                                            q: "Why R instead of PnL?",
+                                            a: "PnL can lie when position size changes. R (risk units) shows discipline and consistency — comparable across trades."
+                                        },
+                                        {
+                                            q: "Can I export / backup?",
+                                            a: "Yes. Export CSV for spreadsheets and create JSON backups to restore or migrate your journal anytime."
+                                        }
+                                    ].map(({ q, a })=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                            style: {
+                                                padding: 14,
+                                                borderRadius: 16,
+                                                border: "1px solid rgba(255,255,255,0.10)",
+                                                background: "rgba(255,255,255,0.02)",
+                                                display: "grid",
+                                                gap: 8
+                                            },
+                                            className: "jsx-910ace414c98bef2",
+                                            children: [
+                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                    style: {
+                                                        fontWeight: 900
+                                                    },
+                                                    className: "jsx-910ace414c98bef2",
+                                                    children: q
+                                                }, void 0, false, {
+                                                    fileName: "[project]/web/app/page.tsx",
+                                                    lineNumber: 1185,
+                                                    columnNumber: 19
+                                                }, this),
+                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                    style: {
+                                                        fontSize: 13,
+                                                        opacity: 0.75,
+                                                        lineHeight: 1.6
+                                                    },
+                                                    className: "jsx-910ace414c98bef2",
+                                                    children: a
+                                                }, void 0, false, {
+                                                    fileName: "[project]/web/app/page.tsx",
+                                                    lineNumber: 1186,
+                                                    columnNumber: 19
+                                                }, this)
+                                            ]
+                                        }, q, true, {
+                                            fileName: "[project]/web/app/page.tsx",
+                                            lineNumber: 1174,
+                                            columnNumber: 17
+                                        }, this)),
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                        style: {
+                                            padding: 14,
+                                            borderRadius: 16,
+                                            border: "1px solid rgba(255,255,255,0.10)",
+                                            background: "rgba(255,255,255,0.02)",
+                                            display: "grid",
+                                            gap: 8,
+                                            gridColumn: "1 / -1"
+                                        },
+                                        className: "jsx-910ace414c98bef2",
+                                        children: [
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                style: {
+                                                    fontWeight: 900
+                                                },
+                                                className: "jsx-910ace414c98bef2",
+                                                children: "Is my data private?"
+                                            }, void 0, false, {
+                                                fileName: "[project]/web/app/page.tsx",
+                                                lineNumber: 1205,
+                                                columnNumber: 17
+                                            }, this),
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                style: {
+                                                    fontSize: 13,
+                                                    opacity: 0.75,
+                                                    lineHeight: 1.6
+                                                },
+                                                className: "jsx-910ace414c98bef2",
+                                                children: "Yes. TradeLog is built around local-first principles. You keep control of your data and can export it whenever you want."
+                                            }, void 0, false, {
+                                                fileName: "[project]/web/app/page.tsx",
+                                                lineNumber: 1206,
+                                                columnNumber: 17
+                                            }, this)
+                                        ]
+                                    }, void 0, true, {
+                                        fileName: "[project]/web/app/page.tsx",
+                                        lineNumber: 1194,
+                                        columnNumber: 15
+                                    }, this)
+                                ]
+                            }, void 0, true, {
+                                fileName: "[project]/web/app/page.tsx",
+                                lineNumber: 1147,
+                                columnNumber: 13
+                            }, this)
+                        }, void 0, false, {
+                            fileName: "[project]/web/app/page.tsx",
+                            lineNumber: 1146,
+                            columnNumber: 11
+                        }, this)
+                    }, void 0, false, {
+                        fileName: "[project]/web/app/page.tsx",
+                        lineNumber: 1145,
+                        columnNumber: 9
+                    }, this),
+                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                        style: {
+                            marginTop: 18
+                        },
+                        className: "jsx-910ace414c98bef2",
+                        children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$web$2f$app$2f$components$2f$ui$2f$Card$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Card"], {
+                            title: "Why R, not PnL?",
+                            subtitle: "Because money alone doesn’t tell the truth.",
+                            children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                style: {
+                                    display: "grid",
+                                    gap: 12,
+                                    lineHeight: 1.6
+                                },
+                                className: "jsx-910ace414c98bef2",
+                                children: [
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                        style: {
+                                            fontSize: 14,
+                                            opacity: 0.8
+                                        },
+                                        className: "jsx-910ace414c98bef2",
+                                        children: "PnL changes with position size and luck. A +$200 trade can still be a bad decision if you risked $400."
+                                    }, void 0, false, {
+                                        fileName: "[project]/web/app/page.tsx",
+                                        lineNumber: 1222,
+                                        columnNumber: 15
+                                    }, this),
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                        style: {
+                                            fontSize: 14,
+                                            fontWeight: 600,
+                                            opacity: 0.9
+                                        },
+                                        className: "jsx-910ace414c98bef2",
+                                        children: "R (risk units) measures discipline — how well you execute your plan, independent of account size."
+                                    }, void 0, false, {
+                                        fileName: "[project]/web/app/page.tsx",
+                                        lineNumber: 1227,
+                                        columnNumber: 15
+                                    }, this),
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                        style: {
+                                            marginTop: 6,
+                                            padding: 12,
+                                            borderRadius: 14,
+                                            border: "1px solid rgba(255,255,255,0.10)",
+                                            background: "rgba(255,255,255,0.02)",
+                                            fontSize: 13,
+                                            opacity: 0.85
+                                        },
+                                        className: "jsx-910ace414c98bef2",
+                                        children: "📌 A trader who respects risk stays consistent. R makes that visible."
+                                    }, void 0, false, {
+                                        fileName: "[project]/web/app/page.tsx",
+                                        lineNumber: 1232,
+                                        columnNumber: 15
+                                    }, this)
+                                ]
+                            }, void 0, true, {
+                                fileName: "[project]/web/app/page.tsx",
+                                lineNumber: 1221,
+                                columnNumber: 13
+                            }, this)
+                        }, void 0, false, {
+                            fileName: "[project]/web/app/page.tsx",
+                            lineNumber: 1217,
+                            columnNumber: 11
+                        }, this)
+                    }, void 0, false, {
+                        fileName: "[project]/web/app/page.tsx",
+                        lineNumber: 1216,
                         columnNumber: 9
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3151,7 +3377,7 @@ function HomePage() {
                             display: "flex",
                             justifyContent: "center"
                         },
-                        className: "jsx-6fd383b431260eb2",
+                        className: "jsx-910ace414c98bef2",
                         children: [
                             "© ",
                             year,
@@ -3159,23 +3385,23 @@ function HomePage() {
                         ]
                     }, void 0, true, {
                         fileName: "[project]/web/app/page.tsx",
-                        lineNumber: 873,
+                        lineNumber: 1251,
                         columnNumber: 9
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$web$2f$node_modules$2f$styled$2d$jsx$2f$style$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
-                        id: "6fd383b431260eb2",
-                        children: '.mockDashboardWrap.jsx-6fd383b431260eb2 [class*=demo],.mockDashboardWrap.jsx-6fd383b431260eb2 [data-demo],.mockDashboardWrap.jsx-6fd383b431260eb2 .demo,.mockDashboardWrap.jsx-6fd383b431260eb2 .demoData{display:none!important}.mockDashboardWrap.jsx-6fd383b431260eb2{height:100%}.mockDashboardWrap.jsx-6fd383b431260eb2 *{min-height:0}.pnlLine.jsx-6fd383b431260eb2,.rLine.jsx-6fd383b431260eb2,.rGlow.jsx-6fd383b431260eb2{stroke-dasharray:900;stroke-dashoffset:900px;animation:1.25s forwards drawLine}.pnlLine.jsx-6fd383b431260eb2{opacity:0;animation-name:drawPnl;animation-duration:1.05s;animation-delay:50ms}.rGlow.jsx-6fd383b431260eb2{filter:blur(6px);animation-delay:.18s}.rLine.jsx-6fd383b431260eb2{animation-delay:.18s}.pnlRGrid.jsx-6fd383b431260eb2 svg.jsx-6fd383b431260eb2 circle.jsx-6fd383b431260eb2{opacity:0;animation:.35s .95s forwards fadeDots}@keyframes drawLine{to{stroke-dashoffset:0}}@keyframes drawPnl{0%{stroke-dashoffset:900px;opacity:0}20%{opacity:1}to{stroke-dashoffset:0;opacity:1}}@keyframes fadeDots{to{opacity:.9}}@media (width<=980px){div[style*="grid-template-columns: 1.2fr 1fr"].jsx-6fd383b431260eb2,div[style*="grid-template-columns: repeat(3, 1fr)"].jsx-6fd383b431260eb2,.traderPanelGrid.jsx-6fd383b431260eb2{grid-template-columns:1fr!important}}'
+                        id: "910ace414c98bef2",
+                        children: '.mockDashboardWrap.jsx-910ace414c98bef2 [class*=demo],.mockDashboardWrap.jsx-910ace414c98bef2 [data-demo],.mockDashboardWrap.jsx-910ace414c98bef2 .demo,.mockDashboardWrap.jsx-910ace414c98bef2 .demoData{display:none!important}@media (width<=980px){div[style*="grid-template-columns: 1.2fr 1fr"].jsx-910ace414c98bef2,div[style*="grid-template-columns: repeat(3, 1fr)"].jsx-910ace414c98bef2,.traderPanelGrid.jsx-910ace414c98bef2{grid-template-columns:1fr!important}}'
                     }, void 0, false, void 0, this)
                 ]
             }, void 0, true, {
                 fileName: "[project]/web/app/page.tsx",
-                lineNumber: 776,
+                lineNumber: 969,
                 columnNumber: 7
             }, this)
         ]
     }, void 0, true, {
         fileName: "[project]/web/app/page.tsx",
-        lineNumber: 773,
+        lineNumber: 966,
         columnNumber: 5
     }, this);
 }

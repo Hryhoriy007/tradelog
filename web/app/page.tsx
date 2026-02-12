@@ -9,7 +9,6 @@ import { Page, HeaderRow } from "@/app/components/ui/Layout";
 import { Card } from "@/app/components/ui/Card";
 import { Button } from "@/app/components/ui/Button";
 import { ui } from "@/app/components/ui/styles";
-
 import { MockDashboard } from "@/app/components/marketing/MockDashboard";
 import { DashboardWindow } from "@/app/components/marketing/DashboardWindow";
 import { Background3D } from "@/app/components/marketing/Background3D";
@@ -38,39 +37,48 @@ const copy: {
     <>
       Trade with data,
       <br />
-      not emotions.
-      <br />
-      Stay consistent.
+      not emotions. <br /> Stay consistent.
     </>
   ),
-  heroSub: "Log entries, exits, risk, emotions, and rules — so your results stop lying to you.",
-
+  heroSub:
+    "Log entries, exits, risk, emotions, and rules — so your results stop lying to you.",
   how1: "Log what you executed",
   how1Text: "Pair, side, entry, stop, target — done in seconds.",
   how2: "Capture the real context",
-  how2Text: "Setup, bias, emotions before & after. Why you entered. Why you exited.",
+  how2Text:
+    "Setup, bias, emotions before & after. Why you entered. Why you exited.",
   how3: "Review your behavior",
   how3Text: "Equity in R, mistakes, overtrading, best setups.",
-
   featuresTitle: "Features",
   features: [
     {
       title: "Log trades without breaking focus",
       subtitle: "Fast, no clutter",
-      points: ["Add a trade in ~30 seconds", "Presets for repeatable setups", "Tags for mistakes, psychology, FOMO"],
+      points: [
+        "Add a trade in ~30 seconds",
+        "Presets for repeatable setups",
+        "Tags for mistakes, psychology, FOMO",
+      ],
     },
     {
       title: "Stats that expose your discipline",
       subtitle: "See what you repeat",
-      points: ["Equity curve in R (not fake PnL)", "Win / Loss / BE distribution", "Best & worst setups by Avg R"],
+      points: [
+        "Equity curve in R (not fake PnL)",
+        "Win / Loss / BE distribution",
+        "Best & worst setups by Avg R",
+      ],
     },
     {
       title: "Your data. No lock-in. Ever.",
       subtitle: "Export & restore anytime",
-      points: ["One-click JSON backup", "CSV export for Excel / Sheets", "Import with merge or replace modes"],
+      points: [
+        "One-click JSON backup",
+        "CSV export for Excel / Sheets",
+        "Import with merge or replace modes",
+      ],
     },
   ],
-
   bottomTitle: "Ready to stop repeating the same mistakes?",
   bottomSub: "Create an account and start logging trades in minutes.",
 };
@@ -96,12 +104,28 @@ function Badge({ children }: { children: ReactNode }) {
   );
 }
 
-function Feature({ title, subtitle, points }: { title: string; subtitle: string; points: string[] }) {
+function Feature({
+  title,
+  subtitle,
+  points,
+}: {
+  title: string;
+  subtitle: string;
+  points: string[];
+}) {
   return (
     <div style={{ height: "100%" }}>
       <Card title={title} subtitle={subtitle}>
         <div style={{ display: "grid", gap: 10 }}>
-          <ul style={{ margin: 0, paddingLeft: 18, display: "grid", gap: 8, opacity: 0.9 }}>
+          <ul
+            style={{
+              margin: 0,
+              paddingLeft: 18,
+              display: "grid",
+              gap: 8,
+              opacity: 0.9,
+            }}
+          >
             {points.map((p) => (
               <li key={p}>{p}</li>
             ))}
@@ -143,14 +167,15 @@ function Step({ n, title, text }: { n: string; title: string; text: string }) {
         </div>
         <div style={{ fontWeight: 900 }}>{title}</div>
       </div>
-      <div style={{ opacity: 0.75, fontSize: 13, lineHeight: 1.5 }}>{text}</div>
+
+      <div style={{ opacity: 0.75, fontSize: 13, lineHeight: 1.5 }}>
+        {text}
+      </div>
     </div>
   );
 }
 
-/* =========================
-   Trader Panel (Binance-like)
-   ========================= */
+/* ========================= Trader Panel (Binance-like) ========================= */
 
 function clamp01(x: number) {
   return Math.max(0, Math.min(1, x));
@@ -171,6 +196,7 @@ function hashSeed(s: string) {
   }
   return h >>> 0;
 }
+
 function rand01(seed: number) {
   let x = seed || 123456789;
   x ^= x << 13;
@@ -198,7 +224,6 @@ function pnlTone(v: number | undefined, maxAbs: number) {
   }
 
   const t = maxAbs > 0 ? clamp01(Math.abs(v) / maxAbs) : 0;
-
   const bgA = 0.08 + t * 0.30; // 0.08..0.38
   const brA = 0.16 + t * 0.26; // 0.16..0.42
 
@@ -220,29 +245,29 @@ function pnlTone(v: number | undefined, maxAbs: number) {
 // ✅ no file needed — embedded SVG placeholder image
 const TRADER_PLACEHOLDER =
   "data:image/svg+xml;charset=utf-8," +
-  encodeURIComponent(`
-<svg xmlns="http://www.w3.org/2000/svg" width="900" height="675" viewBox="0 0 900 675">
-  <defs>
-    <radialGradient id="g" cx="30%" cy="0%" r="90%">
-      <stop offset="0%" stop-color="rgba(140,80,255,0.55)"/>
-      <stop offset="55%" stop-color="rgba(140,80,255,0.12)"/>
-      <stop offset="100%" stop-color="rgba(0,0,0,0.15)"/>
-    </radialGradient>
-    <linearGradient id="b" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0%" stop-color="#0b0b12"/>
-      <stop offset="100%" stop-color="#11131b"/>
-    </linearGradient>
-  </defs>
-  <rect width="900" height="675" fill="url(#b)"/>
-  <rect width="900" height="675" fill="url(#g)"/>
-  <circle cx="450" cy="310" r="150" fill="rgba(255,255,255,0.06)"/>
-  <circle cx="450" cy="270" r="70" fill="rgba(255,255,255,0.10)"/>
-  <path d="M290,530c35-90,115-135,160-135s125,45,160,135" fill="rgba(255,255,255,0.10)"/>
-  <text x="50%" y="92%" text-anchor="middle" fill="rgba(255,255,255,0.60)" font-family="Inter, Arial" font-size="28">
-    Trader profile (placeholder)
-  </text>
-</svg>
-`);
+  encodeURIComponent(
+    `<svg xmlns="http://www.w3.org/2000/svg" width="900" height="675" viewBox="0 0 900 675">
+      <defs>
+        <radialGradient id="g" cx="30%" cy="0%" r="90%">
+          <stop offset="0%" stop-color="rgba(140,80,255,0.55)"/>
+          <stop offset="55%" stop-color="rgba(140,80,255,0.12)"/>
+          <stop offset="100%" stop-color="rgba(0,0,0,0.15)"/>
+        </radialGradient>
+        <linearGradient id="b" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0%" stop-color="#0b0b12"/>
+          <stop offset="100%" stop-color="#11131b"/>
+        </linearGradient>
+      </defs>
+      <rect width="900" height="675" fill="url(#b)"/>
+      <rect width="900" height="675" fill="url(#g)"/>
+      <circle cx="450" cy="310" r="150" fill="rgba(255,255,255,0.06)"/>
+      <circle cx="450" cy="270" r="70" fill="rgba(255,255,255,0.10)"/>
+      <path d="M290,530c35-90,115-135,160-135s125,45,160,135" fill="rgba(255,255,255,0.10)"/>
+      <text x="50%" y="92%" text-anchor="middle" fill="rgba(255,255,255,0.60)" font-family="Inter, Arial" font-size="28">
+        Trader profile (placeholder)
+      </text>
+    </svg>`
+  );
 
 type RangeKey = "1m" | "3m" | "1y";
 
@@ -258,19 +283,34 @@ function TraderCalendarPanel() {
 
   const [range, setRange] = useState<RangeKey>("1m");
 
+  // ✅ current month by default
   const [monthDate, setMonthDate] = useState(() => {
     const n = new Date();
     return new Date(n.getFullYear(), n.getMonth(), 1);
   });
 
+  // stable "now" and currentMonthStart for blocking future navigation
   const now = useMemo(() => new Date(), []);
-  const currentMonthStart = useMemo(() => new Date(now.getFullYear(), now.getMonth(), 1), [now]);
+  const currentMonthStart = useMemo(
+    () => new Date(now.getFullYear(), now.getMonth(), 1),
+    [now]
+  );
 
+  // ✅ NEW: earliest month that has data (adjust if you want another "launch" month)
+  // Example: only Jan+Feb exist -> historyStart = Jan 1, 2026
   const historyStart = useMemo(() => new Date(2026, 0, 1), []);
 
-  const monthStart = useMemo(() => new Date(monthDate.getFullYear(), monthDate.getMonth(), 1), [monthDate]);
-  const isMonthBeforeHistory = useMemo(() => monthStart < historyStart, [monthStart, historyStart]);
+  const monthStart = useMemo(
+    () => new Date(monthDate.getFullYear(), monthDate.getMonth(), 1),
+    [monthDate]
+  );
 
+  const isMonthBeforeHistory = useMemo(
+    () => monthStart < historyStart,
+    [monthStart, historyStart]
+  );
+
+  // ✅ Hard clamp: prevent future AND prevent going before historyStart
   useEffect(() => {
     if (monthDate > currentMonthStart) {
       setMonthDate(currentMonthStart);
@@ -286,19 +326,29 @@ function TraderCalendarPanel() {
   const monthIndex = monthDate.getMonth();
   const monthLabel = `${year}-${String(monthIndex + 1).padStart(2, "0")}`;
 
-  const daysInMonth = useMemo(() => new Date(year, monthIndex + 1, 0).getDate(), [year, monthIndex]);
-  const leadingEmpty = useMemo(() => new Date(year, monthIndex, 1).getDay(), [year, monthIndex]);
+  const daysInMonth = useMemo(
+    () => new Date(year, monthIndex + 1, 0).getDate(),
+    [year, monthIndex]
+  );
 
+  const leadingEmpty = useMemo(
+    () => new Date(year, monthIndex, 1).getDay(),
+    [year, monthIndex]
+  );
+
+  // for "today" highlight
   const isThisMonth = now.getFullYear() === year && now.getMonth() === monthIndex;
   const todayDay = now.getDate();
-
   const isCurrentMonth = isThisMonth;
-  const isHistoryStartMonth = year === historyStart.getFullYear() && monthIndex === historyStart.getMonth();
+
+  // ✅ NEW: disable prev arrow when we're at historyStart month
+  const isHistoryStartMonth =
+    year === historyStart.getFullYear() && monthIndex === historyStart.getMonth();
 
   const goPrevMonth = () => {
     setMonthDate((d) => {
       const prev = new Date(d.getFullYear(), d.getMonth() - 1, 1);
-      if (prev < historyStart) return d;
+      if (prev < historyStart) return d; // 🚫 prevent earlier than history
       return prev;
     });
   };
@@ -306,12 +356,18 @@ function TraderCalendarPanel() {
   const goNextMonth = () => {
     setMonthDate((d) => {
       const next = new Date(d.getFullYear(), d.getMonth() + 1, 1);
-      if (next > currentMonthStart) return d;
+      if (next > currentMonthStart) return d; // 🚫 prevent future
       return next;
     });
   };
 
-  const [tip, setTip] = useState<{ open: boolean; x: number; y: number; title: string; value: string }>({
+  const [tip, setTip] = useState<{
+    open: boolean;
+    x: number;
+    y: number;
+    title: string;
+    value: string;
+  }>({
     open: false,
     x: 0,
     y: 0,
@@ -320,9 +376,15 @@ function TraderCalendarPanel() {
   });
 
   const sum = (xs: number[]) => xs.reduce((a, b) => a + b, 0);
+
+  // ✅ FIX: 7d/30d should be last 7/30 CALENDAR days (no-trade days count as 0)
   const asNum = (v: number | undefined) => (typeof v === "number" ? v : 0);
 
-  const sumDays = (arr: Array<number | undefined>, fromDay: number, toDay: number) => {
+  const sumDays = (
+    arr: Array<number | undefined>,
+    fromDay: number,
+    toDay: number
+  ) => {
     const from = Math.max(1, fromDay);
     const to = Math.min(arr.length, toDay);
     let s = 0;
@@ -330,9 +392,12 @@ function TraderCalendarPanel() {
     return s;
   };
 
+  // generate month pnl (raw full month) — but if month before historyStart, show empty
   const dailyPnl = useMemo(() => {
     if (isMonthBeforeHistory) {
-      return Array.from({ length: daysInMonth }, () => undefined) as Array<number | undefined>;
+      return Array.from({ length: daysInMonth }, () => undefined) as Array<
+        number | undefined
+      >;
     }
 
     const seedBase = hashSeed(`${year}-${monthIndex}`);
@@ -342,13 +407,13 @@ function TraderCalendarPanel() {
       const r = rand01(seedBase + d * 101);
       const r2 = rand01(seedBase + d * 911);
 
+      // ~22% no trades
       if (r < 0.22) {
         arr.push(undefined);
         continue;
       }
 
-      let v = (r2 - 0.52) * 6;
-
+      let v = (r2 - 0.52) * 6; // -3..+3-ish
       const spike = rand01(seedBase + d * 333);
       if (spike > 0.92) v += (spike - 0.9) * 1500;
       if (spike < 0.06) v -= (0.08 - spike) * 900;
@@ -359,43 +424,63 @@ function TraderCalendarPanel() {
     return arr;
   }, [year, monthIndex, daysInMonth, isMonthBeforeHistory]);
 
+  // ✅ hide future days in CURRENT month
   const dailyPnlVisible = useMemo(() => {
-    if (!isThisMonth) return dailyPnl;
+    if (!isThisMonth) return dailyPnl; // past months = show all
     return dailyPnl.map((v, idx) => (idx + 1 > todayDay ? undefined : v));
   }, [dailyPnl, isThisMonth, todayDay]);
 
+  // ✅ maxAbs based on visible data (no future spikes)
   const maxAbs = useMemo(() => {
-    return dailyPnlVisible.reduce((mx, v) => (v === undefined ? mx : Math.max(mx, Math.abs(v))), 0);
+    return dailyPnlVisible.reduce(
+      (mx, v) => (v === undefined ? mx : Math.max(mx, Math.abs(v))),
+      0
+    );
   }, [dailyPnlVisible]);
 
+  // ✅ available months since historyStart up to selected month (inclusive)
   const monthsAvailableUpToSelected = useMemo(() => {
-    const n = (year - historyStart.getFullYear()) * 12 + (monthIndex - historyStart.getMonth()) + 1;
+    const n =
+      (year - historyStart.getFullYear()) * 12 +
+      (monthIndex - historyStart.getMonth()) +
+      1;
     return Math.max(0, n);
   }, [year, monthIndex, historyStart]);
 
+  // ✅ requested months, clamped to available history
   const rangeMonthsRequested = range === "1m" ? 1 : range === "3m" ? 3 : 12;
-  const rangeMonths = Math.max(1, Math.min(rangeMonthsRequested, monthsAvailableUpToSelected || 1));
+  const rangeMonths = Math.max(
+    1,
+    Math.min(rangeMonthsRequested, monthsAvailableUpToSelected || 1)
+  );
 
   const rangeSeries = useMemo(() => {
     const series: number[] = [];
 
     for (let mOffset = rangeMonths - 1; mOffset >= 0; mOffset--) {
       const d = new Date(year, monthIndex - mOffset, 1);
-      const histMonthStart = new Date(historyStart.getFullYear(), historyStart.getMonth(), 1);
+
+      // 🚫 do not include months before history
+      const histMonthStart = new Date(
+        historyStart.getFullYear(),
+        historyStart.getMonth(),
+        1
+      );
       if (d < histMonthStart) continue;
 
       const y = d.getFullYear();
       const mi = d.getMonth();
       const dim = new Date(y, mi + 1, 0).getDate();
       const seedBase = hashSeed(`${y}-${mi}`);
-
       const isCur = y === now.getFullYear() && mi === now.getMonth();
 
       for (let day = 1; day <= dim; day++) {
+        // 🚫 range also must not include future days in CURRENT month
         if (isCur && day > now.getDate()) break;
 
         const r = rand01(seedBase + day * 101);
         const r2 = rand01(seedBase + day * 911);
+
         if (r < 0.22) continue;
 
         let v = (r2 - 0.52) * 6;
@@ -413,7 +498,6 @@ function TraderCalendarPanel() {
   const stats = useMemo(() => {
     const endDay = isThisMonth ? todayDay : daysInMonth;
     const today = isThisMonth ? asNum(dailyPnlVisible[todayDay - 1]) : 0;
-
     const pnl7d = sumDays(dailyPnlVisible, endDay - 6, endDay);
     const pnl30d = sumDays(dailyPnlVisible, endDay - 29, endDay);
     const pnlRange = sum(rangeSeries);
@@ -426,11 +510,21 @@ function TraderCalendarPanel() {
     };
   }, [dailyPnlVisible, todayDay, isThisMonth, daysInMonth, rangeSeries]);
 
+  // ✅ label: if clicked "1y" but history < 12 months, show YTD instead (more honest)
   const rangeLabel =
-    range === "1m" ? "1m" : range === "3m" ? "3m" : monthsAvailableUpToSelected < 12 ? "YTD" : "1y";
+    range === "1m"
+      ? "1m"
+      : range === "3m"
+      ? "3m"
+      : monthsAvailableUpToSelected < 12
+      ? "YTD"
+      : "1y";
 
   return (
-    <Card title="Trader snapshot" subtitle="Binance-style calendar (real month + intensity + tooltip).">
+    <Card
+      title="Trader snapshot"
+      subtitle="Binance-style calendar (real month + intensity + tooltip)."
+    >
       <div
         className="traderPanelGrid"
         style={{
@@ -463,10 +557,25 @@ function TraderCalendarPanel() {
             <img
               src={trader.photoUrl}
               alt={trader.name}
-              style={{ width: "100%", height: "100%", objectFit: "cover", display: "block", opacity: 0.95 }}
+              style={{
+                width: "100%",
+                height: "100%",
+                objectFit: "cover",
+                display: "block",
+                opacity: 0.95,
+              }}
             />
 
-            <div style={{ position: "absolute", left: 12, top: 12, display: "flex", gap: 8, flexWrap: "wrap" }}>
+            <div
+              style={{
+                position: "absolute",
+                left: 12,
+                top: 12,
+                display: "flex",
+                gap: 8,
+                flexWrap: "wrap",
+              }}
+            >
               <span
                 style={{
                   padding: "5px 10px",
@@ -480,6 +589,7 @@ function TraderCalendarPanel() {
               >
                 {trader.style}
               </span>
+
               <span
                 style={{
                   padding: "5px 10px",
@@ -502,7 +612,16 @@ function TraderCalendarPanel() {
               {trader.age} y.o. • {trader.yearsTrading} years trading
             </div>
 
-            <div style={{ marginTop: 4, display: "grid", gap: 8, fontSize: 13, opacity: 0.85, lineHeight: 1.55 }}>
+            <div
+              style={{
+                marginTop: 4,
+                display: "grid",
+                gap: 8,
+                fontSize: 13,
+                opacity: 0.85,
+                lineHeight: 1.55,
+              }}
+            >
               <div>✅ Logs every trade (entry/stop/target)</div>
               <div>✅ Reviews mistakes weekly</div>
               <div>✅ Measures performance in R, not vibes</div>
@@ -555,14 +674,23 @@ function TraderCalendarPanel() {
                 minWidth: 180,
               }}
             >
-              <div style={{ fontSize: 12, opacity: 0.85, marginBottom: 4 }}>{tip.title}</div>
+              <div style={{ fontSize: 12, opacity: 0.85, marginBottom: 4 }}>
+                {tip.title}
+              </div>
               <div style={{ fontSize: 13, fontWeight: 900 }}>{tip.value}</div>
             </div>
           )}
 
           {/* header */}
           <div style={{ display: "grid", gap: 8 }}>
-            <div style={{ display: "flex", justifyContent: "space-between", gap: 10, alignItems: "center" }}>
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "space-between",
+                gap: 10,
+                alignItems: "center",
+              }}
+            >
               <div style={{ fontWeight: 950, fontSize: 14 }}>Futures PnL</div>
 
               <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
@@ -570,7 +698,10 @@ function TraderCalendarPanel() {
                 <div style={{ display: "flex", gap: 6, alignItems: "center" }}>
                   {(["1m", "3m", "1y"] as RangeKey[]).map((k) => {
                     const active = k === range;
-                    const effectiveLabel = k === "1y" && monthsAvailableUpToSelected < 12 ? "YTD" : k;
+                    const effectiveLabel =
+                      k === "1y" && monthsAvailableUpToSelected < 12
+                        ? "YTD"
+                        : k;
 
                     return (
                       <button
@@ -581,8 +712,12 @@ function TraderCalendarPanel() {
                           height: 30,
                           padding: "0 10px",
                           borderRadius: 999,
-                          border: active ? "1px solid rgba(255,205,80,0.35)" : "1px solid rgba(255,255,255,0.10)",
-                          background: active ? "rgba(255,205,80,0.12)" : "rgba(255,255,255,0.03)",
+                          border: active
+                            ? "1px solid rgba(255,205,80,0.35)"
+                            : "1px solid rgba(255,255,255,0.10)",
+                          background: active
+                            ? "rgba(255,205,80,0.12)"
+                            : "rgba(255,255,255,0.03)",
                           color: "rgba(255,255,255,0.92)",
                           fontSize: 12,
                           cursor: "pointer",
@@ -651,7 +786,9 @@ function TraderCalendarPanel() {
                     opacity: isCurrentMonth ? 0.45 : 1,
                   }}
                   aria-label="Next month"
-                  title={isCurrentMonth ? "You can’t view future months" : "Next month"}
+                  title={
+                    isCurrentMonth ? "You can’t view future months" : "Next month"
+                  }
                 >
                   →
                 </button>
@@ -659,7 +796,13 @@ function TraderCalendarPanel() {
             </div>
 
             {/* summary */}
-            <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 10 }}>
+            <div
+              style={{
+                display: "grid",
+                gridTemplateColumns: "repeat(4, 1fr)",
+                gap: 10,
+              }}
+            >
               {[
                 { k: "Today", v: stats.today },
                 { k: "7d", v: stats.pnl7d },
@@ -667,6 +810,7 @@ function TraderCalendarPanel() {
                 { k: rangeLabel, v: stats.pnlRange },
               ].map((it) => {
                 const tone = pnlTone(it.v, Math.max(1, Math.abs(stats.pnlRange)));
+
                 return (
                   <div
                     key={it.k}
@@ -680,7 +824,15 @@ function TraderCalendarPanel() {
                     }}
                   >
                     <div style={{ fontSize: 11, opacity: 0.75 }}>{it.k}</div>
-                    <div style={{ fontWeight: 900, fontSize: 13, color: tone.text }}>{fmtMoney(it.v)}</div>
+                    <div
+                      style={{
+                        fontWeight: 900,
+                        fontSize: 13,
+                        color: tone.text,
+                      }}
+                    >
+                      {fmtMoney(it.v)}
+                    </div>
                   </div>
                 );
               })}
@@ -689,8 +841,17 @@ function TraderCalendarPanel() {
 
           {/* calendar */}
           <div>
-            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: 10 }}>
-              <div style={{ fontWeight: 950, fontSize: 13, opacity: 0.9 }}>Daily PnL</div>
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+                gap: 10,
+              }}
+            >
+              <div style={{ fontWeight: 950, fontSize: 13, opacity: 0.9 }}>
+                Daily PnL
+              </div>
               <div style={{ fontSize: 12, opacity: 0.65 }}>S M T W T F S</div>
             </div>
 
@@ -721,10 +882,12 @@ function TraderCalendarPanel() {
                 const tone = pnlTone(v, maxAbs);
                 const isToday = isThisMonth && day === todayDay;
                 const labelDate = `${monthLabel}-${String(day).padStart(2, "0")}`;
-
                 const cellValue = v === undefined ? "No trades" : fmtMoney(v);
                 const displaySmall =
-                  v === undefined ? "" : (v > 0 ? "+" : "") + (Math.abs(v) >= 100 ? v.toFixed(0) : v.toFixed(2));
+                  v === undefined
+                    ? ""
+                    : (v > 0 ? "+" : "") +
+                      (Math.abs(v) >= 100 ? v.toFixed(0) : v.toFixed(2));
 
                 return (
                   <div
@@ -732,8 +895,12 @@ function TraderCalendarPanel() {
                     style={{
                       height: 44,
                       borderRadius: 10,
-                      border: isToday ? "1px solid rgba(255,205,80,0.45)" : `1px solid ${tone.br}`,
-                      boxShadow: isToday ? "0 0 0 2px rgba(255,205,80,0.10) inset" : undefined,
+                      border: isToday
+                        ? "1px solid rgba(255,205,80,0.45)"
+                        : `1px solid ${tone.br}`,
+                      boxShadow: isToday
+                        ? "0 0 0 2px rgba(255,205,80,0.10) inset"
+                        : undefined,
                       background: tone.bg,
                       padding: "6px 8px",
                       display: "grid",
@@ -741,22 +908,48 @@ function TraderCalendarPanel() {
                       cursor: "default",
                     }}
                     onMouseEnter={(e) => {
-                      setTip({ open: true, x: e.clientX, y: e.clientY, title: labelDate, value: cellValue });
+                      setTip({
+                        open: true,
+                        x: e.clientX,
+                        y: e.clientY,
+                        title: labelDate,
+                        value: cellValue,
+                      });
                     }}
-                    onMouseMove={(e) => setTip((t) => (t.open ? { ...t, x: e.clientX, y: e.clientY } : t))}
+                    onMouseMove={(e) =>
+                      setTip((t) =>
+                        t.open ? { ...t, x: e.clientX, y: e.clientY } : t
+                      )
+                    }
                   >
                     <div style={{ fontSize: 11, opacity: 0.75 }}>
                       {day}
-                      {isToday ? <span style={{ marginLeft: 6, opacity: 0.85 }}>• today</span> : null}
+                      {isToday ? (
+                        <span style={{ marginLeft: 6, opacity: 0.85 }}>
+                          • today
+                        </span>
+                      ) : null}
                     </div>
-                    <div style={{ fontSize: 11, fontWeight: 800, color: tone.text }}>{displaySmall}</div>
+                    <div
+                      style={{ fontSize: 11, fontWeight: 800, color: tone.text }}
+                    >
+                      {displaySmall}
+                    </div>
                   </div>
                 );
               })}
             </div>
 
-            <div style={{ marginTop: 10, fontSize: 12, opacity: 0.72, lineHeight: 1.5 }}>
-              The calendar reveals streaks, revenge days, and risk spikes — the stuff you actually need to fix.
+            <div
+              style={{
+                marginTop: 10,
+                fontSize: 12,
+                opacity: 0.72,
+                lineHeight: 1.5,
+              }}
+            >
+              The calendar reveals streaks, revenge days, and risk spikes — the
+              stuff you actually need to fix.
             </div>
           </div>
         </div>
@@ -808,19 +1001,49 @@ export default function HomePage() {
                 "radial-gradient(1200px 400px at 10% 10%, rgba(140,80,255,0.16), transparent 50%), rgba(255,255,255,0.02)",
             }}
           >
-            <div style={{ display: "flex", gap: 8, flexWrap: "wrap", marginBottom: 12, alignItems: "center" }}>
+            <div
+              style={{
+                display: "flex",
+                gap: 8,
+                flexWrap: "wrap",
+                marginBottom: 12,
+                alignItems: "center",
+              }}
+            >
               <Badge>Crypto only</Badge>
               <Badge>No exchange API</Badge>
-              <Badge>📈 R-based stats</Badge>
-              <Badge>Win / Loss / BE</Badge>
-              <Badge>🧠 Psychology notes</Badge>
             </div>
 
-            <div style={{ fontSize: 44, fontWeight: 950, letterSpacing: -0.8, lineHeight: 1.05 }}>{t.heroTitle}</div>
+            <div
+              style={{
+                fontSize: 44,
+                fontWeight: 950,
+                letterSpacing: -0.8,
+                lineHeight: 1.05,
+              }}
+            >
+              {t.heroTitle}
+            </div>
 
-            <div style={{ marginTop: 12, ...ui.subtle, fontSize: 14, lineHeight: 1.6 }}>{t.heroSub}</div>
+            <div
+              style={{
+                marginTop: 12,
+                ...ui.subtle,
+                fontSize: 14,
+                lineHeight: 1.6,
+              }}
+            >
+              {t.heroSub}
+            </div>
 
-            <div style={{ display: "flex", gap: 10, flexWrap: "wrap", marginTop: 16 }}>
+            <div
+              style={{
+                display: "flex",
+                gap: 10,
+                flexWrap: "wrap",
+                marginTop: 16,
+              }}
+            >
               <Link href="/register" style={{ textDecoration: "none" }}>
                 <Button variant="primary">Registration</Button>
               </Link>
@@ -829,30 +1052,58 @@ export default function HomePage() {
               </Link>
             </div>
 
-            <div style={{ marginTop: 10, opacity: 0.75, fontSize: 12, lineHeight: 1.5 }}>
+            <div
+              style={{
+                marginTop: 10,
+                opacity: 0.75,
+                fontSize: 12,
+                lineHeight: 1.5,
+              }}
+            >
               No exchange connection • No spreadsheets • Your data stays yours
+            </div>
+
+            <div
+              style={{
+                marginTop: 14,
+                display: "flex",
+                gap: 10,
+                flexWrap: "wrap",
+                opacity: 0.85,
+              }}
+            >
+              <Badge>📈 R-based stats</Badge>
+              <Badge>Win / Loss / BE</Badge>
+              <Badge>🧠 Psychology notes</Badge>
+              <Badge>🔒 No exchange API</Badge>
             </div>
           </div>
 
-          {/* ✅ FIX: make right panel same height as left */}
-          <div className="mockDashboardWrap" style={{ height: "100%", display: "flex", minHeight: 0 }}>
-            <div style={{ flex: 1, display: "flex", minHeight: 0 }}>
-              <DashboardWindow>
-                <MockDashboard />
-              </DashboardWindow>
-            </div>
+          <div className="mockDashboardWrap">
+            <DashboardWindow>
+              <MockDashboard />
+            </DashboardWindow>
           </div>
         </div>
 
-        {/* TRADER PANEL */}
+        {/* ✅ TRADER PANEL (inserted before How it works) */}
         <div style={{ marginTop: 18 }}>
           <TraderCalendarPanel />
         </div>
 
         {/* HOW IT WORKS */}
         <div style={{ marginTop: 10 }}>
-          <div style={{ fontSize: 18, fontWeight: 950, marginBottom: 10 }}>How it works</div>
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 12, alignItems: "stretch" }}>
+          <div style={{ fontSize: 18, fontWeight: 950, marginBottom: 10 }}>
+            How it works
+          </div>
+          <div
+            style={{
+              display: "grid",
+              gridTemplateColumns: "repeat(3, 1fr)",
+              gap: 12,
+              alignItems: "stretch",
+            }}
+          >
             <Step n="1" title={t.how1} text={t.how1Text} />
             <Step n="2" title={t.how2} text={t.how2Text} />
             <Step n="3" title={t.how3} text={t.how3Text} />
@@ -861,91 +1112,160 @@ export default function HomePage() {
 
         {/* FEATURES */}
         <div style={{ marginTop: 44 }}>
-          <div style={{ fontSize: 20, fontWeight: 950, marginBottom: 14, paddingLeft: 4 }}>{t.featuresTitle}</div>
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 12, alignItems: "stretch" }}>
+          <div
+            style={{
+              fontSize: 20,
+              fontWeight: 950,
+              marginBottom: 14,
+              paddingLeft: 4,
+            }}
+          >
+            {t.featuresTitle}
+          </div>
+          <div
+            style={{
+              display: "grid",
+              gridTemplateColumns: "repeat(3, 1fr)",
+              gap: 12,
+              alignItems: "stretch",
+            }}
+          >
             {t.features.map((f) => (
-              <Feature key={f.title} title={f.title} subtitle={f.subtitle} points={f.points} />
+              <Feature
+                key={f.title}
+                title={f.title}
+                subtitle={f.subtitle}
+                points={f.points}
+              />
             ))}
           </div>
         </div>
 
+        {/* FAQ */}
+        <div style={{ marginTop: 18 }}>
+          <Card title="FAQ" subtitle="Quick answers before you start.">
+            <div
+              className="faqGrid"
+              style={{
+                display: "grid",
+                gridTemplateColumns: "repeat(2, 1fr)",
+                gap: 12,
+                alignItems: "stretch",
+              }}
+            >
+              {[
+                {
+                  q: "Do I need exchange API keys?",
+                  a: "No. TradeLog doesn’t require Binance/Bybit API keys. You log trades manually to stay intentional and reduce security risk.",
+                },
+                {
+                  q: "Spot & Futures supported?",
+                  a: "Yes. Log spot or futures trades the same way — with entry, stop, target and the result measured in R.",
+                },
+                {
+                  q: "Why R instead of PnL?",
+                  a: "PnL can lie when position size changes. R (risk units) shows discipline and consistency — comparable across trades.",
+                },
+                {
+                  q: "Can I export / backup?",
+                  a: "Yes. Export CSV for spreadsheets and create JSON backups to restore or migrate your journal anytime.",
+                },
+              ].map(({ q, a }) => (
+                <div
+                  key={q}
+                  style={{
+                    padding: 14,
+                    borderRadius: 16,
+                    border: "1px solid rgba(255,255,255,0.10)",
+                    background: "rgba(255,255,255,0.02)",
+                    display: "grid",
+                    gap: 8,
+                  }}
+                >
+                  <div style={{ fontWeight: 900 }}>{q}</div>
+                  <div
+                    style={{ fontSize: 13, opacity: 0.75, lineHeight: 1.6 }}
+                  >
+                    {a}
+                  </div>
+                </div>
+              ))}
+
+              <div
+                style={{
+                  padding: 14,
+                  borderRadius: 16,
+                  border: "1px solid rgba(255,255,255,0.10)",
+                  background: "rgba(255,255,255,0.02)",
+                  display: "grid",
+                  gap: 8,
+                  gridColumn: "1 / -1",
+                }}
+              >
+                <div style={{ fontWeight: 900 }}>Is my data private?</div>
+                <div style={{ fontSize: 13, opacity: 0.75, lineHeight: 1.6 }}>
+                  Yes. TradeLog is built around local-first principles. You keep
+                  control of your data and can export it whenever you want.
+                </div>
+              </div>
+            </div>
+          </Card>
+        </div>
+
+        {/* WHY R NOT PNL */}
+        <div style={{ marginTop: 18 }}>
+          <Card
+            title="Why R, not PnL?"
+            subtitle="Because money alone doesn’t tell the truth."
+          >
+            <div style={{ display: "grid", gap: 12, lineHeight: 1.6 }}>
+              <div style={{ fontSize: 14, opacity: 0.8 }}>
+                PnL changes with position size and luck. A +$200 trade can still
+                be a bad decision if you risked $400.
+              </div>
+
+              <div style={{ fontSize: 14, fontWeight: 600, opacity: 0.9 }}>
+                R (risk units) measures discipline — how well you execute your
+                plan, independent of account size.
+              </div>
+
+              <div
+                style={{
+                  marginTop: 6,
+                  padding: 12,
+                  borderRadius: 14,
+                  border: "1px solid rgba(255,255,255,0.10)",
+                  background: "rgba(255,255,255,0.02)",
+                  fontSize: 13,
+                  opacity: 0.85,
+                }}
+              >
+                📌 A trader who respects risk stays consistent. R makes that
+                visible.
+              </div>
+            </div>
+          </Card>
+        </div>
+
         {/* Footer */}
-        <div style={{ marginTop: 14, opacity: 0.6, fontSize: 12, display: "flex", justifyContent: "center" }}>
+        <div
+          style={{
+            marginTop: 14,
+            opacity: 0.6,
+            fontSize: 12,
+            display: "flex",
+            justifyContent: "center",
+          }}
+        >
           © {year} TradeLog
         </div>
 
         <style jsx>{`
-          /* keep your "demo" hidden */
           .mockDashboardWrap :global([class*="demo"]),
           .mockDashboardWrap :global([data-demo]),
           .mockDashboardWrap :global(.demo),
           .mockDashboardWrap :global(.demoData) {
             display: none !important;
-          }
-
-          /* ✅ ensure the dashboard can stretch */
-          .mockDashboardWrap {
-            height: 100%;
-          }
-          .mockDashboardWrap :global(*) {
-            min-height: 0;
-          }
-
-          /* PnL vs R line draw animation (kept from your code) */
-          .pnlLine,
-          .rLine,
-          .rGlow {
-            stroke-dasharray: 900;
-            stroke-dashoffset: 900;
-            animation: drawLine 1.25s ease forwards;
-          }
-
-          .pnlLine {
-            animation-duration: 1.05s;
-            animation-delay: 0.05s;
-            opacity: 0;
-            animation-name: drawPnl;
-          }
-
-          .rGlow {
-            animation-delay: 0.18s;
-            filter: blur(6px);
-          }
-
-          .rLine {
-            animation-delay: 0.18s;
-          }
-
-          .pnlRGrid svg circle {
-            opacity: 0;
-            animation: fadeDots 0.35s ease forwards;
-            animation-delay: 0.95s;
-          }
-
-          @keyframes drawLine {
-            to {
-              stroke-dashoffset: 0;
-            }
-          }
-
-          @keyframes drawPnl {
-            0% {
-              stroke-dashoffset: 900;
-              opacity: 0;
-            }
-            20% {
-              opacity: 1;
-            }
-            100% {
-              stroke-dashoffset: 0;
-              opacity: 1;
-            }
-          }
-
-          @keyframes fadeDots {
-            to {
-              opacity: 0.9;
-            }
           }
 
           @media (max-width: 980px) {
