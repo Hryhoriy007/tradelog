@@ -2,7 +2,7 @@
 "use client";
 
 import Link from "next/link";
-import { useMemo, useState, useEffect } from "react";
+import React, { useMemo, useState, useEffect } from "react";
 
 import { Page, HeaderRow } from "@/app/components/ui/Layout";
 import { Card } from "@/app/components/ui/Card";
@@ -181,42 +181,21 @@ function rand01(seed: number) {
 /** Binance-like tone with intensity by abs(v) / maxAbs */
 function pnlTone(v: number | undefined, maxAbs: number) {
   if (v === undefined || v === null) {
-    return {
-      bg: "rgba(255,255,255,0.04)",
-      br: "rgba(255,255,255,0.08)",
-      text: "rgba(255,255,255,0.70)",
-    };
+    return { bg: "rgba(255,255,255,0.04)", br: "rgba(255,255,255,0.08)", text: "rgba(255,255,255,0.70)" };
   }
 
   if (v === 0) {
-    return {
-      bg: "rgba(180,180,180,0.10)",
-      br: "rgba(180,180,180,0.16)",
-      text: "rgba(255,255,255,0.88)",
-    };
+    return { bg: "rgba(180,180,180,0.10)", br: "rgba(180,180,180,0.16)", text: "rgba(255,255,255,0.88)" };
   }
 
   const t = maxAbs > 0 ? clamp01(Math.abs(v) / maxAbs) : 0;
+  const bgA = 0.08 + t * 0.30;
+  const brA = 0.16 + t * 0.26;
 
-  const bgA = 0.08 + t * 0.30; // 0.08..0.38
-  const brA = 0.16 + t * 0.26; // 0.16..0.42
-
-  if (v > 0) {
-    return {
-      bg: `rgba(0, 180, 120, ${bgA})`,
-      br: `rgba(0, 180, 120, ${brA})`,
-      text: "rgba(235,255,245,0.95)",
-    };
-  }
-
-  return {
-    bg: `rgba(240, 70, 70, ${bgA})`,
-    br: `rgba(240, 70, 70, ${brA})`,
-    text: "rgba(255,235,235,0.95)",
-  };
+  if (v > 0) return { bg: `rgba(0, 180, 120, ${bgA})`, br: `rgba(0, 180, 120, ${brA})`, text: "rgba(235,255,245,0.95)" };
+  return { bg: `rgba(240, 70, 70, ${bgA})`, br: `rgba(240, 70, 70, ${brA})`, text: "rgba(255,235,235,0.95)" };
 }
 
-// ✅ no file needed — embedded SVG placeholder image
 const TRADER_PLACEHOLDER =
   "data:image/svg+xml;charset=utf-8," +
   encodeURIComponent(`
@@ -247,7 +226,7 @@ type RangeKey = "1m" | "3m" | "1y";
 
 function TraderCalendarPanel() {
   const trader = {
-    name: "",
+    name: "Dmytro_515",
     age: 28,
     yearsTrading: 4,
     style: "Futures • Intraday",
@@ -264,7 +243,6 @@ function TraderCalendarPanel() {
 
   const now = useMemo(() => new Date(), []);
   const currentMonthStart = useMemo(() => new Date(now.getFullYear(), now.getMonth(), 1), [now]);
-
   const historyStart = useMemo(() => new Date(2026, 0, 1), []);
 
   const monthStart = useMemo(() => new Date(monthDate.getFullYear(), monthDate.getMonth(), 1), [monthDate]);
@@ -425,8 +403,7 @@ function TraderCalendarPanel() {
     };
   }, [dailyPnlVisible, todayDay, isThisMonth, daysInMonth, rangeSeries]);
 
-  const rangeLabel =
-    range === "1m" ? "1m" : range === "3m" ? "3m" : monthsAvailableUpToSelected < 12 ? "YTD" : "1y";
+  const rangeLabel = range === "1m" ? "1m" : range === "3m" ? "3m" : monthsAvailableUpToSelected < 12 ? "YTD" : "1y";
 
   return (
     <Card title="Trader snapshot" subtitle="Binance-style calendar (real month + intensity + tooltip).">
@@ -588,11 +565,6 @@ function TraderCalendarPanel() {
                           fontWeight: active ? 900 : 700,
                           opacity: active ? 1 : 0.85,
                         }}
-                        title={
-                          k === "1y" && monthsAvailableUpToSelected < 12
-                            ? "Year-to-date (history is less than 12 months)"
-                            : undefined
-                        }
                       >
                         {effectiveLabel}
                       </button>
@@ -764,109 +736,71 @@ function TraderCalendarPanel() {
   );
 }
 
-function Pricing() {
+/* =========================
+   HERO Pricing (moved up)
+   ========================= */
+
+function HeroPricingCard() {
+  const monthly = 9;
+  const yearly = monthly * 12; // 108
+
   return (
-    <Card title="Pricing" subtitle="Simple and clear. No hidden fees.">
-      <div
-        style={{
-          display: "grid",
-          gridTemplateColumns: "repeat(2, 1fr)",
-          gap: 12,
-          alignItems: "stretch",
-        }}
-      >
-        {/* TRIAL */}
-        <div
+    <div
+      style={{
+        marginTop: 14,
+        padding: 14,
+        borderRadius: 18,
+        border: "1px solid rgba(140,80,255,0.22)",
+        background: "rgba(140,80,255,0.08)",
+        display: "grid",
+        gap: 10,
+      }}
+    >
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: 10 }}>
+        <div style={{ fontWeight: 950 }}>Pricing</div>
+
+        <span
           style={{
-            padding: 16,
-            borderRadius: 18,
-            border: "1px solid rgba(255,255,255,0.10)",
-            background: "rgba(255,255,255,0.02)",
-            display: "grid",
-            gap: 10,
+            padding: "5px 10px",
+            borderRadius: 999,
+            border: "1px solid rgba(255,205,80,0.28)",
+            background: "rgba(255,205,80,0.10)",
+            fontSize: 12,
+            fontWeight: 900,
+            opacity: 0.95,
+            whiteSpace: "nowrap",
           }}
         >
-          <div style={{ fontWeight: 950, fontSize: 14 }}>Trial</div>
-          <div style={{ fontSize: 34, fontWeight: 950, lineHeight: 1 }}>
-            $0 <span style={{ fontSize: 12, opacity: 0.7 }}>for 7 days</span>
-          </div>
-          <div style={{ fontSize: 13, opacity: 0.75, lineHeight: 1.6 }}>
-            Try TradeLog first. No exchange API. Export anytime.
-          </div>
+          Paid only
+        </span>
+      </div>
 
-          <ul style={{ margin: 0, paddingLeft: 18, display: "grid", gap: 8, fontSize: 13, opacity: 0.9 }}>
-            <li>Unlimited trade logs</li>
-            <li>R-based stats</li>
-            <li>CSV + JSON export</li>
-          </ul>
-
-          <Link href="/register" style={{ textDecoration: "none", marginTop: 6 }}>
-            <Button variant="secondary">Start free trial</Button>
-          </Link>
+      <div style={{ display: "grid", gap: 6 }}>
+        <div style={{ fontSize: 28, fontWeight: 950, letterSpacing: -0.3, lineHeight: 1 }}>
+          ${monthly} <span style={{ fontSize: 12, opacity: 0.75, fontWeight: 700 }}>/ month</span>
         </div>
-
-        {/* PRO */}
-        <div
-          style={{
-            padding: 16,
-            borderRadius: 18,
-            border: "1px solid rgba(140,80,255,0.22)",
-            background: "rgba(140,80,255,0.08)",
-            display: "grid",
-            gap: 10,
-          }}
-        >
-          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: 10 }}>
-            <div style={{ fontWeight: 950, fontSize: 14 }}>Pro</div>
-            <span
-              style={{
-                padding: "5px 10px",
-                borderRadius: 999,
-                border: "1px solid rgba(255,205,80,0.28)",
-                background: "rgba(255,205,80,0.10)",
-                fontSize: 12,
-                fontWeight: 900,
-                opacity: 0.95,
-                whiteSpace: "nowrap",
-              }}
-            >
-              Most popular
-            </span>
-          </div>
-
-          <div style={{ fontSize: 34, fontWeight: 950, lineHeight: 1 }}>
-            $9 <span style={{ fontSize: 12, opacity: 0.7 }}>/ month</span>
-          </div>
-
-          <div style={{ fontSize: 13, opacity: 0.8, lineHeight: 1.6 }}>
-            For traders who want consistency and clean reviews.
-          </div>
-
-          <ul style={{ margin: 0, paddingLeft: 18, display: "grid", gap: 8, fontSize: 13, opacity: 0.92 }}>
-            <li>Advanced reviews & filters</li>
-            <li>Mistake tags & psychology notes</li>
-            <li>Backup / restore</li>
-          </ul>
-
-          {/* Поки без Stripe — ведемо на реєстрацію */}
-          <Link href="/register" style={{ textDecoration: "none", marginTop: 6 }}>
-            <Button variant="primary">Get Pro</Button>
-          </Link>
-
-          <div style={{ fontSize: 12, opacity: 0.65, lineHeight: 1.5 }}>
-            (Checkout буде підключений пізніше через Stripe.)
-          </div>
+        <div style={{ fontSize: 12, opacity: 0.78 }}>
+          or <b>${yearly}</b> / year
         </div>
       </div>
 
-      <style jsx>{`
-        @media (max-width: 980px) {
-          div[style*="grid-template-columns: repeat(2, 1fr)"] {
-            grid-template-columns: 1fr !important;
-          }
-        }
-      `}</style>
-    </Card>
+      <div style={{ fontSize: 13, opacity: 0.82, lineHeight: 1.55 }}>
+        Full access: R-based stats, Win/Loss/BE, psychology notes, exports.
+      </div>
+
+      <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
+        <Link href="/register" style={{ textDecoration: "none" }}>
+          <Button variant="primary">Get access</Button>
+        </Link>
+        <Link href="/login" style={{ textDecoration: "none" }}>
+          <Button variant="secondary">Login</Button>
+        </Link>
+      </div>
+
+      <div style={{ fontSize: 12, opacity: 0.65, lineHeight: 1.5 }}>
+        (Checkout буде підключений пізніше через Stripe.)
+      </div>
+    </div>
   );
 }
 
@@ -913,9 +847,13 @@ export default function HomePage() {
                 "radial-gradient(1200px 400px at 10% 10%, rgba(140,80,255,0.16), transparent 50%), rgba(255,255,255,0.02)",
             }}
           >
+            {/* ✅ badges moved UP (as requested) */}
             <div style={{ display: "flex", gap: 8, flexWrap: "wrap", marginBottom: 12, alignItems: "center" }}>
               <Badge>Crypto only</Badge>
               <Badge>No exchange API</Badge>
+              <Badge>📈 R-based stats</Badge>
+              <Badge>Win / Loss / BE</Badge>
+              <Badge>🧠 Psychology notes</Badge>
             </div>
 
             <div style={{ fontSize: 44, fontWeight: 950, letterSpacing: -0.8, lineHeight: 1.05 }}>{t.heroTitle}</div>
@@ -935,12 +873,8 @@ export default function HomePage() {
               No exchange connection • No spreadsheets • Your data stays yours
             </div>
 
-            <div style={{ marginTop: 14, display: "flex", gap: 10, flexWrap: "wrap", opacity: 0.85 }}>
-              <Badge>📈 R-based stats</Badge>
-              <Badge>Win / Loss / BE</Badge>
-              <Badge>🧠 Psychology notes</Badge>
-              <Badge>🔒 No exchange API</Badge>
-            </div>
+            {/* ✅ pricing moved into HERO (as requested) */}
+            <HeroPricingCard />
           </div>
 
           <div className="mockDashboardWrap">
@@ -950,7 +884,7 @@ export default function HomePage() {
           </div>
         </div>
 
-        {/* ✅ NEW: Trader panel BEFORE How it works */}
+        {/* Trader panel */}
         <div style={{ marginTop: 12 }}>
           <TraderCalendarPanel />
         </div>
@@ -965,11 +899,6 @@ export default function HomePage() {
           </div>
         </div>
 
-        {/* PRICING */}
-<div style={{ marginTop: 18 }}>
-  <Pricing />
-</div>
-
         {/* FEATURES */}
         <div style={{ marginTop: 44 }}>
           <div style={{ fontSize: 20, fontWeight: 950, marginBottom: 14, paddingLeft: 4 }}>{t.featuresTitle}</div>
@@ -978,104 +907,6 @@ export default function HomePage() {
               <Feature key={f.title} title={f.title} subtitle={f.subtitle} points={f.points} />
             ))}
           </div>
-        </div>
-
-        {/* PRICING */}
-        <div style={{ marginTop: 18 }}>
-          <Card title="Pricing" subtitle="Simple subscription. Cancel anytime.">
-            <div
-              className="pricingGrid"
-              style={{
-                display: "grid",
-                gridTemplateColumns: "1fr 1.4fr",
-                gap: 14,
-                alignItems: "stretch",
-              }}
-            >
-              <div
-                style={{
-                  borderRadius: 16,
-                  border: "1px solid rgba(255,255,255,0.10)",
-                  background: "rgba(255,255,255,0.02)",
-                  padding: 14,
-                  display: "grid",
-                  gap: 10,
-                }}
-              >
-                <div style={{ display: "flex", alignItems: "baseline", gap: 10, flexWrap: "wrap" }}>
-                  <div style={{ fontSize: 28, fontWeight: 950, letterSpacing: -0.4 }}>
-                    $9<span style={{ fontSize: 12, opacity: 0.7, fontWeight: 700 }}>/mo</span>
-                  </div>
-                  <div style={{ fontSize: 12, opacity: 0.75 }}>or $79/year</div>
-                </div>
-
-                <div style={{ fontSize: 12, opacity: 0.75, lineHeight: 1.5 }}>
-                  One plan for traders who want consistency and accountability.
-                </div>
-
-                <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
-                  <Link href="/register" style={{ textDecoration: "none" }}>
-                    <Button variant="primary">Registration</Button>
-                  </Link>
-                  <Link href="/login" style={{ textDecoration: "none" }}>
-                    <Button variant="secondary">Login</Button>
-                  </Link>
-                </div>
-
-                <div style={{ fontSize: 11, opacity: 0.6 }}>No exchange API • Local-first • Export anytime</div>
-              </div>
-
-              <div
-                style={{
-                  borderRadius: 16,
-                  border: "1px solid rgba(255,255,255,0.10)",
-                  background: "rgba(255,255,255,0.02)",
-                  padding: 14,
-                  display: "grid",
-                  gap: 10,
-                }}
-              >
-                <div style={{ fontWeight: 900 }}>Included in Pro</div>
-
-                <ul style={{ margin: 0, paddingLeft: 18, display: "grid", gap: 8, opacity: 0.9, fontSize: 13 }}>
-                  <li>R-based stats (expectancy, Avg R, streaks)</li>
-                  <li>Psychology notes + rule tracking</li>
-                  <li>Templates / presets for repeatable setups</li>
-                  <li>CSV export + JSON backup</li>
-                  <li>Import with merge / replace modes</li>
-                </ul>
-
-                <div style={{ display: "flex", gap: 8, flexWrap: "wrap", marginTop: 4 }}>
-                  <span
-                    style={{
-                      padding: "4px 10px",
-                      borderRadius: 999,
-                      border: "1px solid rgba(255,255,255,0.10)",
-                      background: "rgba(255,255,255,0.03)",
-                      fontSize: 12,
-                      opacity: 0.85,
-                      whiteSpace: "nowrap",
-                    }}
-                  >
-                    ✅ Cancel anytime
-                  </span>
-                  <span
-                    style={{
-                      padding: "4px 10px",
-                      borderRadius: 999,
-                      border: "1px solid rgba(255,255,255,0.10)",
-                      background: "rgba(255,255,255,0.03)",
-                      fontSize: 12,
-                      opacity: 0.85,
-                      whiteSpace: "nowrap",
-                    }}
-                  >
-                    ✅ No API keys
-                  </span>
-                </div>
-              </div>
-            </div>
-          </Card>
         </div>
 
         {/* FAQ */}
@@ -1137,291 +968,8 @@ export default function HomePage() {
               >
                 <div style={{ fontWeight: 900 }}>Is my data private?</div>
                 <div style={{ fontSize: 13, opacity: 0.75, lineHeight: 1.6 }}>
-                  Yes. TradeLog is built around local-first principles. You keep control of your data and can export it
-                  whenever you want.
+                  Yes. TradeLog is built around local-first principles. You keep control of your data and can export it whenever you want.
                 </div>
-              </div>
-            </div>
-          </Card>
-        </div>
-
-        {/* WHY R NOT PNL */}
-        <div style={{ marginTop: 18 }}>
-          <Card title="Why R, not PnL?" subtitle="Because money alone doesn’t tell the truth.">
-            <div style={{ display: "grid", gap: 12, lineHeight: 1.6 }}>
-              <div style={{ fontSize: 14, opacity: 0.8 }}>
-                PnL changes with position size and luck. A +$200 trade can still be a bad decision if you risked $400.
-              </div>
-              <div style={{ fontSize: 14, fontWeight: 600, opacity: 0.9 }}>
-                R (risk units) measures discipline — how well you execute your plan, independent of account size.
-              </div>
-              <div
-                style={{
-                  marginTop: 6,
-                  padding: 12,
-                  borderRadius: 14,
-                  border: "1px solid rgba(255,255,255,0.10)",
-                  background: "rgba(255,255,255,0.02)",
-                  fontSize: 13,
-                  opacity: 0.85,
-                }}
-              >
-                📌 A trader who respects risk stays consistent. R makes that visible.
-              </div>
-            </div>
-          </Card>
-        </div>
-
-        {/* PnL vs R (animated) */}
-        <div style={{ marginTop: 18 }}>
-          <Card title="PnL vs R" subtitle="PnL is noisy. R shows execution quality.">
-            <div
-              className="pnlRGrid"
-              style={{
-                display: "grid",
-                gridTemplateColumns: "1.25fr 0.75fr",
-                gap: 14,
-                alignItems: "stretch",
-              }}
-            >
-              {/* Chart */}
-              <div
-                style={{
-                  position: "relative",
-                  borderRadius: 16,
-                  border: "1px solid rgba(255,255,255,0.10)",
-                  background:
-                    "radial-gradient(900px 260px at 20% 0%, rgba(140,80,255,0.12), transparent 55%), rgba(255,255,255,0.02)",
-                  padding: 14,
-                  paddingTop: 18,
-                  paddingBottom: 18,
-                  overflow: "hidden",
-                }}
-              >
-                <div
-                  style={{
-                    display: "flex",
-                    justifyContent: "space-between",
-                    gap: 12,
-                    alignItems: "center",
-                    marginBottom: 8,
-                    fontSize: 12,
-                    opacity: 0.9,
-                  }}
-                >
-                  <div style={{ opacity: 0.75 }}>Better ↑</div>
-
-                  <div style={{ display: "flex", gap: 12, flexWrap: "wrap", alignItems: "center" }}>
-                    <div style={{ display: "flex", alignItems: "center", gap: 8, opacity: 0.75 }}>
-                      <span
-                        style={{
-                          width: 18,
-                          height: 2,
-                          background: "rgba(255,255,255,0.28)",
-                          display: "inline-block",
-                        }}
-                      />
-                      PnL (size & luck)
-                    </div>
-                    <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                      <span
-                        style={{
-                          width: 18,
-                          height: 3,
-                          background: "rgba(140,80,255,0.95)",
-                          display: "inline-block",
-                        }}
-                      />
-                      R (discipline)
-                    </div>
-                  </div>
-
-                  <div style={{ opacity: 0.65 }}>Worse ↓</div>
-                </div>
-
-                <svg width="100%" height="210" viewBox="0 0 560 210" role="img" aria-label="PnL vs R chart">
-                  <defs>
-                    <linearGradient id="fade2" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="0%" stopColor="rgba(255,255,255,0.10)" />
-                      <stop offset="100%" stopColor="rgba(255,255,255,0.02)" />
-                    </linearGradient>
-
-                    <filter id="glow2">
-                      <feGaussianBlur stdDeviation="4" result="blur" />
-                      <feMerge>
-                        <feMergeNode in="blur" />
-                        <feMergeNode in="SourceGraphic" />
-                      </feMerge>
-                    </filter>
-                  </defs>
-
-                  <rect x="0" y="0" width="560" height="210" fill="transparent" />
-
-                  {Array.from({ length: 5 }).map((_, i) => {
-                    const y = 40 + i * 35;
-                    return (
-                      <line
-                        key={i}
-                        x1="0"
-                        y1={y}
-                        x2="560"
-                        y2={y}
-                        stroke={i === 4 ? "rgba(255,255,255,0.10)" : "rgba(255,255,255,0.06)"}
-                        strokeWidth="1"
-                      />
-                    );
-                  })}
-
-                  <rect x="0" y="175" width="560" height="35" fill="url(#fade2)" opacity="0.55" />
-
-                  <polyline
-                    className="pnlLine"
-                    points="10,135 60,110 110,155 160,102 210,160 260,96 310,172 360,88 410,166 460,80 510,148 550,70"
-                    fill="none"
-                    stroke="rgba(255,255,255,0.26)"
-                    strokeWidth="1.7"
-                    strokeLinejoin="round"
-                    strokeLinecap="round"
-                  />
-
-                  <polyline
-                    className="rGlow"
-                    points="10,165 60,160 110,153 160,148 210,140 260,132 310,124 360,116 410,106 460,98 510,88 550,78"
-                    fill="none"
-                    stroke="rgba(140,80,255,0.35)"
-                    strokeWidth="7"
-                    strokeLinejoin="round"
-                    strokeLinecap="round"
-                    filter="url(#glow2)"
-                    opacity="0.55"
-                  />
-                  <polyline
-                    className="rLine"
-                    points="10,165 60,160 110,153 160,148 210,140 260,132 310,124 360,116 410,106 460,98 510,88 550,78"
-                    fill="none"
-                    stroke="rgba(140,80,255,0.95)"
-                    strokeWidth="3"
-                    strokeLinejoin="round"
-                    strokeLinecap="round"
-                  />
-
-                  {[
-                    [10, 165],
-                    [60, 160],
-                    [110, 153],
-                    [160, 148],
-                    [210, 140],
-                    [260, 132],
-                    [310, 124],
-                    [360, 116],
-                    [410, 106],
-                    [460, 98],
-                    [510, 88],
-                    [550, 78],
-                  ].map(([x, y]) => (
-                    <circle key={`${x}-${y}`} cx={x} cy={y} r="3.2" fill="rgba(140,80,255,0.95)" />
-                  ))}
-                </svg>
-
-                <div style={{ marginTop: 10, fontSize: 12, opacity: 0.72, lineHeight: 1.5 }}>
-                  PnL swings with size. <b>R stays comparable</b> — it reflects execution quality.
-                </div>
-              </div>
-
-              {/* Example */}
-              <div
-                style={{
-                  borderRadius: 16,
-                  border: "1px solid rgba(255,255,255,0.10)",
-                  background: "rgba(255,255,255,0.02)",
-                  padding: 14,
-                  display: "grid",
-                  gap: 10,
-                }}
-              >
-                <div style={{ fontWeight: 900 }}>Example</div>
-
-                <div style={{ fontSize: 13, opacity: 0.78, lineHeight: 1.6 }}>
-                  Trade A: +$200 looks great.
-                  <br />
-                  If risk was $400 → <b>+0.5R</b>.
-                </div>
-
-                <div style={{ fontSize: 13, opacity: 0.78, lineHeight: 1.6 }}>
-                  Trade B: -$50 looks small.
-                  <br />
-                  If risk was $25 → <b>-2R</b>.
-                </div>
-
-                <div
-                  style={{
-                    marginTop: 4,
-                    padding: 10,
-                    borderRadius: 14,
-                    border: "1px solid rgba(140,80,255,0.22)",
-                    background: "rgba(140,80,255,0.08)",
-                    fontSize: 12,
-                    opacity: 0.9,
-                    lineHeight: 1.5,
-                  }}
-                >
-                  R makes results honest — and improvement measurable.
-                </div>
-              </div>
-            </div>
-          </Card>
-        </div>
-
-        {/* BEFORE / AFTER */}
-        <div style={{ marginTop: 18 }}>
-          <Card title="Before vs After TradeLog" subtitle="Same trader. Different behavior.">
-            <div
-              className="beforeAfterGrid"
-              style={{
-                display: "grid",
-                gridTemplateColumns: "1fr 1fr",
-                gap: 14,
-                alignItems: "stretch",
-              }}
-            >
-              <div
-                style={{
-                  padding: 16,
-                  borderRadius: 18,
-                  border: "1px solid rgba(255,100,100,0.25)",
-                  background: "rgba(255,100,100,0.06)",
-                  display: "grid",
-                  gap: 10,
-                }}
-              >
-                <div style={{ fontWeight: 900, fontSize: 16 }}>Before</div>
-                <ul style={{ margin: 0, paddingLeft: 18, display: "grid", gap: 8, fontSize: 13, opacity: 0.85 }}>
-                  <li>Trading without a written plan</li>
-                  <li>Revenge trades after losses</li>
-                  <li>Moving stop-loss emotionally</li>
-                  <li>Judging performance by random PnL</li>
-                  <li>Repeating the same mistakes</li>
-                </ul>
-              </div>
-
-              <div
-                style={{
-                  padding: 16,
-                  borderRadius: 18,
-                  border: "1px solid rgba(80,200,120,0.25)",
-                  background: "rgba(80,200,120,0.06)",
-                  display: "grid",
-                  gap: 10,
-                }}
-              >
-                <div style={{ fontWeight: 900, fontSize: 16 }}>After</div>
-                <ul style={{ margin: 0, paddingLeft: 18, display: "grid", gap: 8, fontSize: 13, opacity: 0.9 }}>
-                  <li>Clear rules before every trade</li>
-                  <li>Losses tracked and reviewed in R</li>
-                  <li>Stops respected, risk controlled</li>
-                  <li>Consistency measured, not luck</li>
-                  <li>Patterns identified and improved</li>
-                </ul>
               </div>
             </div>
           </Card>
@@ -1466,74 +1014,11 @@ export default function HomePage() {
         </div>
 
         <style jsx>{`
-          .mockDashboardWrap :global(*) {
-            /* no-op wrapper to scope selectors */
-          }
-          .mockDashboardWrap :global(*:not(script)) {
-            /* we keep safe baseline */
-          }
           .mockDashboardWrap :global([class*="demo"]),
           .mockDashboardWrap :global([data-demo]),
           .mockDashboardWrap :global(.demo),
           .mockDashboardWrap :global(.demoData) {
             display: none !important;
-          }
-
-          /* PnL vs R line draw animation */
-          .pnlLine,
-          .rLine,
-          .rGlow {
-            stroke-dasharray: 900;
-            stroke-dashoffset: 900;
-            animation: drawLine 1.25s ease forwards;
-          }
-
-          .pnlLine {
-            animation-duration: 1.05s;
-            animation-delay: 0.05s;
-            opacity: 0;
-            animation-name: drawPnl;
-          }
-
-          .rGlow {
-            animation-delay: 0.18s;
-            filter: blur(6px);
-          }
-
-          .rLine {
-            animation-delay: 0.18s;
-          }
-
-          .pnlRGrid svg circle {
-            opacity: 0;
-            animation: fadeDots 0.35s ease forwards;
-            animation-delay: 0.95s;
-          }
-
-          @keyframes drawLine {
-            to {
-              stroke-dashoffset: 0;
-            }
-          }
-
-          @keyframes drawPnl {
-            0% {
-              stroke-dashoffset: 900;
-              opacity: 0;
-            }
-            20% {
-              opacity: 1;
-            }
-            100% {
-              stroke-dashoffset: 0;
-              opacity: 1;
-            }
-          }
-
-          @keyframes fadeDots {
-            to {
-              opacity: 0.9;
-            }
           }
 
           @media (max-width: 980px) {
@@ -1544,20 +1029,10 @@ export default function HomePage() {
               grid-template-columns: 1fr !important;
             }
 
-            .pricingGrid {
-              grid-template-columns: 1fr !important;
-            }
             .faqGrid {
               grid-template-columns: 1fr !important;
             }
-            .pnlRGrid {
-              grid-template-columns: 1fr !important;
-            }
-            .beforeAfterGrid {
-              grid-template-columns: 1fr !important;
-            }
 
-            /* ✅ Trader panel responsive */
             .traderPanelGrid {
               grid-template-columns: 1fr !important;
             }
