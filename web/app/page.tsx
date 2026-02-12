@@ -268,12 +268,24 @@ function TraderCalendarPanel() {
   const now = useMemo(() => new Date(), []);
   const currentMonthStart = useMemo(() => new Date(now.getFullYear(), now.getMonth(), 1), [now]);
 
-  // ✅ Hard clamp: if somehow monthDate becomes future, snap back
+  // ✅ NEW: earliest month that has data (adjust if you want another "launch" month)
+  // Example: only Jan+Feb exist -> historyStart = Jan 1, 2026
+  const historyStart = useMemo(() => new Date(2026, 0, 1), []);
+
+  const monthStart = useMemo(() => new Date(monthDate.getFullYear(), monthDate.getMonth(), 1), [monthDate]);
+  const isMonthBeforeHistory = useMemo(() => monthStart < historyStart, [monthStart, historyStart]);
+
+  // ✅ Hard clamp: prevent future AND prevent going before historyStart
   useEffect(() => {
     if (monthDate > currentMonthStart) {
       setMonthDate(currentMonthStart);
+      return;
     }
-  }, [monthDate, currentMonthStart]);
+    if (monthStart < historyStart) {
+      setMonthDate(historyStart);
+      return;
+    }
+  }, [monthDate, currentMonthStart, monthStart, historyStart]);
 
   const year = monthDate.getFullYear();
   const monthIndex = monthDate.getMonth();
@@ -288,8 +300,15 @@ function TraderCalendarPanel() {
 
   const isCurrentMonth = isThisMonth;
 
+  // ✅ NEW: disable prev arrow when we're at historyStart month
+  const isHistoryStartMonth = year === historyStart.getFullYear() && monthIndex === historyStart.getMonth();
+
   const goPrevMonth = () => {
-    setMonthDate((d) => new Date(d.getFullYear(), d.getMonth() - 1, 1));
+    setMonthDate((d) => {
+      const prev = new Date(d.getFullYear(), d.getMonth() - 1, 1);
+      if (prev < historyStart) return d; // 🚫 prevent earlier than history
+      return prev;
+    });
   };
 
   const goNextMonth = () => {
@@ -308,8 +327,25 @@ function TraderCalendarPanel() {
     value: "",
   });
 
-  // generate month pnl (raw full month)
+  const sum = (xs: number[]) => xs.reduce((a, b) => a + b, 0);
+
+  // ✅ FIX: 7d/30d should be last 7/30 CALENDAR days (no-trade days count as 0)
+  const asNum = (v: number | undefined) => (typeof v === "number" ? v : 0);
+
+  const sumDays = (arr: Array<number | undefined>, fromDay: number, toDay: number) => {
+    const from = Math.max(1, fromDay);
+    const to = Math.min(arr.length, toDay);
+    let s = 0;
+    for (let d = from; d <= to; d++) s += asNum(arr[d - 1]);
+    return s;
+  };
+
+  // generate month pnl (raw full month) — but if month before historyStart, show empty
   const dailyPnl = useMemo(() => {
+    if (isMonthBeforeHistory) {
+      return Array.from({ length: daysInMonth }, () => undefined) as Array<number | undefined>;
+    }
+
     const seedBase = hashSeed(`${year}-${monthIndex}`);
     const arr: Array<number | undefined> = [];
 
@@ -333,25 +369,40 @@ function TraderCalendarPanel() {
     }
 
     return arr;
-  }, [year, monthIndex, daysInMonth]);
+  }, [year, monthIndex, daysInMonth, isMonthBeforeHistory]);
 
-  // ✅ NEW: hide future days in CURRENT month
+  // ✅ hide future days in CURRENT month
   const dailyPnlVisible = useMemo(() => {
     if (!isThisMonth) return dailyPnl; // past months = show all
     return dailyPnl.map((v, idx) => (idx + 1 > todayDay ? undefined : v));
   }, [dailyPnl, isThisMonth, todayDay]);
 
-  // ✅ NEW: maxAbs based on visible data (no future spikes)
+  // ✅ maxAbs based on visible data (no future spikes)
   const maxAbs = useMemo(() => {
     return dailyPnlVisible.reduce((mx, v) => (v === undefined ? mx : Math.max(mx, Math.abs(v))), 0);
   }, [dailyPnlVisible]);
 
-  const rangeMonths = range === "1m" ? 1 : range === "3m" ? 3 : 12;
+  // ✅ available months since historyStart up to selected month (inclusive)
+  const monthsAvailableUpToSelected = useMemo(() => {
+    const n =
+      (year - historyStart.getFullYear()) * 12 + (monthIndex - historyStart.getMonth()) + 1;
+    return Math.max(0, n);
+  }, [year, monthIndex, historyStart]);
+
+  // ✅ requested months, clamped to available history
+  const rangeMonthsRequested = range === "1m" ? 1 : range === "3m" ? 3 : 12;
+  const rangeMonths = Math.max(1, Math.min(rangeMonthsRequested, monthsAvailableUpToSelected || 1));
 
   const rangeSeries = useMemo(() => {
     const series: number[] = [];
+
     for (let mOffset = rangeMonths - 1; mOffset >= 0; mOffset--) {
       const d = new Date(year, monthIndex - mOffset, 1);
+
+      // 🚫 do not include months before history
+      const histMonthStart = new Date(historyStart.getFullYear(), historyStart.getMonth(), 1);
+      if (d < histMonthStart) continue;
+
       const y = d.getFullYear();
       const mi = d.getMonth();
       const dim = new Date(y, mi + 1, 0).getDate();
@@ -360,7 +411,7 @@ function TraderCalendarPanel() {
       const isCur = y === now.getFullYear() && mi === now.getMonth();
 
       for (let day = 1; day <= dim; day++) {
-        // ✅ NEW: range also must not include future days in CURRENT month
+        // 🚫 range also must not include future days in CURRENT month
         if (isCur && day > now.getDate()) break;
 
         const r = rand01(seedBase + day * 101);
@@ -375,25 +426,12 @@ function TraderCalendarPanel() {
         series.push(Number(v.toFixed(2)));
       }
     }
+
     return series;
-  }, [rangeMonths, year, monthIndex, now]);
-
-  const sum = (xs: number[]) => xs.reduce((a, b) => a + b, 0);
-
-  // ✅ FIX: 7d/30d should be last 7/30 CALENDAR days
-  const asNum = (v: number | undefined) => (typeof v === "number" ? v : 0);
-
-  const sumDays = (arr: Array<number | undefined>, fromDay: number, toDay: number) => {
-    const from = Math.max(1, fromDay);
-    const to = Math.min(arr.length, toDay);
-    let s = 0;
-    for (let d = from; d <= to; d++) s += asNum(arr[d - 1]);
-    return s;
-  };
+  }, [rangeMonths, year, monthIndex, now, historyStart]);
 
   const stats = useMemo(() => {
     const endDay = isThisMonth ? todayDay : daysInMonth;
-
     const today = isThisMonth ? asNum(dailyPnlVisible[todayDay - 1]) : 0;
 
     const pnl7d = sumDays(dailyPnlVisible, endDay - 6, endDay);
@@ -408,7 +446,15 @@ function TraderCalendarPanel() {
     };
   }, [dailyPnlVisible, todayDay, isThisMonth, daysInMonth, rangeSeries]);
 
-  const rangeLabel = range === "1m" ? "1m" : range === "3m" ? "3m" : "1y";
+  // ✅ label: if clicked "1y" but history < 12 months, show YTD instead (more honest)
+  const rangeLabel =
+    range === "1m"
+      ? "1m"
+      : range === "3m"
+        ? "3m"
+        : monthsAvailableUpToSelected < 12
+          ? "YTD"
+          : "1y";
 
   return (
     <Card title="Trader snapshot" subtitle="Binance-style calendar (real month + intensity + tooltip).">
@@ -551,6 +597,9 @@ function TraderCalendarPanel() {
                 <div style={{ display: "flex", gap: 6, alignItems: "center" }}>
                   {(["1m", "3m", "1y"] as RangeKey[]).map((k) => {
                     const active = k === range;
+                    const effectiveLabel =
+                      k === "1y" && monthsAvailableUpToSelected < 12 ? "YTD" : k;
+
                     return (
                       <button
                         key={k}
@@ -568,8 +617,13 @@ function TraderCalendarPanel() {
                           fontWeight: active ? 900 : 700,
                           opacity: active ? 1 : 0.85,
                         }}
+                        title={
+                          k === "1y" && monthsAvailableUpToSelected < 12
+                            ? "Year-to-date (history is less than 12 months)"
+                            : undefined
+                        }
                       >
-                        {k}
+                        {effectiveLabel}
                       </button>
                     );
                   })}
@@ -578,6 +632,7 @@ function TraderCalendarPanel() {
                 <button
                   type="button"
                   onClick={goPrevMonth}
+                  disabled={isHistoryStartMonth}
                   style={{
                     width: 34,
                     height: 34,
@@ -585,10 +640,11 @@ function TraderCalendarPanel() {
                     border: "1px solid rgba(255,255,255,0.10)",
                     background: "rgba(255,255,255,0.03)",
                     color: "rgba(255,255,255,0.9)",
-                    cursor: "pointer",
+                    cursor: isHistoryStartMonth ? "not-allowed" : "pointer",
+                    opacity: isHistoryStartMonth ? 0.45 : 1,
                   }}
                   aria-label="Previous month"
-                  title="Previous month"
+                  title={isHistoryStartMonth ? "No earlier data" : "Previous month"}
                 >
                   ←
                 </button>
@@ -688,7 +744,6 @@ function TraderCalendarPanel() {
                 />
               ))}
 
-              {/* ✅ IMPORTANT: use dailyPnlVisible here */}
               {dailyPnlVisible.map((v, idx) => {
                 const day = idx + 1;
                 const tone = pnlTone(v, maxAbs);
