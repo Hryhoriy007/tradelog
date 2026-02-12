@@ -238,7 +238,7 @@ const TRADER_PLACEHOLDER =
   <circle cx="450" cy="270" r="70" fill="rgba(255,255,255,0.10)"/>
   <path d="M290,530c35-90,115-135,160-135s125,45,160,135" fill="rgba(255,255,255,0.10)"/>
   <text x="50%" y="92%" text-anchor="middle" fill="rgba(255,255,255,0.60)" font-family="Inter, Arial" font-size="28">
-    Trader profile (placeholder)
+    Dmytro_515
   </text>
 </svg>
 `);
@@ -247,7 +247,7 @@ type RangeKey = "1m" | "3m" | "1y";
 
 function TraderCalendarPanel() {
   const trader = {
-    name: "Dmytro_515",
+    name: "",
     age: 28,
     yearsTrading: 4,
     style: "Futures • Intraday",
