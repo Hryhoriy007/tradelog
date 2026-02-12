@@ -249,7 +249,7 @@ type RangeKey = "1m" | "3m" | "1y";
 
 function TraderCalendarPanel() {
   const trader = {
-    name: "Dmytro_515 ",
+    name: "Dmytro_515",
     age: 28,
     yearsTrading: 4,
     style: "Futures • Intraday",
@@ -373,12 +373,25 @@ function TraderCalendarPanel() {
 
   const sum = (xs: number[]) => xs.reduce((a, b) => a + b, 0);
 
-  const stats = useMemo(() => {
-    const today = isThisMonth && typeof dailyPnl[todayDay - 1] === "number" ? (dailyPnl[todayDay - 1] as number) : 0;
+  // ✅ FIX: 7d/30d should be last 7/30 CALENDAR days (no-trade days count as 0)
+  const asNum = (v: number | undefined) => (typeof v === "number" ? v : 0);
 
-    const monthNums = dailyPnl.filter((x): x is number => typeof x === "number");
-    const pnl7d = sum(monthNums.slice(-7));
-    const pnl30d = sum(monthNums.slice(-30));
+  const sumDays = (arr: Array<number | undefined>, fromDay: number, toDay: number) => {
+    const from = Math.max(1, fromDay);
+    const to = Math.min(arr.length, toDay);
+    let s = 0;
+    for (let d = from; d <= to; d++) s += asNum(arr[d - 1]);
+    return s;
+  };
+
+  const stats = useMemo(() => {
+    const today = isThisMonth ? asNum(dailyPnl[todayDay - 1]) : 0;
+
+    // endDay: current month => today, past month => last day of that month
+    const endDay = isThisMonth ? todayDay : daysInMonth;
+
+    const pnl7d = sumDays(dailyPnl, endDay - 6, endDay); // last 7 calendar days
+    const pnl30d = sumDays(dailyPnl, endDay - 29, endDay); // last 30 calendar days
     const pnlRange = sum(rangeSeries);
 
     return {
@@ -387,7 +400,7 @@ function TraderCalendarPanel() {
       pnl30d: Number(pnl30d.toFixed(2)),
       pnlRange: Number(pnlRange.toFixed(2)),
     };
-  }, [dailyPnl, todayDay, isThisMonth, rangeSeries]);
+  }, [dailyPnl, todayDay, isThisMonth, daysInMonth, rangeSeries]);
 
   const rangeLabel = range === "1m" ? "1m" : range === "3m" ? "3m" : "1y";
 
