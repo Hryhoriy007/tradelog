@@ -2,7 +2,7 @@
 "use client";
 
 import Link from "next/link";
-import { useMemo } from "react";
+import { useMemo, useState, useEffect } from "react";
 
 import { Page, HeaderRow } from "@/app/components/ui/Layout";
 import { Card } from "@/app/components/ui/Card";
@@ -150,11 +150,9 @@ function Step({ n, title, text }: { n: string; title: string; text: string }) {
 /* =========================
    Trader Panel (Binance-like)
    ========================= */
-function pnlTone(v?: number) {
-  if (v === undefined || v === null) return { bg: "rgba(255,255,255,0.04)", br: "rgba(255,255,255,0.08)" };
-  if (v > 0) return { bg: "rgba(80,200,120,0.14)", br: "rgba(80,200,120,0.22)" };
-  if (v < 0) return { bg: "rgba(255,100,100,0.14)", br: "rgba(255,100,100,0.22)" };
-  return { bg: "rgba(180,180,180,0.10)", br: "rgba(180,180,180,0.16)" };
+
+function clamp01(x: number) {
+  return Math.max(0, Math.min(1, x));
 }
 
 function fmtMoney(v?: number) {
@@ -163,35 +161,275 @@ function fmtMoney(v?: number) {
   return `${sign}${v.toFixed(2)} USD`;
 }
 
+// deterministic pseudo-random (stable per month/day)
+function hashSeed(s: string) {
+  let h = 2166136261;
+  for (let i = 0; i < s.length; i++) {
+    h ^= s.charCodeAt(i);
+    h = Math.imul(h, 16777619);
+  }
+  return h >>> 0;
+}
+function rand01(seed: number) {
+  let x = seed || 123456789;
+  x ^= x << 13;
+  x ^= x >>> 17;
+  x ^= x << 5;
+  return ((x >>> 0) % 1_000_000) / 1_000_000;
+}
+
+/** Binance-like tone with intensity by abs(v) / maxAbs */
+function pnlTone(v: number | undefined, maxAbs: number) {
+  if (v === undefined || v === null) {
+    return {
+      bg: "rgba(255,255,255,0.04)",
+      br: "rgba(255,255,255,0.08)",
+      text: "rgba(255,255,255,0.70)",
+    };
+  }
+
+  if (v === 0) {
+    return {
+      bg: "rgba(180,180,180,0.10)",
+      br: "rgba(180,180,180,0.16)",
+      text: "rgba(255,255,255,0.88)",
+    };
+  }
+
+  const t = maxAbs > 0 ? clamp01(Math.abs(v) / maxAbs) : 0;
+
+  const bgA = 0.08 + t * 0.30; // 0.08..0.38
+  const brA = 0.16 + t * 0.26; // 0.16..0.42
+
+  if (v > 0) {
+    return {
+      bg: `rgba(0, 180, 120, ${bgA})`,
+      br: `rgba(0, 180, 120, ${brA})`,
+      text: "rgba(235,255,245,0.95)",
+    };
+  }
+
+  return {
+    bg: `rgba(240, 70, 70, ${bgA})`,
+    br: `rgba(240, 70, 70, ${brA})`,
+    text: "rgba(255,235,235,0.95)",
+  };
+}
+
+// ✅ no file needed — embedded SVG placeholder image
+const TRADER_PLACEHOLDER =
+  "data:image/svg+xml;charset=utf-8," +
+  encodeURIComponent(`
+<svg xmlns="http://www.w3.org/2000/svg" width="900" height="675" viewBox="0 0 900 675">
+  <defs>
+    <radialGradient id="g" cx="30%" cy="0%" r="90%">
+      <stop offset="0%" stop-color="rgba(140,80,255,0.55)"/>
+      <stop offset="55%" stop-color="rgba(140,80,255,0.12)"/>
+      <stop offset="100%" stop-color="rgba(0,0,0,0.15)"/>
+    </radialGradient>
+    <linearGradient id="b" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#0b0b12"/>
+      <stop offset="100%" stop-color="#11131b"/>
+    </linearGradient>
+  </defs>
+  <rect width="900" height="675" fill="url(#b)"/>
+  <rect width="900" height="675" fill="url(#g)"/>
+  <circle cx="450" cy="310" r="150" fill="rgba(255,255,255,0.06)"/>
+  <circle cx="450" cy="270" r="70" fill="rgba(255,255,255,0.10)"/>
+  <path d="M290,530c35-90,115-135,160-135s125,45,160,135" fill="rgba(255,255,255,0.10)"/>
+  <text x="50%" y="92%" text-anchor="middle" fill="rgba(255,255,255,0.60)" font-family="Inter, Arial" font-size="28">
+    Trader profile (placeholder)
+  </text>
+</svg>
+`);
+
+type RangeKey = "1m" | "3m" | "1y";
+
 function TraderCalendarPanel() {
   const trader = {
-    name: "Dmytro Kovalenko",
+    name: "Dmytro_515",
     age: 28,
     yearsTrading: 4,
     style: "Futures • Intraday",
     note: "Tracks risk in R, avoids revenge trading",
-    photoUrl: "/trader.jpg", // ✅ put an image into /public/trader.jpg or change this path
+    photoUrl: TRADER_PLACEHOLDER,
   };
 
-  const monthLabel = "2026-02";
+  const [range, setRange] = useState<RangeKey>("1m");
 
-  // Mock daily PnL (28 days example). undefined = no data
-  const dailyPnl: Array<number | undefined> = [
-    -0.33, +582.39, +0.11, -0.3, -69.7, -310.54, -0.21, -0.02, +0.51, -58.93, -0.43, -0.14, undefined, undefined,
-    undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined,
-    undefined, undefined, undefined, undefined,
-  ];
+  const [monthDate, setMonthDate] = useState(() => {
+    const n = new Date();
+    return new Date(n.getFullYear(), n.getMonth(), 1);
+  });
 
-  const today = 0.0;
-  const pnl7d = -369.76;
-  const pnl30d = -92.77;
-  const pnlAll = -2094.16;
+  const now = useMemo(() => new Date(), []);
+  const currentMonthStart = useMemo(() => new Date(now.getFullYear(), now.getMonth(), 1), [now]);
 
-  // Adjust this (0..6) to align the month start visually
-  const leadingEmpty = 6;
+  const historyStart = useMemo(() => new Date(2026, 0, 1), []);
+
+  const monthStart = useMemo(() => new Date(monthDate.getFullYear(), monthDate.getMonth(), 1), [monthDate]);
+  const isMonthBeforeHistory = useMemo(() => monthStart < historyStart, [monthStart, historyStart]);
+
+  useEffect(() => {
+    if (monthDate > currentMonthStart) {
+      setMonthDate(currentMonthStart);
+      return;
+    }
+    if (monthStart < historyStart) {
+      setMonthDate(historyStart);
+      return;
+    }
+  }, [monthDate, currentMonthStart, monthStart, historyStart]);
+
+  const year = monthDate.getFullYear();
+  const monthIndex = monthDate.getMonth();
+  const monthLabel = `${year}-${String(monthIndex + 1).padStart(2, "0")}`;
+
+  const daysInMonth = useMemo(() => new Date(year, monthIndex + 1, 0).getDate(), [year, monthIndex]);
+  const leadingEmpty = useMemo(() => new Date(year, monthIndex, 1).getDay(), [year, monthIndex]);
+
+  const isThisMonth = now.getFullYear() === year && now.getMonth() === monthIndex;
+  const todayDay = now.getDate();
+
+  const isCurrentMonth = isThisMonth;
+  const isHistoryStartMonth = year === historyStart.getFullYear() && monthIndex === historyStart.getMonth();
+
+  const goPrevMonth = () => {
+    setMonthDate((d) => {
+      const prev = new Date(d.getFullYear(), d.getMonth() - 1, 1);
+      if (prev < historyStart) return d;
+      return prev;
+    });
+  };
+
+  const goNextMonth = () => {
+    setMonthDate((d) => {
+      const next = new Date(d.getFullYear(), d.getMonth() + 1, 1);
+      if (next > currentMonthStart) return d;
+      return next;
+    });
+  };
+
+  const [tip, setTip] = useState<{ open: boolean; x: number; y: number; title: string; value: string }>({
+    open: false,
+    x: 0,
+    y: 0,
+    title: "",
+    value: "",
+  });
+
+  const sum = (xs: number[]) => xs.reduce((a, b) => a + b, 0);
+  const asNum = (v: number | undefined) => (typeof v === "number" ? v : 0);
+
+  const sumDays = (arr: Array<number | undefined>, fromDay: number, toDay: number) => {
+    const from = Math.max(1, fromDay);
+    const to = Math.min(arr.length, toDay);
+    let s = 0;
+    for (let d = from; d <= to; d++) s += asNum(arr[d - 1]);
+    return s;
+  };
+
+  const dailyPnl = useMemo(() => {
+    if (isMonthBeforeHistory) {
+      return Array.from({ length: daysInMonth }, () => undefined) as Array<number | undefined>;
+    }
+
+    const seedBase = hashSeed(`${year}-${monthIndex}`);
+    const arr: Array<number | undefined> = [];
+
+    for (let d = 1; d <= daysInMonth; d++) {
+      const r = rand01(seedBase + d * 101);
+      const r2 = rand01(seedBase + d * 911);
+
+      if (r < 0.22) {
+        arr.push(undefined);
+        continue;
+      }
+
+      let v = (r2 - 0.52) * 6;
+
+      const spike = rand01(seedBase + d * 333);
+      if (spike > 0.92) v += (spike - 0.9) * 1500;
+      if (spike < 0.06) v -= (0.08 - spike) * 900;
+
+      arr.push(Number(v.toFixed(2)));
+    }
+
+    return arr;
+  }, [year, monthIndex, daysInMonth, isMonthBeforeHistory]);
+
+  const dailyPnlVisible = useMemo(() => {
+    if (!isThisMonth) return dailyPnl;
+    return dailyPnl.map((v, idx) => (idx + 1 > todayDay ? undefined : v));
+  }, [dailyPnl, isThisMonth, todayDay]);
+
+  const maxAbs = useMemo(() => {
+    return dailyPnlVisible.reduce((mx, v) => (v === undefined ? mx : Math.max(mx, Math.abs(v))), 0);
+  }, [dailyPnlVisible]);
+
+  const monthsAvailableUpToSelected = useMemo(() => {
+    const n = (year - historyStart.getFullYear()) * 12 + (monthIndex - historyStart.getMonth()) + 1;
+    return Math.max(0, n);
+  }, [year, monthIndex, historyStart]);
+
+  const rangeMonthsRequested = range === "1m" ? 1 : range === "3m" ? 3 : 12;
+  const rangeMonths = Math.max(1, Math.min(rangeMonthsRequested, monthsAvailableUpToSelected || 1));
+
+  const rangeSeries = useMemo(() => {
+    const series: number[] = [];
+
+    for (let mOffset = rangeMonths - 1; mOffset >= 0; mOffset--) {
+      const d = new Date(year, monthIndex - mOffset, 1);
+      const histMonthStart = new Date(historyStart.getFullYear(), historyStart.getMonth(), 1);
+      if (d < histMonthStart) continue;
+
+      const y = d.getFullYear();
+      const mi = d.getMonth();
+      const dim = new Date(y, mi + 1, 0).getDate();
+      const seedBase = hashSeed(`${y}-${mi}`);
+
+      const isCur = y === now.getFullYear() && mi === now.getMonth();
+
+      for (let day = 1; day <= dim; day++) {
+        if (isCur && day > now.getDate()) break;
+
+        const r = rand01(seedBase + day * 101);
+        const r2 = rand01(seedBase + day * 911);
+        if (r < 0.22) continue;
+
+        let v = (r2 - 0.52) * 6;
+        const spike = rand01(seedBase + day * 333);
+        if (spike > 0.92) v += (spike - 0.9) * 1500;
+        if (spike < 0.06) v -= (0.08 - spike) * 900;
+
+        series.push(Number(v.toFixed(2)));
+      }
+    }
+
+    return series;
+  }, [rangeMonths, year, monthIndex, now, historyStart]);
+
+  const stats = useMemo(() => {
+    const endDay = isThisMonth ? todayDay : daysInMonth;
+    const today = isThisMonth ? asNum(dailyPnlVisible[todayDay - 1]) : 0;
+
+    const pnl7d = sumDays(dailyPnlVisible, endDay - 6, endDay);
+    const pnl30d = sumDays(dailyPnlVisible, endDay - 29, endDay);
+    const pnlRange = sum(rangeSeries);
+
+    return {
+      today: Number(today.toFixed(2)),
+      pnl7d: Number(pnl7d.toFixed(2)),
+      pnl30d: Number(pnl30d.toFixed(2)),
+      pnlRange: Number(pnlRange.toFixed(2)),
+    };
+  }, [dailyPnlVisible, todayDay, isThisMonth, daysInMonth, rangeSeries]);
+
+  const rangeLabel =
+    range === "1m" ? "1m" : range === "3m" ? "3m" : monthsAvailableUpToSelected < 12 ? "YTD" : "1y";
 
   return (
-    <Card title="Trader snapshot" subtitle="A full panel before “How it works” (Binance-style calendar).">
+    <Card title="Trader snapshot" subtitle="Binance-style calendar (real month + intensity + tooltip).">
       <div
         className="traderPanelGrid"
         style={{
@@ -201,7 +439,7 @@ function TraderCalendarPanel() {
           alignItems: "stretch",
         }}
       >
-        {/* LEFT: Trader */}
+        {/* LEFT */}
         <div
           style={{
             borderRadius: 18,
@@ -224,16 +462,7 @@ function TraderCalendarPanel() {
             <img
               src={trader.photoUrl}
               alt={trader.name}
-              style={{
-                width: "100%",
-                height: "100%",
-                objectFit: "cover",
-                display: "block",
-                opacity: 0.92,
-              }}
-              onError={(e) => {
-                (e.currentTarget as HTMLImageElement).style.display = "none";
-              }}
+              style={{ width: "100%", height: "100%", objectFit: "cover", display: "block", opacity: 0.95 }}
             />
 
             <div style={{ position: "absolute", left: 12, top: 12, display: "flex", gap: 8, flexWrap: "wrap" }}>
@@ -295,7 +524,7 @@ function TraderCalendarPanel() {
           </div>
         </div>
 
-        {/* RIGHT: Calendar */}
+        {/* RIGHT */}
         <div
           style={{
             borderRadius: 18,
@@ -304,53 +533,160 @@ function TraderCalendarPanel() {
             padding: 14,
             display: "grid",
             gap: 12,
+            position: "relative",
           }}
+          onMouseLeave={() => setTip((t) => ({ ...t, open: false }))}
         >
+          {tip.open && (
+            <div
+              style={{
+                position: "fixed",
+                left: tip.x,
+                top: tip.y,
+                transform: "translate(12px, 12px)",
+                zIndex: 9999,
+                pointerEvents: "none",
+                padding: "10px 12px",
+                borderRadius: 12,
+                border: "1px solid rgba(255,255,255,0.12)",
+                background: "rgba(10,10,14,0.92)",
+                boxShadow: "0 12px 30px rgba(0,0,0,0.35)",
+                minWidth: 180,
+              }}
+            >
+              <div style={{ fontSize: 12, opacity: 0.85, marginBottom: 4 }}>{tip.title}</div>
+              <div style={{ fontSize: 13, fontWeight: 900 }}>{tip.value}</div>
+            </div>
+          )}
+
+          {/* header */}
           <div style={{ display: "grid", gap: 8 }}>
             <div style={{ display: "flex", justifyContent: "space-between", gap: 10, alignItems: "center" }}>
               <div style={{ fontWeight: 950, fontSize: 14 }}>Futures PnL</div>
-              <div
-                style={{
-                  padding: "6px 10px",
-                  borderRadius: 999,
-                  border: "1px solid rgba(255,255,255,0.10)",
-                  background: "rgba(255,255,255,0.03)",
-                  fontSize: 12,
-                  opacity: 0.9,
-                }}
-              >
-                {monthLabel}
+
+              <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
+                {/* range switch */}
+                <div style={{ display: "flex", gap: 6, alignItems: "center" }}>
+                  {(["1m", "3m", "1y"] as RangeKey[]).map((k) => {
+                    const active = k === range;
+                    const effectiveLabel = k === "1y" && monthsAvailableUpToSelected < 12 ? "YTD" : k;
+
+                    return (
+                      <button
+                        key={k}
+                        type="button"
+                        onClick={() => setRange(k)}
+                        style={{
+                          height: 30,
+                          padding: "0 10px",
+                          borderRadius: 999,
+                          border: active ? "1px solid rgba(255,205,80,0.35)" : "1px solid rgba(255,255,255,0.10)",
+                          background: active ? "rgba(255,205,80,0.12)" : "rgba(255,255,255,0.03)",
+                          color: "rgba(255,255,255,0.92)",
+                          fontSize: 12,
+                          cursor: "pointer",
+                          fontWeight: active ? 900 : 700,
+                          opacity: active ? 1 : 0.85,
+                        }}
+                        title={
+                          k === "1y" && monthsAvailableUpToSelected < 12
+                            ? "Year-to-date (history is less than 12 months)"
+                            : undefined
+                        }
+                      >
+                        {effectiveLabel}
+                      </button>
+                    );
+                  })}
+                </div>
+
+                <button
+                  type="button"
+                  onClick={goPrevMonth}
+                  disabled={isHistoryStartMonth}
+                  style={{
+                    width: 34,
+                    height: 34,
+                    borderRadius: 10,
+                    border: "1px solid rgba(255,255,255,0.10)",
+                    background: "rgba(255,255,255,0.03)",
+                    color: "rgba(255,255,255,0.9)",
+                    cursor: isHistoryStartMonth ? "not-allowed" : "pointer",
+                    opacity: isHistoryStartMonth ? 0.45 : 1,
+                  }}
+                  aria-label="Previous month"
+                  title={isHistoryStartMonth ? "No earlier data" : "Previous month"}
+                >
+                  ←
+                </button>
+
+                <div
+                  style={{
+                    padding: "6px 10px",
+                    borderRadius: 999,
+                    border: "1px solid rgba(255,255,255,0.10)",
+                    background: "rgba(255,255,255,0.03)",
+                    fontSize: 12,
+                    opacity: 0.92,
+                    minWidth: 84,
+                    textAlign: "center",
+                  }}
+                >
+                  {monthLabel}
+                </div>
+
+                <button
+                  type="button"
+                  onClick={goNextMonth}
+                  disabled={isCurrentMonth}
+                  style={{
+                    width: 34,
+                    height: 34,
+                    borderRadius: 10,
+                    border: "1px solid rgba(255,255,255,0.10)",
+                    background: "rgba(255,255,255,0.03)",
+                    color: "rgba(255,255,255,0.9)",
+                    cursor: isCurrentMonth ? "not-allowed" : "pointer",
+                    opacity: isCurrentMonth ? 0.45 : 1,
+                  }}
+                  aria-label="Next month"
+                  title={isCurrentMonth ? "You can’t view future months" : "Next month"}
+                >
+                  →
+                </button>
               </div>
             </div>
 
+            {/* summary */}
             <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 10 }}>
               {[
-                { k: "Today", v: today },
-                { k: "7d", v: pnl7d },
-                { k: "30d", v: pnl30d },
-                { k: "All time", v: pnlAll },
+                { k: "Today", v: stats.today },
+                { k: "7d", v: stats.pnl7d },
+                { k: "30d", v: stats.pnl30d },
+                { k: rangeLabel, v: stats.pnlRange },
               ].map((it) => {
-                const t = pnlTone(it.v);
+                const tone = pnlTone(it.v, Math.max(1, Math.abs(stats.pnlRange)));
                 return (
                   <div
                     key={it.k}
                     style={{
                       padding: 10,
                       borderRadius: 14,
-                      border: `1px solid ${t.br}`,
-                      background: t.bg,
+                      border: `1px solid ${tone.br}`,
+                      background: tone.bg,
                       display: "grid",
                       gap: 4,
                     }}
                   >
                     <div style={{ fontSize: 11, opacity: 0.75 }}>{it.k}</div>
-                    <div style={{ fontWeight: 900, fontSize: 13 }}>{fmtMoney(it.v)}</div>
+                    <div style={{ fontWeight: 900, fontSize: 13, color: tone.text }}>{fmtMoney(it.v)}</div>
                   </div>
                 );
               })}
             </div>
           </div>
 
+          {/* calendar */}
           <div>
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: 10 }}>
               <div style={{ fontWeight: 950, fontSize: 13, opacity: 0.9 }}>Daily PnL</div>
@@ -379,27 +715,40 @@ function TraderCalendarPanel() {
                 />
               ))}
 
-              {dailyPnl.map((v, idx) => {
+              {dailyPnlVisible.map((v, idx) => {
                 const day = idx + 1;
-                const t = pnlTone(v);
+                const tone = pnlTone(v, maxAbs);
+                const isToday = isThisMonth && day === todayDay;
+                const labelDate = `${monthLabel}-${String(day).padStart(2, "0")}`;
+
+                const cellValue = v === undefined ? "No trades" : fmtMoney(v);
+                const displaySmall =
+                  v === undefined ? "" : (v > 0 ? "+" : "") + (Math.abs(v) >= 100 ? v.toFixed(0) : v.toFixed(2));
+
                 return (
                   <div
                     key={day}
                     style={{
                       height: 44,
                       borderRadius: 10,
-                      border: `1px solid ${t.br}`,
-                      background: t.bg,
+                      border: isToday ? "1px solid rgba(255,205,80,0.45)" : `1px solid ${tone.br}`,
+                      boxShadow: isToday ? "0 0 0 2px rgba(255,205,80,0.10) inset" : undefined,
+                      background: tone.bg,
                       padding: "6px 8px",
                       display: "grid",
                       alignContent: "space-between",
+                      cursor: "default",
                     }}
-                    title={v === undefined ? `Day ${day}: no trades` : `Day ${day}: ${fmtMoney(v)}`}
+                    onMouseEnter={(e) => {
+                      setTip({ open: true, x: e.clientX, y: e.clientY, title: labelDate, value: cellValue });
+                    }}
+                    onMouseMove={(e) => setTip((t) => (t.open ? { ...t, x: e.clientX, y: e.clientY } : t))}
                   >
-                    <div style={{ fontSize: 11, opacity: 0.75 }}>{day}</div>
-                    <div style={{ fontSize: 11, fontWeight: 800, opacity: 0.9 }}>
-                      {v === undefined ? "" : (v > 0 ? "+" : "") + (Math.abs(v) >= 100 ? v.toFixed(0) : v.toFixed(2))}
+                    <div style={{ fontSize: 11, opacity: 0.75 }}>
+                      {day}
+                      {isToday ? <span style={{ marginLeft: 6, opacity: 0.85 }}>• today</span> : null}
                     </div>
+                    <div style={{ fontSize: 11, fontWeight: 800, color: tone.text }}>{displaySmall}</div>
                   </div>
                 );
               })}
