@@ -199,7 +199,6 @@ function pnlTone(v: number | undefined, maxAbs: number) {
 
   const t = maxAbs > 0 ? clamp01(Math.abs(v) / maxAbs) : 0;
 
-  // tuned like Binance blocks
   const bgA = 0.08 + t * 0.30; // 0.08..0.38
   const brA = 0.16 + t * 0.26; // 0.16..0.42
 
@@ -281,8 +280,6 @@ function TraderCalendarPanel() {
   const monthLabel = `${year}-${String(monthIndex + 1).padStart(2, "0")}`;
 
   const daysInMonth = useMemo(() => new Date(year, monthIndex + 1, 0).getDate(), [year, monthIndex]);
-
-  // ✅ correct leadingEmpty (Sunday-first)
   const leadingEmpty = useMemo(() => new Date(year, monthIndex, 1).getDay(), [year, monthIndex]);
 
   // for "today" highlight
@@ -311,7 +308,7 @@ function TraderCalendarPanel() {
     value: "",
   });
 
-  // generate month pnl
+  // generate month pnl (raw full month)
   const dailyPnl = useMemo(() => {
     const seedBase = hashSeed(`${year}-${monthIndex}`);
     const arr: Array<number | undefined> = [];
@@ -326,10 +323,8 @@ function TraderCalendarPanel() {
         continue;
       }
 
-      // base small pnl
       let v = (r2 - 0.52) * 6; // -3..+3-ish
 
-      // spikes
       const spike = rand01(seedBase + d * 333);
       if (spike > 0.92) v += (spike - 0.9) * 1500;
       if (spike < 0.06) v -= (0.08 - spike) * 900;
@@ -340,9 +335,16 @@ function TraderCalendarPanel() {
     return arr;
   }, [year, monthIndex, daysInMonth]);
 
+  // ✅ NEW: hide future days in CURRENT month
+  const dailyPnlVisible = useMemo(() => {
+    if (!isThisMonth) return dailyPnl; // past months = show all
+    return dailyPnl.map((v, idx) => (idx + 1 > todayDay ? undefined : v));
+  }, [dailyPnl, isThisMonth, todayDay]);
+
+  // ✅ NEW: maxAbs based on visible data (no future spikes)
   const maxAbs = useMemo(() => {
-    return dailyPnl.reduce((mx, v) => (v === undefined ? mx : Math.max(mx, Math.abs(v))), 0);
-  }, [dailyPnl]);
+    return dailyPnlVisible.reduce((mx, v) => (v === undefined ? mx : Math.max(mx, Math.abs(v))), 0);
+  }, [dailyPnlVisible]);
 
   const rangeMonths = range === "1m" ? 1 : range === "3m" ? 3 : 12;
 
@@ -355,7 +357,12 @@ function TraderCalendarPanel() {
       const dim = new Date(y, mi + 1, 0).getDate();
       const seedBase = hashSeed(`${y}-${mi}`);
 
+      const isCur = y === now.getFullYear() && mi === now.getMonth();
+
       for (let day = 1; day <= dim; day++) {
+        // ✅ NEW: range also must not include future days in CURRENT month
+        if (isCur && day > now.getDate()) break;
+
         const r = rand01(seedBase + day * 101);
         const r2 = rand01(seedBase + day * 911);
         if (r < 0.22) continue;
@@ -369,11 +376,11 @@ function TraderCalendarPanel() {
       }
     }
     return series;
-  }, [rangeMonths, year, monthIndex]);
+  }, [rangeMonths, year, monthIndex, now]);
 
   const sum = (xs: number[]) => xs.reduce((a, b) => a + b, 0);
 
-  // ✅ FIX: 7d/30d should be last 7/30 CALENDAR days (no-trade days count as 0)
+  // ✅ FIX: 7d/30d should be last 7/30 CALENDAR days
   const asNum = (v: number | undefined) => (typeof v === "number" ? v : 0);
 
   const sumDays = (arr: Array<number | undefined>, fromDay: number, toDay: number) => {
@@ -385,13 +392,12 @@ function TraderCalendarPanel() {
   };
 
   const stats = useMemo(() => {
-    const today = isThisMonth ? asNum(dailyPnl[todayDay - 1]) : 0;
-
-    // endDay: current month => today, past month => last day of that month
     const endDay = isThisMonth ? todayDay : daysInMonth;
 
-    const pnl7d = sumDays(dailyPnl, endDay - 6, endDay); // last 7 calendar days
-    const pnl30d = sumDays(dailyPnl, endDay - 29, endDay); // last 30 calendar days
+    const today = isThisMonth ? asNum(dailyPnlVisible[todayDay - 1]) : 0;
+
+    const pnl7d = sumDays(dailyPnlVisible, endDay - 6, endDay);
+    const pnl30d = sumDays(dailyPnlVisible, endDay - 29, endDay);
     const pnlRange = sum(rangeSeries);
 
     return {
@@ -400,7 +406,7 @@ function TraderCalendarPanel() {
       pnl30d: Number(pnl30d.toFixed(2)),
       pnlRange: Number(pnlRange.toFixed(2)),
     };
-  }, [dailyPnl, todayDay, isThisMonth, daysInMonth, rangeSeries]);
+  }, [dailyPnlVisible, todayDay, isThisMonth, daysInMonth, rangeSeries]);
 
   const rangeLabel = range === "1m" ? "1m" : range === "3m" ? "3m" : "1y";
 
@@ -532,7 +538,6 @@ function TraderCalendarPanel() {
             >
               <div style={{ fontSize: 12, opacity: 0.85, marginBottom: 4 }}>{tip.title}</div>
               <div style={{ fontSize: 13, fontWeight: 900 }}>{tip.value}</div>
-              <div style={{ fontSize: 11, opacity: 0.65, marginTop: 4 }}></div>
             </div>
           )}
 
@@ -683,7 +688,8 @@ function TraderCalendarPanel() {
                 />
               ))}
 
-              {dailyPnl.map((v, idx) => {
+              {/* ✅ IMPORTANT: use dailyPnlVisible here */}
+              {dailyPnlVisible.map((v, idx) => {
                 const day = idx + 1;
                 const tone = pnlTone(v, maxAbs);
                 const isToday = isThisMonth && day === todayDay;
@@ -731,6 +737,7 @@ function TraderCalendarPanel() {
     </Card>
   );
 }
+
 
 export default function HomePage() {
   const year = useMemo(() => new Date().getFullYear(), []);
