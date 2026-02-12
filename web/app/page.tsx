@@ -975,6 +975,256 @@ export default function HomePage() {
           </Card>
         </div>
 
+{/* WHY R NOT PNL */}
+<div style={{ marginTop: 18 }}>
+  <Card
+    title="Why R, not PnL?"
+    subtitle="Because money alone doesn’t tell the truth."
+  >
+    <div style={{ display: "grid", gap: 12, lineHeight: 1.6 }}>
+      <div style={{ fontSize: 14, opacity: 0.8 }}>
+        PnL changes with position size and luck. A +$200 trade can still
+        be a bad decision if you risked $400.
+      </div>
+
+      <div style={{ fontSize: 14, fontWeight: 600, opacity: 0.9 }}>
+        R (risk units) measures discipline — how well you execute your
+        plan, independent of account size.
+      </div>
+
+      <div
+        style={{
+          marginTop: 6,
+          padding: 12,
+          borderRadius: 14,
+          border: "1px solid rgba(255,255,255,0.10)",
+          background: "rgba(255,255,255,0.02)",
+          fontSize: 13,
+          opacity: 0.85,
+        }}
+      >
+        📌 A trader who respects risk stays consistent. R makes that visible.
+      </div>
+    </div>
+  </Card>
+</div>
+
+{/* PnL vs R (animated) */}
+<div style={{ marginTop: 18 }}>
+  <Card
+    title="PnL vs R"
+    subtitle="PnL is noisy. R shows execution quality."
+  >
+    <div
+      className="pnlRGrid"
+      style={{
+        display: "grid",
+        gridTemplateColumns: "1.25fr 0.75fr",
+        gap: 14,
+        alignItems: "stretch",
+      }}
+    >
+      {/* Chart */}
+      <div
+        style={{
+          position: "relative",
+          borderRadius: 16,
+          border: "1px solid rgba(255,255,255,0.10)",
+          background:
+            "radial-gradient(900px 260px at 20% 0%, rgba(140,80,255,0.12), transparent 55%), rgba(255,255,255,0.02)",
+          padding: 14,
+          paddingTop: 18,
+          paddingBottom: 18,
+          overflow: "hidden",
+        }}
+      >
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            marginBottom: 8,
+            fontSize: 12,
+            opacity: 0.9,
+          }}
+        >
+          <div style={{ opacity: 0.75 }}>Better ↑</div>
+
+          <div style={{ display: "flex", gap: 12, alignItems: "center" }}>
+            <div style={{ display: "flex", alignItems: "center", gap: 8, opacity: 0.75 }}>
+              <span
+                style={{
+                  width: 18,
+                  height: 2,
+                  background: "rgba(255,255,255,0.28)",
+                  display: "inline-block",
+                }}
+              />
+              PnL (size & luck)
+            </div>
+
+            <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+              <span
+                style={{
+                  width: 18,
+                  height: 3,
+                  background: "rgba(140,80,255,0.95)",
+                  display: "inline-block",
+                }}
+              />
+              R (discipline)
+            </div>
+          </div>
+
+          <div style={{ opacity: 0.65 }}>Worse ↓</div>
+        </div>
+
+        <svg
+          width="100%"
+          height="210"
+          viewBox="0 0 560 210"
+          role="img"
+          aria-label="PnL vs R chart"
+        >
+          <defs>
+            <linearGradient id="fade2" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stopColor="rgba(255,255,255,0.10)" />
+              <stop offset="100%" stopColor="rgba(255,255,255,0.02)" />
+            </linearGradient>
+
+            <filter id="glow2">
+              <feGaussianBlur stdDeviation="4" result="blur" />
+              <feMerge>
+                <feMergeNode in="blur" />
+                <feMergeNode in="SourceGraphic" />
+              </feMerge>
+            </filter>
+          </defs>
+
+          <rect x="0" y="0" width="560" height="210" fill="transparent" />
+
+          {Array.from({ length: 5 }).map((_, i) => {
+            const y = 40 + i * 35;
+            return (
+              <line
+                key={i}
+                x1="0"
+                y1={y}
+                x2="560"
+                y2={y}
+                stroke={i === 4 ? "rgba(255,255,255,0.10)" : "rgba(255,255,255,0.06)"}
+                strokeWidth="1"
+              />
+            );
+          })}
+
+          <rect x="0" y="175" width="560" height="35" fill="url(#fade2)" opacity="0.55" />
+
+          <polyline
+            className="pnlLine"
+            points="10,135 60,110 110,155 160,102 210,160 260,96 310,172 360,88 410,166 460,80 510,148 550,70"
+            fill="none"
+            stroke="rgba(255,255,255,0.26)"
+            strokeWidth="1.7"
+            strokeLinejoin="round"
+            strokeLinecap="round"
+          />
+
+          <polyline
+            className="rGlow"
+            points="10,165 60,160 110,153 160,148 210,140 260,132 310,124 360,116 410,106 460,98 510,88 550,78"
+            fill="none"
+            stroke="rgba(140,80,255,0.35)"
+            strokeWidth="7"
+            strokeLinejoin="round"
+            strokeLinecap="round"
+            filter="url(#glow2)"
+            opacity="0.55"
+          />
+
+          <polyline
+            className="rLine"
+            points="10,165 60,160 110,153 160,148 210,140 260,132 310,124 360,116 410,106 460,98 510,88 550,78"
+            fill="none"
+            stroke="rgba(140,80,255,0.95)"
+            strokeWidth="3"
+            strokeLinejoin="round"
+            strokeLinecap="round"
+          />
+
+          {[
+            [10, 165],
+            [60, 160],
+            [110, 153],
+            [160, 148],
+            [210, 140],
+            [260, 132],
+            [310, 124],
+            [360, 116],
+            [410, 106],
+            [460, 98],
+            [510, 88],
+            [550, 78],
+          ].map(([x, y]) => (
+            <circle
+              key={`${x}-${y}`}
+              cx={x}
+              cy={y}
+              r="3.2"
+              fill="rgba(140,80,255,0.95)"
+            />
+          ))}
+        </svg>
+
+        <div style={{ marginTop: 10, fontSize: 12, opacity: 0.72 }}>
+          PnL swings with size. <b>R stays comparable</b> — it reflects execution quality.
+        </div>
+      </div>
+
+      {/* Example */}
+      <div
+        style={{
+          borderRadius: 16,
+          border: "1px solid rgba(255,255,255,0.10)",
+          background: "rgba(255,255,255,0.02)",
+          padding: 14,
+          display: "grid",
+          gap: 10,
+        }}
+      >
+        <div style={{ fontWeight: 900 }}>Example</div>
+
+        <div style={{ fontSize: 13, opacity: 0.78 }}>
+          Trade A: +$200 looks great.
+          <br />
+          If risk was $400 → <b>+0.5R</b>
+        </div>
+
+        <div style={{ fontSize: 13, opacity: 0.78 }}>
+          Trade B: -$50 looks small.
+          <br />
+          If risk was $25 → <b>-2R</b>
+        </div>
+
+        <div
+          style={{
+            marginTop: 4,
+            padding: 10,
+            borderRadius: 14,
+            border: "1px solid rgba(140,80,255,0.22)",
+            background: "rgba(140,80,255,0.08)",
+            fontSize: 12,
+            opacity: 0.9,
+          }}
+        >
+          R makes results honest — and improvement measurable.
+        </div>
+      </div>
+    </div>
+  </Card>
+</div>
+
+
 {/* BEFORE / AFTER */} <div style={{ marginTop: 18 }}> 
   <Card title="Before vs After TradeLog" subtitle="Same trader. Different behavior."> 
     <div className="beforeAfterGrid" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 14, alignItems: "stretch", }} > 
