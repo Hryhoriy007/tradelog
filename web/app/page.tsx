@@ -226,7 +226,7 @@ type RangeKey = "1m" | "3m" | "1y";
 
 function TraderCalendarPanel() {
   const trader = {
-    name: "Dmytro_515",
+    name: "",
     age: 28,
     yearsTrading: 4,
     style: "Futures • Intraday",

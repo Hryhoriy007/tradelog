@@ -1832,7 +1832,7 @@ const TRADER_PLACEHOLDER = "data:image/svg+xml;charset=utf-8," + encodeURICompon
 function TraderCalendarPanel() {
     _s();
     const trader = {
-        name: "Dmytro_515",
+        name: "",
         age: 28,
         yearsTrading: 4,
         style: "Futures • Intraday",
