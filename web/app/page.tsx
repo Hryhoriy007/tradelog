@@ -2,7 +2,8 @@
 "use client";
 
 import Link from "next/link";
-import { useMemo, useState } from "react";
+import type { ReactNode } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 import { Page, HeaderRow } from "@/app/components/ui/Layout";
 import { Card } from "@/app/components/ui/Card";
@@ -20,7 +21,7 @@ type FeatureItem = {
 };
 
 const copy: {
-  heroTitle: React.ReactNode;
+  heroTitle: ReactNode;
   heroSub: string;
   how1: string;
   how1Text: string;
@@ -74,7 +75,7 @@ const copy: {
   bottomSub: "Create an account and start logging trades in minutes.",
 };
 
-function Badge({ children }: { children: React.ReactNode }) {
+function Badge({ children }: { children: ReactNode }) {
   return (
     <span
       style={{
@@ -146,6 +147,7 @@ function Step({ n, title, text }: { n: string; title: string; text: string }) {
     </div>
   );
 }
+
 /* =========================
    Trader Panel (Binance-like)
    ========================= */
@@ -160,7 +162,7 @@ function fmtMoney(v?: number) {
   return `${sign}${v.toFixed(2)} USD`;
 }
 
-// lightweight deterministic pseudo-random (stable per month/day)
+// deterministic pseudo-random (stable per month/day)
 function hashSeed(s: string) {
   let h = 2166136261;
   for (let i = 0; i < s.length; i++) {
@@ -170,7 +172,6 @@ function hashSeed(s: string) {
   return h >>> 0;
 }
 function rand01(seed: number) {
-  // xorshift32
   let x = seed || 123456789;
   x ^= x << 13;
   x ^= x >>> 17;
@@ -178,9 +179,7 @@ function rand01(seed: number) {
   return ((x >>> 0) % 1_000_000) / 1_000_000;
 }
 
-/**
- * Binance-like tone with intensity by abs(v) / maxAbs
- */
+/** Binance-like tone with intensity by abs(v) / maxAbs */
 function pnlTone(v: number | undefined, maxAbs: number) {
   if (v === undefined || v === null) {
     return {
@@ -246,38 +245,77 @@ const TRADER_PLACEHOLDER =
 </svg>
 `);
 
+type RangeKey = "1m" | "3m" | "1y";
+
 function TraderCalendarPanel() {
   const trader = {
-    name: "Dmytro Kovalenko",
+    name: "Dmytro_515 ",
     age: 28,
     yearsTrading: 4,
     style: "Futures • Intraday",
     note: "Tracks risk in R, avoids revenge trading",
-    photoUrl: TRADER_PLACEHOLDER, // ✅ placeholder (no /public needed)
+    photoUrl: TRADER_PLACEHOLDER,
   };
+
+  const [range, setRange] = useState<RangeKey>("1m");
 
   // ✅ current month by default
   const [monthDate, setMonthDate] = useState(() => {
-    const now = new Date();
-    return new Date(now.getFullYear(), now.getMonth(), 1);
+    const n = new Date();
+    return new Date(n.getFullYear(), n.getMonth(), 1);
   });
+
+  // stable "now" and currentMonthStart for blocking future navigation
+  const now = useMemo(() => new Date(), []);
+  const currentMonthStart = useMemo(() => new Date(now.getFullYear(), now.getMonth(), 1), [now]);
+
+  // ✅ Hard clamp: if somehow monthDate becomes future, snap back
+  useEffect(() => {
+    if (monthDate > currentMonthStart) {
+      setMonthDate(currentMonthStart);
+    }
+  }, [monthDate, currentMonthStart]);
 
   const year = monthDate.getFullYear();
   const monthIndex = monthDate.getMonth();
   const monthLabel = `${year}-${String(monthIndex + 1).padStart(2, "0")}`;
 
-  // ✅ real days in month
   const daysInMonth = useMemo(() => new Date(year, monthIndex + 1, 0).getDate(), [year, monthIndex]);
 
-  // ✅ correct leadingEmpty (S M T W T F S ; Sunday-first like Binance)
+  // ✅ correct leadingEmpty (Sunday-first)
   const leadingEmpty = useMemo(() => new Date(year, monthIndex, 1).getDay(), [year, monthIndex]);
 
-  // ✅ generate “Binance-like” mock daily pnl for the whole month
+  // for "today" highlight
+  const isThisMonth = now.getFullYear() === year && now.getMonth() === monthIndex;
+  const todayDay = now.getDate();
+
+  const isCurrentMonth = isThisMonth;
+
+  const goPrevMonth = () => {
+    setMonthDate((d) => new Date(d.getFullYear(), d.getMonth() - 1, 1));
+  };
+
+  const goNextMonth = () => {
+    setMonthDate((d) => {
+      const next = new Date(d.getFullYear(), d.getMonth() + 1, 1);
+      if (next > currentMonthStart) return d; // 🚫 prevent future
+      return next;
+    });
+  };
+
+  const [tip, setTip] = useState<{ open: boolean; x: number; y: number; title: string; value: string }>({
+    open: false,
+    x: 0,
+    y: 0,
+    title: "",
+    value: "",
+  });
+
+  // generate month pnl
   const dailyPnl = useMemo(() => {
     const seedBase = hashSeed(`${year}-${monthIndex}`);
     const arr: Array<number | undefined> = [];
 
-    // emulate: many small days + few spikes (like futures)
     for (let d = 1; d <= daysInMonth; d++) {
       const r = rand01(seedBase + d * 101);
       const r2 = rand01(seedBase + d * 911);
@@ -289,48 +327,72 @@ function TraderCalendarPanel() {
       }
 
       // base small pnl
-      let v = (r2 - 0.52) * 6; // around -3..+3
+      let v = (r2 - 0.52) * 6; // -3..+3-ish
 
-      // occasional spike days
+      // spikes
       const spike = rand01(seedBase + d * 333);
-      if (spike > 0.92) v += (spike - 0.9) * 1500; // big green
-      if (spike < 0.06) v -= (0.08 - spike) * 900; // big red
+      if (spike > 0.92) v += (spike - 0.9) * 1500;
+      if (spike < 0.06) v -= (0.08 - spike) * 900;
 
-      // keep 2 decimals
       arr.push(Number(v.toFixed(2)));
     }
 
     return arr;
   }, [year, monthIndex, daysInMonth]);
 
-  // ✅ max abs for intensity scaling
   const maxAbs = useMemo(() => {
     return dailyPnl.reduce((mx, v) => (v === undefined ? mx : Math.max(mx, Math.abs(v))), 0);
   }, [dailyPnl]);
 
-  // summary numbers (mocked from month data)
-  const { today, pnl7d, pnl30d, pnlAll } = useMemo(() => {
-    const nums = dailyPnl.filter((x): x is number => typeof x === "number");
-    const sum = (xs: number[]) => xs.reduce((a, b) => a + b, 0);
+  const rangeMonths = range === "1m" ? 1 : range === "3m" ? 3 : 12;
 
-    const last = nums.length ? nums[nums.length - 1] : 0;
-    const last7 = sum(nums.slice(-7));
-    const last30 = sum(nums.slice(-30));
-    const all = sum(nums);
+  const rangeSeries = useMemo(() => {
+    const series: number[] = [];
+    for (let mOffset = rangeMonths - 1; mOffset >= 0; mOffset--) {
+      const d = new Date(year, monthIndex - mOffset, 1);
+      const y = d.getFullYear();
+      const mi = d.getMonth();
+      const dim = new Date(y, mi + 1, 0).getDate();
+      const seedBase = hashSeed(`${y}-${mi}`);
+
+      for (let day = 1; day <= dim; day++) {
+        const r = rand01(seedBase + day * 101);
+        const r2 = rand01(seedBase + day * 911);
+        if (r < 0.22) continue;
+
+        let v = (r2 - 0.52) * 6;
+        const spike = rand01(seedBase + day * 333);
+        if (spike > 0.92) v += (spike - 0.9) * 1500;
+        if (spike < 0.06) v -= (0.08 - spike) * 900;
+
+        series.push(Number(v.toFixed(2)));
+      }
+    }
+    return series;
+  }, [rangeMonths, year, monthIndex]);
+
+  const sum = (xs: number[]) => xs.reduce((a, b) => a + b, 0);
+
+  const stats = useMemo(() => {
+    const today = isThisMonth && typeof dailyPnl[todayDay - 1] === "number" ? (dailyPnl[todayDay - 1] as number) : 0;
+
+    const monthNums = dailyPnl.filter((x): x is number => typeof x === "number");
+    const pnl7d = sum(monthNums.slice(-7));
+    const pnl30d = sum(monthNums.slice(-30));
+    const pnlRange = sum(rangeSeries);
 
     return {
-      today: Number(last.toFixed(2)),
-      pnl7d: Number(last7.toFixed(2)),
-      pnl30d: Number(last30.toFixed(2)),
-      pnlAll: Number(all.toFixed(2)),
+      today: Number(today.toFixed(2)),
+      pnl7d: Number(pnl7d.toFixed(2)),
+      pnl30d: Number(pnl30d.toFixed(2)),
+      pnlRange: Number(pnlRange.toFixed(2)),
     };
-  }, [dailyPnl]);
+  }, [dailyPnl, todayDay, isThisMonth, rangeSeries]);
 
-  const goPrevMonth = () => setMonthDate((d) => new Date(d.getFullYear(), d.getMonth() - 1, 1));
-  const goNextMonth = () => setMonthDate((d) => new Date(d.getFullYear(), d.getMonth() + 1, 1));
+  const rangeLabel = range === "1m" ? "1m" : range === "3m" ? "3m" : "1y";
 
   return (
-    <Card title="Trader snapshot" subtitle="Binance-style calendar (real month + intensity gradient).">
+    <Card title="Trader snapshot" subtitle="Binance-style calendar (real month + intensity + tooltip).">
       <div
         className="traderPanelGrid"
         style={{
@@ -340,7 +402,7 @@ function TraderCalendarPanel() {
           alignItems: "stretch",
         }}
       >
-        {/* LEFT: Trader */}
+        {/* LEFT */}
         <div
           style={{
             borderRadius: 18,
@@ -363,13 +425,7 @@ function TraderCalendarPanel() {
             <img
               src={trader.photoUrl}
               alt={trader.name}
-              style={{
-                width: "100%",
-                height: "100%",
-                objectFit: "cover",
-                display: "block",
-                opacity: 0.95,
-              }}
+              style={{ width: "100%", height: "100%", objectFit: "cover", display: "block", opacity: 0.95 }}
             />
 
             <div style={{ position: "absolute", left: 12, top: 12, display: "flex", gap: 8, flexWrap: "wrap" }}>
@@ -431,7 +487,7 @@ function TraderCalendarPanel() {
           </div>
         </div>
 
-        {/* RIGHT: Calendar */}
+        {/* RIGHT */}
         <div
           style={{
             borderRadius: 18,
@@ -440,14 +496,67 @@ function TraderCalendarPanel() {
             padding: 14,
             display: "grid",
             gap: 12,
+            position: "relative",
           }}
+          onMouseLeave={() => setTip((t) => ({ ...t, open: false }))}
         >
+          {tip.open && (
+            <div
+              style={{
+                position: "fixed",
+                left: tip.x,
+                top: tip.y,
+                transform: "translate(12px, 12px)",
+                zIndex: 9999,
+                pointerEvents: "none",
+                padding: "10px 12px",
+                borderRadius: 12,
+                border: "1px solid rgba(255,255,255,0.12)",
+                background: "rgba(10,10,14,0.92)",
+                boxShadow: "0 12px 30px rgba(0,0,0,0.35)",
+                minWidth: 180,
+              }}
+            >
+              <div style={{ fontSize: 12, opacity: 0.85, marginBottom: 4 }}>{tip.title}</div>
+              <div style={{ fontSize: 13, fontWeight: 900 }}>{tip.value}</div>
+              <div style={{ fontSize: 11, opacity: 0.65, marginTop: 4 }}></div>
+            </div>
+          )}
+
+          {/* header */}
           <div style={{ display: "grid", gap: 8 }}>
             <div style={{ display: "flex", justifyContent: "space-between", gap: 10, alignItems: "center" }}>
               <div style={{ fontWeight: 950, fontSize: 14 }}>Futures PnL</div>
 
-              {/* month switcher */}
               <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
+                {/* range switch */}
+                <div style={{ display: "flex", gap: 6, alignItems: "center" }}>
+                  {(["1m", "3m", "1y"] as RangeKey[]).map((k) => {
+                    const active = k === range;
+                    return (
+                      <button
+                        key={k}
+                        type="button"
+                        onClick={() => setRange(k)}
+                        style={{
+                          height: 30,
+                          padding: "0 10px",
+                          borderRadius: 999,
+                          border: active ? "1px solid rgba(255,205,80,0.35)" : "1px solid rgba(255,255,255,0.10)",
+                          background: active ? "rgba(255,205,80,0.12)" : "rgba(255,255,255,0.03)",
+                          color: "rgba(255,255,255,0.92)",
+                          fontSize: 12,
+                          cursor: "pointer",
+                          fontWeight: active ? 900 : 700,
+                          opacity: active ? 1 : 0.85,
+                        }}
+                      >
+                        {k}
+                      </button>
+                    );
+                  })}
+                </div>
+
                 <button
                   type="button"
                   onClick={goPrevMonth}
@@ -484,6 +593,7 @@ function TraderCalendarPanel() {
                 <button
                   type="button"
                   onClick={goNextMonth}
+                  disabled={isCurrentMonth}
                   style={{
                     width: 34,
                     height: 34,
@@ -491,24 +601,26 @@ function TraderCalendarPanel() {
                     border: "1px solid rgba(255,255,255,0.10)",
                     background: "rgba(255,255,255,0.03)",
                     color: "rgba(255,255,255,0.9)",
-                    cursor: "pointer",
+                    cursor: isCurrentMonth ? "not-allowed" : "pointer",
+                    opacity: isCurrentMonth ? 0.45 : 1,
                   }}
                   aria-label="Next month"
-                  title="Next month"
+                  title={isCurrentMonth ? "You can’t view future months" : "Next month"}
                 >
                   →
                 </button>
               </div>
             </div>
 
+            {/* summary */}
             <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 10 }}>
               {[
-                { k: "Today", v: today },
-                { k: "7d", v: pnl7d },
-                { k: "30d", v: pnl30d },
-                { k: "All time", v: pnlAll },
+                { k: "Today", v: stats.today },
+                { k: "7d", v: stats.pnl7d },
+                { k: "30d", v: stats.pnl30d },
+                { k: rangeLabel, v: stats.pnlRange },
               ].map((it) => {
-                const tone = pnlTone(it.v, Math.max(1, Math.abs(pnlAll)));
+                const tone = pnlTone(it.v, Math.max(1, Math.abs(stats.pnlRange)));
                 return (
                   <div
                     key={it.k}
@@ -529,6 +641,7 @@ function TraderCalendarPanel() {
             </div>
           </div>
 
+          {/* calendar */}
           <div>
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: 10 }}>
               <div style={{ fontWeight: 950, fontSize: 13, opacity: 0.9 }}>Daily PnL</div>
@@ -544,7 +657,6 @@ function TraderCalendarPanel() {
                 gap: 8,
               }}
             >
-              {/* leading empty cells */}
               {Array.from({ length: leadingEmpty }).map((_, i) => (
                 <div
                   key={`e-${i}`}
@@ -558,10 +670,15 @@ function TraderCalendarPanel() {
                 />
               ))}
 
-              {/* month cells */}
               {dailyPnl.map((v, idx) => {
                 const day = idx + 1;
                 const tone = pnlTone(v, maxAbs);
+                const isToday = isThisMonth && day === todayDay;
+                const labelDate = `${monthLabel}-${String(day).padStart(2, "0")}`;
+
+                const cellValue = v === undefined ? "No trades" : fmtMoney(v);
+                const displaySmall =
+                  v === undefined ? "" : (v > 0 ? "+" : "") + (Math.abs(v) >= 100 ? v.toFixed(0) : v.toFixed(2));
 
                 return (
                   <div
@@ -569,20 +686,24 @@ function TraderCalendarPanel() {
                     style={{
                       height: 44,
                       borderRadius: 10,
-                      border: `1px solid ${tone.br}`,
+                      border: isToday ? "1px solid rgba(255,205,80,0.45)" : `1px solid ${tone.br}`,
+                      boxShadow: isToday ? "0 0 0 2px rgba(255,205,80,0.10) inset" : undefined,
                       background: tone.bg,
                       padding: "6px 8px",
                       display: "grid",
                       alignContent: "space-between",
+                      cursor: "default",
                     }}
-                    title={v === undefined ? `Day ${day}: no trades` : `Day ${day}: ${fmtMoney(v)}`}
+                    onMouseEnter={(e) => {
+                      setTip({ open: true, x: e.clientX, y: e.clientY, title: labelDate, value: cellValue });
+                    }}
+                    onMouseMove={(e) => setTip((t) => (t.open ? { ...t, x: e.clientX, y: e.clientY } : t))}
                   >
-                    <div style={{ fontSize: 11, opacity: 0.75 }}>{day}</div>
-                    <div style={{ fontSize: 11, fontWeight: 800, color: tone.text }}>
-                      {v === undefined
-                        ? ""
-                        : (v > 0 ? "+" : "") + (Math.abs(v) >= 100 ? v.toFixed(0) : v.toFixed(2))}
+                    <div style={{ fontSize: 11, opacity: 0.75 }}>
+                      {day}
+                      {isToday ? <span style={{ marginLeft: 6, opacity: 0.85 }}>• today</span> : null}
                     </div>
+                    <div style={{ fontSize: 11, fontWeight: 800, color: tone.text }}>{displaySmall}</div>
                   </div>
                 );
               })}
@@ -678,8 +799,8 @@ export default function HomePage() {
           </div>
         </div>
 
-        {/* ✅ NEW: Trader panel BEFORE How it works */}
-        <div style={{ marginTop: 12 }}>
+        {/* ✅ TRADER PANEL (inserted before How it works) */}
+        <div style={{ marginTop: 18 }}>
           <TraderCalendarPanel />
         </div>
 
@@ -702,105 +823,7 @@ export default function HomePage() {
             ))}
           </div>
         </div>
-
-        {/* PRICING */}
-        <div style={{ marginTop: 18 }}>
-          <Card title="Pricing" subtitle="Simple subscription. Cancel anytime.">
-            <div
-              className="pricingGrid"
-              style={{
-                display: "grid",
-                gridTemplateColumns: "1fr 1.4fr",
-                gap: 14,
-                alignItems: "stretch",
-              }}
-            >
-              <div
-                style={{
-                  borderRadius: 16,
-                  border: "1px solid rgba(255,255,255,0.10)",
-                  background: "rgba(255,255,255,0.02)",
-                  padding: 14,
-                  display: "grid",
-                  gap: 10,
-                }}
-              >
-                <div style={{ display: "flex", alignItems: "baseline", gap: 10, flexWrap: "wrap" }}>
-                  <div style={{ fontSize: 28, fontWeight: 950, letterSpacing: -0.4 }}>
-                    $9<span style={{ fontSize: 12, opacity: 0.7, fontWeight: 700 }}>/mo</span>
-                  </div>
-                  <div style={{ fontSize: 12, opacity: 0.75 }}>or $79/year</div>
-                </div>
-
-                <div style={{ fontSize: 12, opacity: 0.75, lineHeight: 1.5 }}>
-                  One plan for traders who want consistency and accountability.
-                </div>
-
-                <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
-                  <Link href="/register" style={{ textDecoration: "none" }}>
-                    <Button variant="primary">Registration</Button>
-                  </Link>
-                  <Link href="/login" style={{ textDecoration: "none" }}>
-                    <Button variant="secondary">Login</Button>
-                  </Link>
-                </div>
-
-                <div style={{ fontSize: 11, opacity: 0.6 }}>No exchange API • Local-first • Export anytime</div>
-              </div>
-
-              <div
-                style={{
-                  borderRadius: 16,
-                  border: "1px solid rgba(255,255,255,0.10)",
-                  background: "rgba(255,255,255,0.02)",
-                  padding: 14,
-                  display: "grid",
-                  gap: 10,
-                }}
-              >
-                <div style={{ fontWeight: 900 }}>Included in Pro</div>
-
-                <ul style={{ margin: 0, paddingLeft: 18, display: "grid", gap: 8, opacity: 0.9, fontSize: 13 }}>
-                  <li>R-based stats (expectancy, Avg R, streaks)</li>
-                  <li>Psychology notes + rule tracking</li>
-                  <li>Templates / presets for repeatable setups</li>
-                  <li>CSV export + JSON backup</li>
-                  <li>Import with merge / replace modes</li>
-                </ul>
-
-                <div style={{ display: "flex", gap: 8, flexWrap: "wrap", marginTop: 4 }}>
-                  <span
-                    style={{
-                      padding: "4px 10px",
-                      borderRadius: 999,
-                      border: "1px solid rgba(255,255,255,0.10)",
-                      background: "rgba(255,255,255,0.03)",
-                      fontSize: 12,
-                      opacity: 0.85,
-                      whiteSpace: "nowrap",
-                    }}
-                  >
-                    ✅ Cancel anytime
-                  </span>
-                  <span
-                    style={{
-                      padding: "4px 10px",
-                      borderRadius: 999,
-                      border: "1px solid rgba(255,255,255,0.10)",
-                      background: "rgba(255,255,255,0.03)",
-                      fontSize: 12,
-                      opacity: 0.85,
-                      whiteSpace: "nowrap",
-                    }}
-                  >
-                    ✅ No API keys
-                  </span>
-                </div>
-              </div>
-            </div>
-          </Card>
-        </div>
-
+   
         {/* FAQ */}
         <div style={{ marginTop: 18 }}>
           <Card title="FAQ" subtitle="Quick answers before you start.">
@@ -1189,12 +1212,6 @@ export default function HomePage() {
         </div>
 
         <style jsx>{`
-          .mockDashboardWrap :global(*) {
-            /* no-op wrapper to scope selectors */
-          }
-          .mockDashboardWrap :global(*:not(script)) {
-            /* we keep safe baseline */
-          }
           .mockDashboardWrap :global([class*="demo"]),
           .mockDashboardWrap :global([data-demo]),
           .mockDashboardWrap :global(.demo),
@@ -1266,21 +1283,6 @@ export default function HomePage() {
             div[style*="grid-template-columns: repeat(3, 1fr)"] {
               grid-template-columns: 1fr !important;
             }
-
-            .pricingGrid {
-              grid-template-columns: 1fr !important;
-            }
-            .faqGrid {
-              grid-template-columns: 1fr !important;
-            }
-            .pnlRGrid {
-              grid-template-columns: 1fr !important;
-            }
-            .beforeAfterGrid {
-              grid-template-columns: 1fr !important;
-            }
-
-            /* ✅ Trader panel responsive */
             .traderPanelGrid {
               grid-template-columns: 1fr !important;
             }
