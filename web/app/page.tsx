@@ -975,6 +975,31 @@ export default function HomePage() {
           </Card>
         </div>
 
+{/* BEFORE / AFTER */} <div style={{ marginTop: 18 }}> 
+  <Card title="Before vs After TradeLog" subtitle="Same trader. Different behavior."> 
+    <div className="beforeAfterGrid" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 14, alignItems: "stretch", }} > 
+      <div style={{ padding: 16, borderRadius: 18, border: "1px solid rgba(255,100,100,0.25)", background: "rgba(255,100,100,0.06)", display: "grid", gap: 10, }} > 
+        <div style={{ fontWeight: 900, fontSize: 16 }}>Before</div> 
+        <ul style={{ margin: 0, paddingLeft: 18, display: "grid", gap: 8, fontSize: 13, opacity: 0.85 }}> 
+          <li>Trading without a written plan</li> 
+          <li>Revenge trades after losses</li> 
+          <li>Moving stop-loss emotionally</li> 
+          <li>Judging performance by random PnL</li> 
+          <li>Repeating the same mistakes</li> 
+          </ul> 
+          </div> 
+          <div style={{ padding: 16, borderRadius: 18, border: "1px solid rgba(80,200,120,0.25)", background: "rgba(80,200,120,0.06)", display: "grid", gap: 10, }} > 
+            <div style={{ fontWeight: 900, fontSize: 16 }}>After</div> 
+            <ul style={{ margin: 0, paddingLeft: 18, display: "grid", gap: 8, fontSize: 13, opacity: 0.9 }}> 
+              <li>Clear rules before every trade</li> 
+              <li>Losses tracked and reviewed in R</li> 
+              <li>Stops respected, risk controlled</li> 
+              <li>Consistency measured, not luck</li> 
+              <li>Patterns identified and improved</li> 
+              </ul> 
+              </div> 
+              </div> </Card> </div>
+
         {/* CTA */}
         <div
           style={{
