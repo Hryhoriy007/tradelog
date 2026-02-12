@@ -764,6 +764,112 @@ function TraderCalendarPanel() {
   );
 }
 
+function Pricing() {
+  return (
+    <Card title="Pricing" subtitle="Simple and clear. No hidden fees.">
+      <div
+        style={{
+          display: "grid",
+          gridTemplateColumns: "repeat(2, 1fr)",
+          gap: 12,
+          alignItems: "stretch",
+        }}
+      >
+        {/* TRIAL */}
+        <div
+          style={{
+            padding: 16,
+            borderRadius: 18,
+            border: "1px solid rgba(255,255,255,0.10)",
+            background: "rgba(255,255,255,0.02)",
+            display: "grid",
+            gap: 10,
+          }}
+        >
+          <div style={{ fontWeight: 950, fontSize: 14 }}>Trial</div>
+          <div style={{ fontSize: 34, fontWeight: 950, lineHeight: 1 }}>
+            $0 <span style={{ fontSize: 12, opacity: 0.7 }}>for 7 days</span>
+          </div>
+          <div style={{ fontSize: 13, opacity: 0.75, lineHeight: 1.6 }}>
+            Try TradeLog first. No exchange API. Export anytime.
+          </div>
+
+          <ul style={{ margin: 0, paddingLeft: 18, display: "grid", gap: 8, fontSize: 13, opacity: 0.9 }}>
+            <li>Unlimited trade logs</li>
+            <li>R-based stats</li>
+            <li>CSV + JSON export</li>
+          </ul>
+
+          <Link href="/register" style={{ textDecoration: "none", marginTop: 6 }}>
+            <Button variant="secondary">Start free trial</Button>
+          </Link>
+        </div>
+
+        {/* PRO */}
+        <div
+          style={{
+            padding: 16,
+            borderRadius: 18,
+            border: "1px solid rgba(140,80,255,0.22)",
+            background: "rgba(140,80,255,0.08)",
+            display: "grid",
+            gap: 10,
+          }}
+        >
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: 10 }}>
+            <div style={{ fontWeight: 950, fontSize: 14 }}>Pro</div>
+            <span
+              style={{
+                padding: "5px 10px",
+                borderRadius: 999,
+                border: "1px solid rgba(255,205,80,0.28)",
+                background: "rgba(255,205,80,0.10)",
+                fontSize: 12,
+                fontWeight: 900,
+                opacity: 0.95,
+                whiteSpace: "nowrap",
+              }}
+            >
+              Most popular
+            </span>
+          </div>
+
+          <div style={{ fontSize: 34, fontWeight: 950, lineHeight: 1 }}>
+            $9 <span style={{ fontSize: 12, opacity: 0.7 }}>/ month</span>
+          </div>
+
+          <div style={{ fontSize: 13, opacity: 0.8, lineHeight: 1.6 }}>
+            For traders who want consistency and clean reviews.
+          </div>
+
+          <ul style={{ margin: 0, paddingLeft: 18, display: "grid", gap: 8, fontSize: 13, opacity: 0.92 }}>
+            <li>Advanced reviews & filters</li>
+            <li>Mistake tags & psychology notes</li>
+            <li>Backup / restore</li>
+          </ul>
+
+          {/* Поки без Stripe — ведемо на реєстрацію */}
+          <Link href="/register" style={{ textDecoration: "none", marginTop: 6 }}>
+            <Button variant="primary">Get Pro</Button>
+          </Link>
+
+          <div style={{ fontSize: 12, opacity: 0.65, lineHeight: 1.5 }}>
+            (Checkout буде підключений пізніше через Stripe.)
+          </div>
+        </div>
+      </div>
+
+      <style jsx>{`
+        @media (max-width: 980px) {
+          div[style*="grid-template-columns: repeat(2, 1fr)"] {
+            grid-template-columns: 1fr !important;
+          }
+        }
+      `}</style>
+    </Card>
+  );
+}
+
 export default function HomePage() {
   const year = useMemo(() => new Date().getFullYear(), []);
   const t = copy;
@@ -858,6 +964,11 @@ export default function HomePage() {
             <Step n="3" title={t.how3} text={t.how3Text} />
           </div>
         </div>
+
+        {/* PRICING */}
+<div style={{ marginTop: 18 }}>
+  <Pricing />
+</div>
 
         {/* FEATURES */}
         <div style={{ marginTop: 44 }}>
