@@ -2,13 +2,13 @@
 "use client";
 
 import Link from "next/link";
-import type { ReactNode } from "react";
-import { useEffect, useMemo, useState } from "react";
+import { useMemo } from "react";
 
 import { Page, HeaderRow } from "@/app/components/ui/Layout";
 import { Card } from "@/app/components/ui/Card";
 import { Button } from "@/app/components/ui/Button";
 import { ui } from "@/app/components/ui/styles";
+
 import { MockDashboard } from "@/app/components/marketing/MockDashboard";
 import { DashboardWindow } from "@/app/components/marketing/DashboardWindow";
 import { Background3D } from "@/app/components/marketing/Background3D";
@@ -20,7 +20,7 @@ type FeatureItem = {
 };
 
 const copy: {
-  heroTitle: ReactNode;
+  heroTitle: React.ReactNode;
   heroSub: string;
   how1: string;
   how1Text: string;
@@ -37,53 +37,44 @@ const copy: {
     <>
       Trade with data,
       <br />
-      not emotions. <br /> Stay consistent.
+      not emotions.
+      <br />
+      Stay consistent.
     </>
   ),
-  heroSub:
-    "Log entries, exits, risk, emotions, and rules — so your results stop lying to you.",
+  heroSub: "Log entries, exits, risk, emotions, and rules — so your results stop lying to you.",
+
   how1: "Log what you executed",
   how1Text: "Pair, side, entry, stop, target — done in seconds.",
   how2: "Capture the real context",
-  how2Text:
-    "Setup, bias, emotions before & after. Why you entered. Why you exited.",
+  how2Text: "Setup, bias, emotions before & after. Why you entered. Why you exited.",
   how3: "Review your behavior",
   how3Text: "Equity in R, mistakes, overtrading, best setups.",
+
   featuresTitle: "Features",
   features: [
     {
       title: "Log trades without breaking focus",
       subtitle: "Fast, no clutter",
-      points: [
-        "Add a trade in ~30 seconds",
-        "Presets for repeatable setups",
-        "Tags for mistakes, psychology, FOMO",
-      ],
+      points: ["Add a trade in ~30 seconds", "Presets for repeatable setups", "Tags for mistakes, psychology, FOMO"],
     },
     {
       title: "Stats that expose your discipline",
       subtitle: "See what you repeat",
-      points: [
-        "Equity curve in R (not fake PnL)",
-        "Win / Loss / BE distribution",
-        "Best & worst setups by Avg R",
-      ],
+      points: ["Equity curve in R (not fake PnL)", "Win / Loss / BE distribution", "Best & worst setups by Avg R"],
     },
     {
       title: "Your data. No lock-in. Ever.",
       subtitle: "Export & restore anytime",
-      points: [
-        "One-click JSON backup",
-        "CSV export for Excel / Sheets",
-        "Import with merge or replace modes",
-      ],
+      points: ["One-click JSON backup", "CSV export for Excel / Sheets", "Import with merge or replace modes"],
     },
   ],
+
   bottomTitle: "Ready to stop repeating the same mistakes?",
   bottomSub: "Create an account and start logging trades in minutes.",
 };
 
-function Badge({ children }: { children: ReactNode }) {
+function Badge({ children }: { children: React.ReactNode }) {
   return (
     <span
       style={{
@@ -104,28 +95,12 @@ function Badge({ children }: { children: ReactNode }) {
   );
 }
 
-function Feature({
-  title,
-  subtitle,
-  points,
-}: {
-  title: string;
-  subtitle: string;
-  points: string[];
-}) {
+function Feature({ title, subtitle, points }: { title: string; subtitle: string; points: string[] }) {
   return (
     <div style={{ height: "100%" }}>
       <Card title={title} subtitle={subtitle}>
         <div style={{ display: "grid", gap: 10 }}>
-          <ul
-            style={{
-              margin: 0,
-              paddingLeft: 18,
-              display: "grid",
-              gap: 8,
-              opacity: 0.9,
-            }}
-          >
+          <ul style={{ margin: 0, paddingLeft: 18, display: "grid", gap: 8, opacity: 0.9 }}>
             {points.map((p) => (
               <li key={p}>{p}</li>
             ))}
@@ -167,18 +142,19 @@ function Step({ n, title, text }: { n: string; title: string; text: string }) {
         </div>
         <div style={{ fontWeight: 900 }}>{title}</div>
       </div>
-
-      <div style={{ opacity: 0.75, fontSize: 13, lineHeight: 1.5 }}>
-        {text}
-      </div>
+      <div style={{ opacity: 0.75, fontSize: 13, lineHeight: 1.5 }}>{text}</div>
     </div>
   );
 }
 
-/* ========================= Trader Panel (Binance-like) ========================= */
-
-function clamp01(x: number) {
-  return Math.max(0, Math.min(1, x));
+/* =========================
+   Trader Panel (Binance-like)
+   ========================= */
+function pnlTone(v?: number) {
+  if (v === undefined || v === null) return { bg: "rgba(255,255,255,0.04)", br: "rgba(255,255,255,0.08)" };
+  if (v > 0) return { bg: "rgba(80,200,120,0.14)", br: "rgba(80,200,120,0.22)" };
+  if (v < 0) return { bg: "rgba(255,100,100,0.14)", br: "rgba(255,100,100,0.22)" };
+  return { bg: "rgba(180,180,180,0.10)", br: "rgba(180,180,180,0.16)" };
 }
 
 function fmtMoney(v?: number) {
@@ -187,344 +163,35 @@ function fmtMoney(v?: number) {
   return `${sign}${v.toFixed(2)} USD`;
 }
 
-// deterministic pseudo-random (stable per month/day)
-function hashSeed(s: string) {
-  let h = 2166136261;
-  for (let i = 0; i < s.length; i++) {
-    h ^= s.charCodeAt(i);
-    h = Math.imul(h, 16777619);
-  }
-  return h >>> 0;
-}
-
-function rand01(seed: number) {
-  let x = seed || 123456789;
-  x ^= x << 13;
-  x ^= x >>> 17;
-  x ^= x << 5;
-  return ((x >>> 0) % 1_000_000) / 1_000_000;
-}
-
-/** Binance-like tone with intensity by abs(v) / maxAbs */
-function pnlTone(v: number | undefined, maxAbs: number) {
-  if (v === undefined || v === null) {
-    return {
-      bg: "rgba(255,255,255,0.04)",
-      br: "rgba(255,255,255,0.08)",
-      text: "rgba(255,255,255,0.70)",
-    };
-  }
-
-  if (v === 0) {
-    return {
-      bg: "rgba(180,180,180,0.10)",
-      br: "rgba(180,180,180,0.16)",
-      text: "rgba(255,255,255,0.88)",
-    };
-  }
-
-  const t = maxAbs > 0 ? clamp01(Math.abs(v) / maxAbs) : 0;
-  const bgA = 0.08 + t * 0.30; // 0.08..0.38
-  const brA = 0.16 + t * 0.26; // 0.16..0.42
-
-  if (v > 0) {
-    return {
-      bg: `rgba(0, 180, 120, ${bgA})`,
-      br: `rgba(0, 180, 120, ${brA})`,
-      text: "rgba(235,255,245,0.95)",
-    };
-  }
-
-  return {
-    bg: `rgba(240, 70, 70, ${bgA})`,
-    br: `rgba(240, 70, 70, ${brA})`,
-    text: "rgba(255,235,235,0.95)",
-  };
-}
-
-// ✅ no file needed — embedded SVG placeholder image
-const TRADER_PLACEHOLDER =
-  "data:image/svg+xml;charset=utf-8," +
-  encodeURIComponent(
-    `<svg xmlns="http://www.w3.org/2000/svg" width="900" height="675" viewBox="0 0 900 675">
-      <defs>
-        <radialGradient id="g" cx="30%" cy="0%" r="90%">
-          <stop offset="0%" stop-color="rgba(140,80,255,0.55)"/>
-          <stop offset="55%" stop-color="rgba(140,80,255,0.12)"/>
-          <stop offset="100%" stop-color="rgba(0,0,0,0.15)"/>
-        </radialGradient>
-        <linearGradient id="b" x1="0" y1="0" x2="1" y2="1">
-          <stop offset="0%" stop-color="#0b0b12"/>
-          <stop offset="100%" stop-color="#11131b"/>
-        </linearGradient>
-      </defs>
-      <rect width="900" height="675" fill="url(#b)"/>
-      <rect width="900" height="675" fill="url(#g)"/>
-      <circle cx="450" cy="310" r="150" fill="rgba(255,255,255,0.06)"/>
-      <circle cx="450" cy="270" r="70" fill="rgba(255,255,255,0.10)"/>
-      <path d="M290,530c35-90,115-135,160-135s125,45,160,135" fill="rgba(255,255,255,0.10)"/>
-      <text x="50%" y="92%" text-anchor="middle" fill="rgba(255,255,255,0.60)" font-family="Inter, Arial" font-size="28">
-        Trader profile (placeholder)
-      </text>
-    </svg>`
-  );
-
-type RangeKey = "1m" | "3m" | "1y";
-
 function TraderCalendarPanel() {
   const trader = {
-    name: "Dmytro_515",
+    name: "Dmytro Kovalenko",
     age: 28,
     yearsTrading: 4,
     style: "Futures • Intraday",
     note: "Tracks risk in R, avoids revenge trading",
-    photoUrl: TRADER_PLACEHOLDER,
+    photoUrl: "/trader.jpg", // ✅ put an image into /public/trader.jpg or change this path
   };
 
-  const [range, setRange] = useState<RangeKey>("1m");
+  const monthLabel = "2026-02";
 
-  // ✅ current month by default
-  const [monthDate, setMonthDate] = useState(() => {
-    const n = new Date();
-    return new Date(n.getFullYear(), n.getMonth(), 1);
-  });
+  // Mock daily PnL (28 days example). undefined = no data
+  const dailyPnl: Array<number | undefined> = [
+    -0.33, +582.39, +0.11, -0.3, -69.7, -310.54, -0.21, -0.02, +0.51, -58.93, -0.43, -0.14, undefined, undefined,
+    undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined,
+    undefined, undefined, undefined, undefined,
+  ];
 
-  // stable "now" and currentMonthStart for blocking future navigation
-  const now = useMemo(() => new Date(), []);
-  const currentMonthStart = useMemo(
-    () => new Date(now.getFullYear(), now.getMonth(), 1),
-    [now]
-  );
+  const today = 0.0;
+  const pnl7d = -369.76;
+  const pnl30d = -92.77;
+  const pnlAll = -2094.16;
 
-  // ✅ NEW: earliest month that has data (adjust if you want another "launch" month)
-  // Example: only Jan+Feb exist -> historyStart = Jan 1, 2026
-  const historyStart = useMemo(() => new Date(2026, 0, 1), []);
-
-  const monthStart = useMemo(
-    () => new Date(monthDate.getFullYear(), monthDate.getMonth(), 1),
-    [monthDate]
-  );
-
-  const isMonthBeforeHistory = useMemo(
-    () => monthStart < historyStart,
-    [monthStart, historyStart]
-  );
-
-  // ✅ Hard clamp: prevent future AND prevent going before historyStart
-  useEffect(() => {
-    if (monthDate > currentMonthStart) {
-      setMonthDate(currentMonthStart);
-      return;
-    }
-    if (monthStart < historyStart) {
-      setMonthDate(historyStart);
-      return;
-    }
-  }, [monthDate, currentMonthStart, monthStart, historyStart]);
-
-  const year = monthDate.getFullYear();
-  const monthIndex = monthDate.getMonth();
-  const monthLabel = `${year}-${String(monthIndex + 1).padStart(2, "0")}`;
-
-  const daysInMonth = useMemo(
-    () => new Date(year, monthIndex + 1, 0).getDate(),
-    [year, monthIndex]
-  );
-
-  const leadingEmpty = useMemo(
-    () => new Date(year, monthIndex, 1).getDay(),
-    [year, monthIndex]
-  );
-
-  // for "today" highlight
-  const isThisMonth = now.getFullYear() === year && now.getMonth() === monthIndex;
-  const todayDay = now.getDate();
-  const isCurrentMonth = isThisMonth;
-
-  // ✅ NEW: disable prev arrow when we're at historyStart month
-  const isHistoryStartMonth =
-    year === historyStart.getFullYear() && monthIndex === historyStart.getMonth();
-
-  const goPrevMonth = () => {
-    setMonthDate((d) => {
-      const prev = new Date(d.getFullYear(), d.getMonth() - 1, 1);
-      if (prev < historyStart) return d; // 🚫 prevent earlier than history
-      return prev;
-    });
-  };
-
-  const goNextMonth = () => {
-    setMonthDate((d) => {
-      const next = new Date(d.getFullYear(), d.getMonth() + 1, 1);
-      if (next > currentMonthStart) return d; // 🚫 prevent future
-      return next;
-    });
-  };
-
-  const [tip, setTip] = useState<{
-    open: boolean;
-    x: number;
-    y: number;
-    title: string;
-    value: string;
-  }>({
-    open: false,
-    x: 0,
-    y: 0,
-    title: "",
-    value: "",
-  });
-
-  const sum = (xs: number[]) => xs.reduce((a, b) => a + b, 0);
-
-  // ✅ FIX: 7d/30d should be last 7/30 CALENDAR days (no-trade days count as 0)
-  const asNum = (v: number | undefined) => (typeof v === "number" ? v : 0);
-
-  const sumDays = (
-    arr: Array<number | undefined>,
-    fromDay: number,
-    toDay: number
-  ) => {
-    const from = Math.max(1, fromDay);
-    const to = Math.min(arr.length, toDay);
-    let s = 0;
-    for (let d = from; d <= to; d++) s += asNum(arr[d - 1]);
-    return s;
-  };
-
-  // generate month pnl (raw full month) — but if month before historyStart, show empty
-  const dailyPnl = useMemo(() => {
-    if (isMonthBeforeHistory) {
-      return Array.from({ length: daysInMonth }, () => undefined) as Array<
-        number | undefined
-      >;
-    }
-
-    const seedBase = hashSeed(`${year}-${monthIndex}`);
-    const arr: Array<number | undefined> = [];
-
-    for (let d = 1; d <= daysInMonth; d++) {
-      const r = rand01(seedBase + d * 101);
-      const r2 = rand01(seedBase + d * 911);
-
-      // ~22% no trades
-      if (r < 0.22) {
-        arr.push(undefined);
-        continue;
-      }
-
-      let v = (r2 - 0.52) * 6; // -3..+3-ish
-      const spike = rand01(seedBase + d * 333);
-      if (spike > 0.92) v += (spike - 0.9) * 1500;
-      if (spike < 0.06) v -= (0.08 - spike) * 900;
-
-      arr.push(Number(v.toFixed(2)));
-    }
-
-    return arr;
-  }, [year, monthIndex, daysInMonth, isMonthBeforeHistory]);
-
-  // ✅ hide future days in CURRENT month
-  const dailyPnlVisible = useMemo(() => {
-    if (!isThisMonth) return dailyPnl; // past months = show all
-    return dailyPnl.map((v, idx) => (idx + 1 > todayDay ? undefined : v));
-  }, [dailyPnl, isThisMonth, todayDay]);
-
-  // ✅ maxAbs based on visible data (no future spikes)
-  const maxAbs = useMemo(() => {
-    return dailyPnlVisible.reduce(
-      (mx, v) => (v === undefined ? mx : Math.max(mx, Math.abs(v))),
-      0
-    );
-  }, [dailyPnlVisible]);
-
-  // ✅ available months since historyStart up to selected month (inclusive)
-  const monthsAvailableUpToSelected = useMemo(() => {
-    const n =
-      (year - historyStart.getFullYear()) * 12 +
-      (monthIndex - historyStart.getMonth()) +
-      1;
-    return Math.max(0, n);
-  }, [year, monthIndex, historyStart]);
-
-  // ✅ requested months, clamped to available history
-  const rangeMonthsRequested = range === "1m" ? 1 : range === "3m" ? 3 : 12;
-  const rangeMonths = Math.max(
-    1,
-    Math.min(rangeMonthsRequested, monthsAvailableUpToSelected || 1)
-  );
-
-  const rangeSeries = useMemo(() => {
-    const series: number[] = [];
-
-    for (let mOffset = rangeMonths - 1; mOffset >= 0; mOffset--) {
-      const d = new Date(year, monthIndex - mOffset, 1);
-
-      // 🚫 do not include months before history
-      const histMonthStart = new Date(
-        historyStart.getFullYear(),
-        historyStart.getMonth(),
-        1
-      );
-      if (d < histMonthStart) continue;
-
-      const y = d.getFullYear();
-      const mi = d.getMonth();
-      const dim = new Date(y, mi + 1, 0).getDate();
-      const seedBase = hashSeed(`${y}-${mi}`);
-      const isCur = y === now.getFullYear() && mi === now.getMonth();
-
-      for (let day = 1; day <= dim; day++) {
-        // 🚫 range also must not include future days in CURRENT month
-        if (isCur && day > now.getDate()) break;
-
-        const r = rand01(seedBase + day * 101);
-        const r2 = rand01(seedBase + day * 911);
-
-        if (r < 0.22) continue;
-
-        let v = (r2 - 0.52) * 6;
-        const spike = rand01(seedBase + day * 333);
-        if (spike > 0.92) v += (spike - 0.9) * 1500;
-        if (spike < 0.06) v -= (0.08 - spike) * 900;
-
-        series.push(Number(v.toFixed(2)));
-      }
-    }
-
-    return series;
-  }, [rangeMonths, year, monthIndex, now, historyStart]);
-
-  const stats = useMemo(() => {
-    const endDay = isThisMonth ? todayDay : daysInMonth;
-    const today = isThisMonth ? asNum(dailyPnlVisible[todayDay - 1]) : 0;
-    const pnl7d = sumDays(dailyPnlVisible, endDay - 6, endDay);
-    const pnl30d = sumDays(dailyPnlVisible, endDay - 29, endDay);
-    const pnlRange = sum(rangeSeries);
-
-    return {
-      today: Number(today.toFixed(2)),
-      pnl7d: Number(pnl7d.toFixed(2)),
-      pnl30d: Number(pnl30d.toFixed(2)),
-      pnlRange: Number(pnlRange.toFixed(2)),
-    };
-  }, [dailyPnlVisible, todayDay, isThisMonth, daysInMonth, rangeSeries]);
-
-  // ✅ label: if clicked "1y" but history < 12 months, show YTD instead (more honest)
-  const rangeLabel =
-    range === "1m"
-      ? "1m"
-      : range === "3m"
-      ? "3m"
-      : monthsAvailableUpToSelected < 12
-      ? "YTD"
-      : "1y";
+  // Adjust this (0..6) to align the month start visually
+  const leadingEmpty = 6;
 
   return (
-    <Card
-      title="Trader snapshot"
-      subtitle="Binance-style calendar (real month + intensity + tooltip)."
-    >
+    <Card title="Trader snapshot" subtitle="A full panel before “How it works” (Binance-style calendar).">
       <div
         className="traderPanelGrid"
         style={{
@@ -534,7 +201,7 @@ function TraderCalendarPanel() {
           alignItems: "stretch",
         }}
       >
-        {/* LEFT */}
+        {/* LEFT: Trader */}
         <div
           style={{
             borderRadius: 18,
@@ -562,20 +229,14 @@ function TraderCalendarPanel() {
                 height: "100%",
                 objectFit: "cover",
                 display: "block",
-                opacity: 0.95,
+                opacity: 0.92,
+              }}
+              onError={(e) => {
+                (e.currentTarget as HTMLImageElement).style.display = "none";
               }}
             />
 
-            <div
-              style={{
-                position: "absolute",
-                left: 12,
-                top: 12,
-                display: "flex",
-                gap: 8,
-                flexWrap: "wrap",
-              }}
-            >
+            <div style={{ position: "absolute", left: 12, top: 12, display: "flex", gap: 8, flexWrap: "wrap" }}>
               <span
                 style={{
                   padding: "5px 10px",
@@ -589,7 +250,6 @@ function TraderCalendarPanel() {
               >
                 {trader.style}
               </span>
-
               <span
                 style={{
                   padding: "5px 10px",
@@ -612,16 +272,7 @@ function TraderCalendarPanel() {
               {trader.age} y.o. • {trader.yearsTrading} years trading
             </div>
 
-            <div
-              style={{
-                marginTop: 4,
-                display: "grid",
-                gap: 8,
-                fontSize: 13,
-                opacity: 0.85,
-                lineHeight: 1.55,
-              }}
-            >
+            <div style={{ marginTop: 4, display: "grid", gap: 8, fontSize: 13, opacity: 0.85, lineHeight: 1.55 }}>
               <div>✅ Logs every trade (entry/stop/target)</div>
               <div>✅ Reviews mistakes weekly</div>
               <div>✅ Measures performance in R, not vibes</div>
@@ -644,7 +295,7 @@ function TraderCalendarPanel() {
           </div>
         </div>
 
-        {/* RIGHT */}
+        {/* RIGHT: Calendar */}
         <div
           style={{
             borderRadius: 18,
@@ -653,205 +304,56 @@ function TraderCalendarPanel() {
             padding: 14,
             display: "grid",
             gap: 12,
-            position: "relative",
           }}
-          onMouseLeave={() => setTip((t) => ({ ...t, open: false }))}
         >
-          {tip.open && (
-            <div
-              style={{
-                position: "fixed",
-                left: tip.x,
-                top: tip.y,
-                transform: "translate(12px, 12px)",
-                zIndex: 9999,
-                pointerEvents: "none",
-                padding: "10px 12px",
-                borderRadius: 12,
-                border: "1px solid rgba(255,255,255,0.12)",
-                background: "rgba(10,10,14,0.92)",
-                boxShadow: "0 12px 30px rgba(0,0,0,0.35)",
-                minWidth: 180,
-              }}
-            >
-              <div style={{ fontSize: 12, opacity: 0.85, marginBottom: 4 }}>
-                {tip.title}
-              </div>
-              <div style={{ fontSize: 13, fontWeight: 900 }}>{tip.value}</div>
-            </div>
-          )}
-
-          {/* header */}
           <div style={{ display: "grid", gap: 8 }}>
-            <div
-              style={{
-                display: "flex",
-                justifyContent: "space-between",
-                gap: 10,
-                alignItems: "center",
-              }}
-            >
+            <div style={{ display: "flex", justifyContent: "space-between", gap: 10, alignItems: "center" }}>
               <div style={{ fontWeight: 950, fontSize: 14 }}>Futures PnL</div>
-
-              <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
-                {/* range switch */}
-                <div style={{ display: "flex", gap: 6, alignItems: "center" }}>
-                  {(["1m", "3m", "1y"] as RangeKey[]).map((k) => {
-                    const active = k === range;
-                    const effectiveLabel =
-                      k === "1y" && monthsAvailableUpToSelected < 12
-                        ? "YTD"
-                        : k;
-
-                    return (
-                      <button
-                        key={k}
-                        type="button"
-                        onClick={() => setRange(k)}
-                        style={{
-                          height: 30,
-                          padding: "0 10px",
-                          borderRadius: 999,
-                          border: active
-                            ? "1px solid rgba(255,205,80,0.35)"
-                            : "1px solid rgba(255,255,255,0.10)",
-                          background: active
-                            ? "rgba(255,205,80,0.12)"
-                            : "rgba(255,255,255,0.03)",
-                          color: "rgba(255,255,255,0.92)",
-                          fontSize: 12,
-                          cursor: "pointer",
-                          fontWeight: active ? 900 : 700,
-                          opacity: active ? 1 : 0.85,
-                        }}
-                        title={
-                          k === "1y" && monthsAvailableUpToSelected < 12
-                            ? "Year-to-date (history is less than 12 months)"
-                            : undefined
-                        }
-                      >
-                        {effectiveLabel}
-                      </button>
-                    );
-                  })}
-                </div>
-
-                <button
-                  type="button"
-                  onClick={goPrevMonth}
-                  disabled={isHistoryStartMonth}
-                  style={{
-                    width: 34,
-                    height: 34,
-                    borderRadius: 10,
-                    border: "1px solid rgba(255,255,255,0.10)",
-                    background: "rgba(255,255,255,0.03)",
-                    color: "rgba(255,255,255,0.9)",
-                    cursor: isHistoryStartMonth ? "not-allowed" : "pointer",
-                    opacity: isHistoryStartMonth ? 0.45 : 1,
-                  }}
-                  aria-label="Previous month"
-                  title={isHistoryStartMonth ? "No earlier data" : "Previous month"}
-                >
-                  ←
-                </button>
-
-                <div
-                  style={{
-                    padding: "6px 10px",
-                    borderRadius: 999,
-                    border: "1px solid rgba(255,255,255,0.10)",
-                    background: "rgba(255,255,255,0.03)",
-                    fontSize: 12,
-                    opacity: 0.92,
-                    minWidth: 84,
-                    textAlign: "center",
-                  }}
-                >
-                  {monthLabel}
-                </div>
-
-                <button
-                  type="button"
-                  onClick={goNextMonth}
-                  disabled={isCurrentMonth}
-                  style={{
-                    width: 34,
-                    height: 34,
-                    borderRadius: 10,
-                    border: "1px solid rgba(255,255,255,0.10)",
-                    background: "rgba(255,255,255,0.03)",
-                    color: "rgba(255,255,255,0.9)",
-                    cursor: isCurrentMonth ? "not-allowed" : "pointer",
-                    opacity: isCurrentMonth ? 0.45 : 1,
-                  }}
-                  aria-label="Next month"
-                  title={
-                    isCurrentMonth ? "You can’t view future months" : "Next month"
-                  }
-                >
-                  →
-                </button>
+              <div
+                style={{
+                  padding: "6px 10px",
+                  borderRadius: 999,
+                  border: "1px solid rgba(255,255,255,0.10)",
+                  background: "rgba(255,255,255,0.03)",
+                  fontSize: 12,
+                  opacity: 0.9,
+                }}
+              >
+                {monthLabel}
               </div>
             </div>
 
-            {/* summary */}
-            <div
-              style={{
-                display: "grid",
-                gridTemplateColumns: "repeat(4, 1fr)",
-                gap: 10,
-              }}
-            >
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 10 }}>
               {[
-                { k: "Today", v: stats.today },
-                { k: "7d", v: stats.pnl7d },
-                { k: "30d", v: stats.pnl30d },
-                { k: rangeLabel, v: stats.pnlRange },
+                { k: "Today", v: today },
+                { k: "7d", v: pnl7d },
+                { k: "30d", v: pnl30d },
+                { k: "All time", v: pnlAll },
               ].map((it) => {
-                const tone = pnlTone(it.v, Math.max(1, Math.abs(stats.pnlRange)));
-
+                const t = pnlTone(it.v);
                 return (
                   <div
                     key={it.k}
                     style={{
                       padding: 10,
                       borderRadius: 14,
-                      border: `1px solid ${tone.br}`,
-                      background: tone.bg,
+                      border: `1px solid ${t.br}`,
+                      background: t.bg,
                       display: "grid",
                       gap: 4,
                     }}
                   >
                     <div style={{ fontSize: 11, opacity: 0.75 }}>{it.k}</div>
-                    <div
-                      style={{
-                        fontWeight: 900,
-                        fontSize: 13,
-                        color: tone.text,
-                      }}
-                    >
-                      {fmtMoney(it.v)}
-                    </div>
+                    <div style={{ fontWeight: 900, fontSize: 13 }}>{fmtMoney(it.v)}</div>
                   </div>
                 );
               })}
             </div>
           </div>
 
-          {/* calendar */}
           <div>
-            <div
-              style={{
-                display: "flex",
-                justifyContent: "space-between",
-                alignItems: "center",
-                gap: 10,
-              }}
-            >
-              <div style={{ fontWeight: 950, fontSize: 13, opacity: 0.9 }}>
-                Daily PnL
-              </div>
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: 10 }}>
+              <div style={{ fontWeight: 950, fontSize: 13, opacity: 0.9 }}>Daily PnL</div>
               <div style={{ fontSize: 12, opacity: 0.65 }}>S M T W T F S</div>
             </div>
 
@@ -877,79 +379,34 @@ function TraderCalendarPanel() {
                 />
               ))}
 
-              {dailyPnlVisible.map((v, idx) => {
+              {dailyPnl.map((v, idx) => {
                 const day = idx + 1;
-                const tone = pnlTone(v, maxAbs);
-                const isToday = isThisMonth && day === todayDay;
-                const labelDate = `${monthLabel}-${String(day).padStart(2, "0")}`;
-                const cellValue = v === undefined ? "No trades" : fmtMoney(v);
-                const displaySmall =
-                  v === undefined
-                    ? ""
-                    : (v > 0 ? "+" : "") +
-                      (Math.abs(v) >= 100 ? v.toFixed(0) : v.toFixed(2));
-
+                const t = pnlTone(v);
                 return (
                   <div
                     key={day}
                     style={{
                       height: 44,
                       borderRadius: 10,
-                      border: isToday
-                        ? "1px solid rgba(255,205,80,0.45)"
-                        : `1px solid ${tone.br}`,
-                      boxShadow: isToday
-                        ? "0 0 0 2px rgba(255,205,80,0.10) inset"
-                        : undefined,
-                      background: tone.bg,
+                      border: `1px solid ${t.br}`,
+                      background: t.bg,
                       padding: "6px 8px",
                       display: "grid",
                       alignContent: "space-between",
-                      cursor: "default",
                     }}
-                    onMouseEnter={(e) => {
-                      setTip({
-                        open: true,
-                        x: e.clientX,
-                        y: e.clientY,
-                        title: labelDate,
-                        value: cellValue,
-                      });
-                    }}
-                    onMouseMove={(e) =>
-                      setTip((t) =>
-                        t.open ? { ...t, x: e.clientX, y: e.clientY } : t
-                      )
-                    }
+                    title={v === undefined ? `Day ${day}: no trades` : `Day ${day}: ${fmtMoney(v)}`}
                   >
-                    <div style={{ fontSize: 11, opacity: 0.75 }}>
-                      {day}
-                      {isToday ? (
-                        <span style={{ marginLeft: 6, opacity: 0.85 }}>
-                          • today
-                        </span>
-                      ) : null}
-                    </div>
-                    <div
-                      style={{ fontSize: 11, fontWeight: 800, color: tone.text }}
-                    >
-                      {displaySmall}
+                    <div style={{ fontSize: 11, opacity: 0.75 }}>{day}</div>
+                    <div style={{ fontSize: 11, fontWeight: 800, opacity: 0.9 }}>
+                      {v === undefined ? "" : (v > 0 ? "+" : "") + (Math.abs(v) >= 100 ? v.toFixed(0) : v.toFixed(2))}
                     </div>
                   </div>
                 );
               })}
             </div>
 
-            <div
-              style={{
-                marginTop: 10,
-                fontSize: 12,
-                opacity: 0.72,
-                lineHeight: 1.5,
-              }}
-            >
-              The calendar reveals streaks, revenge days, and risk spikes — the
-              stuff you actually need to fix.
+            <div style={{ marginTop: 10, fontSize: 12, opacity: 0.72, lineHeight: 1.5 }}>
+              The calendar reveals streaks, revenge days, and risk spikes — the stuff you actually need to fix.
             </div>
           </div>
         </div>
@@ -1001,49 +458,16 @@ export default function HomePage() {
                 "radial-gradient(1200px 400px at 10% 10%, rgba(140,80,255,0.16), transparent 50%), rgba(255,255,255,0.02)",
             }}
           >
-            <div
-              style={{
-                display: "flex",
-                gap: 8,
-                flexWrap: "wrap",
-                marginBottom: 12,
-                alignItems: "center",
-              }}
-            >
+            <div style={{ display: "flex", gap: 8, flexWrap: "wrap", marginBottom: 12, alignItems: "center" }}>
               <Badge>Crypto only</Badge>
               <Badge>No exchange API</Badge>
             </div>
 
-            <div
-              style={{
-                fontSize: 44,
-                fontWeight: 950,
-                letterSpacing: -0.8,
-                lineHeight: 1.05,
-              }}
-            >
-              {t.heroTitle}
-            </div>
+            <div style={{ fontSize: 44, fontWeight: 950, letterSpacing: -0.8, lineHeight: 1.05 }}>{t.heroTitle}</div>
 
-            <div
-              style={{
-                marginTop: 12,
-                ...ui.subtle,
-                fontSize: 14,
-                lineHeight: 1.6,
-              }}
-            >
-              {t.heroSub}
-            </div>
+            <div style={{ marginTop: 12, ...ui.subtle, fontSize: 14, lineHeight: 1.6 }}>{t.heroSub}</div>
 
-            <div
-              style={{
-                display: "flex",
-                gap: 10,
-                flexWrap: "wrap",
-                marginTop: 16,
-              }}
-            >
+            <div style={{ display: "flex", gap: 10, flexWrap: "wrap", marginTop: 16 }}>
               <Link href="/register" style={{ textDecoration: "none" }}>
                 <Button variant="primary">Registration</Button>
               </Link>
@@ -1052,26 +476,11 @@ export default function HomePage() {
               </Link>
             </div>
 
-            <div
-              style={{
-                marginTop: 10,
-                opacity: 0.75,
-                fontSize: 12,
-                lineHeight: 1.5,
-              }}
-            >
+            <div style={{ marginTop: 10, opacity: 0.75, fontSize: 12, lineHeight: 1.5 }}>
               No exchange connection • No spreadsheets • Your data stays yours
             </div>
 
-            <div
-              style={{
-                marginTop: 14,
-                display: "flex",
-                gap: 10,
-                flexWrap: "wrap",
-                opacity: 0.85,
-              }}
-            >
+            <div style={{ marginTop: 14, display: "flex", gap: 10, flexWrap: "wrap", opacity: 0.85 }}>
               <Badge>📈 R-based stats</Badge>
               <Badge>Win / Loss / BE</Badge>
               <Badge>🧠 Psychology notes</Badge>
@@ -1086,24 +495,15 @@ export default function HomePage() {
           </div>
         </div>
 
-        {/* ✅ TRADER PANEL (inserted before How it works) */}
-        <div style={{ marginTop: 18 }}>
+        {/* ✅ NEW: Trader panel BEFORE How it works */}
+        <div style={{ marginTop: 12 }}>
           <TraderCalendarPanel />
         </div>
 
         {/* HOW IT WORKS */}
         <div style={{ marginTop: 10 }}>
-          <div style={{ fontSize: 18, fontWeight: 950, marginBottom: 10 }}>
-            How it works
-          </div>
-          <div
-            style={{
-              display: "grid",
-              gridTemplateColumns: "repeat(3, 1fr)",
-              gap: 12,
-              alignItems: "stretch",
-            }}
-          >
+          <div style={{ fontSize: 18, fontWeight: 950, marginBottom: 10 }}>How it works</div>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 12, alignItems: "stretch" }}>
             <Step n="1" title={t.how1} text={t.how1Text} />
             <Step n="2" title={t.how2} text={t.how2Text} />
             <Step n="3" title={t.how3} text={t.how3Text} />
@@ -1112,33 +512,110 @@ export default function HomePage() {
 
         {/* FEATURES */}
         <div style={{ marginTop: 44 }}>
-          <div
-            style={{
-              fontSize: 20,
-              fontWeight: 950,
-              marginBottom: 14,
-              paddingLeft: 4,
-            }}
-          >
-            {t.featuresTitle}
-          </div>
-          <div
-            style={{
-              display: "grid",
-              gridTemplateColumns: "repeat(3, 1fr)",
-              gap: 12,
-              alignItems: "stretch",
-            }}
-          >
+          <div style={{ fontSize: 20, fontWeight: 950, marginBottom: 14, paddingLeft: 4 }}>{t.featuresTitle}</div>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 12, alignItems: "stretch" }}>
             {t.features.map((f) => (
-              <Feature
-                key={f.title}
-                title={f.title}
-                subtitle={f.subtitle}
-                points={f.points}
-              />
+              <Feature key={f.title} title={f.title} subtitle={f.subtitle} points={f.points} />
             ))}
           </div>
+        </div>
+
+        {/* PRICING */}
+        <div style={{ marginTop: 18 }}>
+          <Card title="Pricing" subtitle="Simple subscription. Cancel anytime.">
+            <div
+              className="pricingGrid"
+              style={{
+                display: "grid",
+                gridTemplateColumns: "1fr 1.4fr",
+                gap: 14,
+                alignItems: "stretch",
+              }}
+            >
+              <div
+                style={{
+                  borderRadius: 16,
+                  border: "1px solid rgba(255,255,255,0.10)",
+                  background: "rgba(255,255,255,0.02)",
+                  padding: 14,
+                  display: "grid",
+                  gap: 10,
+                }}
+              >
+                <div style={{ display: "flex", alignItems: "baseline", gap: 10, flexWrap: "wrap" }}>
+                  <div style={{ fontSize: 28, fontWeight: 950, letterSpacing: -0.4 }}>
+                    $9<span style={{ fontSize: 12, opacity: 0.7, fontWeight: 700 }}>/mo</span>
+                  </div>
+                  <div style={{ fontSize: 12, opacity: 0.75 }}>or $79/year</div>
+                </div>
+
+                <div style={{ fontSize: 12, opacity: 0.75, lineHeight: 1.5 }}>
+                  One plan for traders who want consistency and accountability.
+                </div>
+
+                <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
+                  <Link href="/register" style={{ textDecoration: "none" }}>
+                    <Button variant="primary">Registration</Button>
+                  </Link>
+                  <Link href="/login" style={{ textDecoration: "none" }}>
+                    <Button variant="secondary">Login</Button>
+                  </Link>
+                </div>
+
+                <div style={{ fontSize: 11, opacity: 0.6 }}>No exchange API • Local-first • Export anytime</div>
+              </div>
+
+              <div
+                style={{
+                  borderRadius: 16,
+                  border: "1px solid rgba(255,255,255,0.10)",
+                  background: "rgba(255,255,255,0.02)",
+                  padding: 14,
+                  display: "grid",
+                  gap: 10,
+                }}
+              >
+                <div style={{ fontWeight: 900 }}>Included in Pro</div>
+
+                <ul style={{ margin: 0, paddingLeft: 18, display: "grid", gap: 8, opacity: 0.9, fontSize: 13 }}>
+                  <li>R-based stats (expectancy, Avg R, streaks)</li>
+                  <li>Psychology notes + rule tracking</li>
+                  <li>Templates / presets for repeatable setups</li>
+                  <li>CSV export + JSON backup</li>
+                  <li>Import with merge / replace modes</li>
+                </ul>
+
+                <div style={{ display: "flex", gap: 8, flexWrap: "wrap", marginTop: 4 }}>
+                  <span
+                    style={{
+                      padding: "4px 10px",
+                      borderRadius: 999,
+                      border: "1px solid rgba(255,255,255,0.10)",
+                      background: "rgba(255,255,255,0.03)",
+                      fontSize: 12,
+                      opacity: 0.85,
+                      whiteSpace: "nowrap",
+                    }}
+                  >
+                    ✅ Cancel anytime
+                  </span>
+                  <span
+                    style={{
+                      padding: "4px 10px",
+                      borderRadius: 999,
+                      border: "1px solid rgba(255,255,255,0.10)",
+                      background: "rgba(255,255,255,0.03)",
+                      fontSize: 12,
+                      opacity: 0.85,
+                      whiteSpace: "nowrap",
+                    }}
+                  >
+                    ✅ No API keys
+                  </span>
+                </div>
+              </div>
+            </div>
+          </Card>
         </div>
 
         {/* FAQ */}
@@ -1183,11 +660,7 @@ export default function HomePage() {
                   }}
                 >
                   <div style={{ fontWeight: 900 }}>{q}</div>
-                  <div
-                    style={{ fontSize: 13, opacity: 0.75, lineHeight: 1.6 }}
-                  >
-                    {a}
-                  </div>
+                  <div style={{ fontSize: 13, opacity: 0.75, lineHeight: 1.6 }}>{a}</div>
                 </div>
               ))}
 
@@ -1204,8 +677,8 @@ export default function HomePage() {
               >
                 <div style={{ fontWeight: 900 }}>Is my data private?</div>
                 <div style={{ fontSize: 13, opacity: 0.75, lineHeight: 1.6 }}>
-                  Yes. TradeLog is built around local-first principles. You keep
-                  control of your data and can export it whenever you want.
+                  Yes. TradeLog is built around local-first principles. You keep control of your data and can export it
+                  whenever you want.
                 </div>
               </div>
             </div>
@@ -1214,21 +687,14 @@ export default function HomePage() {
 
         {/* WHY R NOT PNL */}
         <div style={{ marginTop: 18 }}>
-          <Card
-            title="Why R, not PnL?"
-            subtitle="Because money alone doesn’t tell the truth."
-          >
+          <Card title="Why R, not PnL?" subtitle="Because money alone doesn’t tell the truth.">
             <div style={{ display: "grid", gap: 12, lineHeight: 1.6 }}>
               <div style={{ fontSize: 14, opacity: 0.8 }}>
-                PnL changes with position size and luck. A +$200 trade can still
-                be a bad decision if you risked $400.
+                PnL changes with position size and luck. A +$200 trade can still be a bad decision if you risked $400.
               </div>
-
               <div style={{ fontSize: 14, fontWeight: 600, opacity: 0.9 }}>
-                R (risk units) measures discipline — how well you execute your
-                plan, independent of account size.
+                R (risk units) measures discipline — how well you execute your plan, independent of account size.
               </div>
-
               <div
                 style={{
                   marginTop: 6,
@@ -1240,32 +706,374 @@ export default function HomePage() {
                   opacity: 0.85,
                 }}
               >
-                📌 A trader who respects risk stays consistent. R makes that
-                visible.
+                📌 A trader who respects risk stays consistent. R makes that visible.
               </div>
             </div>
           </Card>
         </div>
 
-        {/* Footer */}
+        {/* PnL vs R (animated) */}
+        <div style={{ marginTop: 18 }}>
+          <Card title="PnL vs R" subtitle="PnL is noisy. R shows execution quality.">
+            <div
+              className="pnlRGrid"
+              style={{
+                display: "grid",
+                gridTemplateColumns: "1.25fr 0.75fr",
+                gap: 14,
+                alignItems: "stretch",
+              }}
+            >
+              {/* Chart */}
+              <div
+                style={{
+                  position: "relative",
+                  borderRadius: 16,
+                  border: "1px solid rgba(255,255,255,0.10)",
+                  background:
+                    "radial-gradient(900px 260px at 20% 0%, rgba(140,80,255,0.12), transparent 55%), rgba(255,255,255,0.02)",
+                  padding: 14,
+                  paddingTop: 18,
+                  paddingBottom: 18,
+                  overflow: "hidden",
+                }}
+              >
+                <div
+                  style={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    gap: 12,
+                    alignItems: "center",
+                    marginBottom: 8,
+                    fontSize: 12,
+                    opacity: 0.9,
+                  }}
+                >
+                  <div style={{ opacity: 0.75 }}>Better ↑</div>
+
+                  <div style={{ display: "flex", gap: 12, flexWrap: "wrap", alignItems: "center" }}>
+                    <div style={{ display: "flex", alignItems: "center", gap: 8, opacity: 0.75 }}>
+                      <span
+                        style={{
+                          width: 18,
+                          height: 2,
+                          background: "rgba(255,255,255,0.28)",
+                          display: "inline-block",
+                        }}
+                      />
+                      PnL (size & luck)
+                    </div>
+                    <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                      <span
+                        style={{
+                          width: 18,
+                          height: 3,
+                          background: "rgba(140,80,255,0.95)",
+                          display: "inline-block",
+                        }}
+                      />
+                      R (discipline)
+                    </div>
+                  </div>
+
+                  <div style={{ opacity: 0.65 }}>Worse ↓</div>
+                </div>
+
+                <svg width="100%" height="210" viewBox="0 0 560 210" role="img" aria-label="PnL vs R chart">
+                  <defs>
+                    <linearGradient id="fade2" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="0%" stopColor="rgba(255,255,255,0.10)" />
+                      <stop offset="100%" stopColor="rgba(255,255,255,0.02)" />
+                    </linearGradient>
+
+                    <filter id="glow2">
+                      <feGaussianBlur stdDeviation="4" result="blur" />
+                      <feMerge>
+                        <feMergeNode in="blur" />
+                        <feMergeNode in="SourceGraphic" />
+                      </feMerge>
+                    </filter>
+                  </defs>
+
+                  <rect x="0" y="0" width="560" height="210" fill="transparent" />
+
+                  {Array.from({ length: 5 }).map((_, i) => {
+                    const y = 40 + i * 35;
+                    return (
+                      <line
+                        key={i}
+                        x1="0"
+                        y1={y}
+                        x2="560"
+                        y2={y}
+                        stroke={i === 4 ? "rgba(255,255,255,0.10)" : "rgba(255,255,255,0.06)"}
+                        strokeWidth="1"
+                      />
+                    );
+                  })}
+
+                  <rect x="0" y="175" width="560" height="35" fill="url(#fade2)" opacity="0.55" />
+
+                  <polyline
+                    className="pnlLine"
+                    points="10,135 60,110 110,155 160,102 210,160 260,96 310,172 360,88 410,166 460,80 510,148 550,70"
+                    fill="none"
+                    stroke="rgba(255,255,255,0.26)"
+                    strokeWidth="1.7"
+                    strokeLinejoin="round"
+                    strokeLinecap="round"
+                  />
+
+                  <polyline
+                    className="rGlow"
+                    points="10,165 60,160 110,153 160,148 210,140 260,132 310,124 360,116 410,106 460,98 510,88 550,78"
+                    fill="none"
+                    stroke="rgba(140,80,255,0.35)"
+                    strokeWidth="7"
+                    strokeLinejoin="round"
+                    strokeLinecap="round"
+                    filter="url(#glow2)"
+                    opacity="0.55"
+                  />
+                  <polyline
+                    className="rLine"
+                    points="10,165 60,160 110,153 160,148 210,140 260,132 310,124 360,116 410,106 460,98 510,88 550,78"
+                    fill="none"
+                    stroke="rgba(140,80,255,0.95)"
+                    strokeWidth="3"
+                    strokeLinejoin="round"
+                    strokeLinecap="round"
+                  />
+
+                  {[
+                    [10, 165],
+                    [60, 160],
+                    [110, 153],
+                    [160, 148],
+                    [210, 140],
+                    [260, 132],
+                    [310, 124],
+                    [360, 116],
+                    [410, 106],
+                    [460, 98],
+                    [510, 88],
+                    [550, 78],
+                  ].map(([x, y]) => (
+                    <circle key={`${x}-${y}`} cx={x} cy={y} r="3.2" fill="rgba(140,80,255,0.95)" />
+                  ))}
+                </svg>
+
+                <div style={{ marginTop: 10, fontSize: 12, opacity: 0.72, lineHeight: 1.5 }}>
+                  PnL swings with size. <b>R stays comparable</b> — it reflects execution quality.
+                </div>
+              </div>
+
+              {/* Example */}
+              <div
+                style={{
+                  borderRadius: 16,
+                  border: "1px solid rgba(255,255,255,0.10)",
+                  background: "rgba(255,255,255,0.02)",
+                  padding: 14,
+                  display: "grid",
+                  gap: 10,
+                }}
+              >
+                <div style={{ fontWeight: 900 }}>Example</div>
+
+                <div style={{ fontSize: 13, opacity: 0.78, lineHeight: 1.6 }}>
+                  Trade A: +$200 looks great.
+                  <br />
+                  If risk was $400 → <b>+0.5R</b>.
+                </div>
+
+                <div style={{ fontSize: 13, opacity: 0.78, lineHeight: 1.6 }}>
+                  Trade B: -$50 looks small.
+                  <br />
+                  If risk was $25 → <b>-2R</b>.
+                </div>
+
+                <div
+                  style={{
+                    marginTop: 4,
+                    padding: 10,
+                    borderRadius: 14,
+                    border: "1px solid rgba(140,80,255,0.22)",
+                    background: "rgba(140,80,255,0.08)",
+                    fontSize: 12,
+                    opacity: 0.9,
+                    lineHeight: 1.5,
+                  }}
+                >
+                  R makes results honest — and improvement measurable.
+                </div>
+              </div>
+            </div>
+          </Card>
+        </div>
+
+        {/* BEFORE / AFTER */}
+        <div style={{ marginTop: 18 }}>
+          <Card title="Before vs After TradeLog" subtitle="Same trader. Different behavior.">
+            <div
+              className="beforeAfterGrid"
+              style={{
+                display: "grid",
+                gridTemplateColumns: "1fr 1fr",
+                gap: 14,
+                alignItems: "stretch",
+              }}
+            >
+              <div
+                style={{
+                  padding: 16,
+                  borderRadius: 18,
+                  border: "1px solid rgba(255,100,100,0.25)",
+                  background: "rgba(255,100,100,0.06)",
+                  display: "grid",
+                  gap: 10,
+                }}
+              >
+                <div style={{ fontWeight: 900, fontSize: 16 }}>Before</div>
+                <ul style={{ margin: 0, paddingLeft: 18, display: "grid", gap: 8, fontSize: 13, opacity: 0.85 }}>
+                  <li>Trading without a written plan</li>
+                  <li>Revenge trades after losses</li>
+                  <li>Moving stop-loss emotionally</li>
+                  <li>Judging performance by random PnL</li>
+                  <li>Repeating the same mistakes</li>
+                </ul>
+              </div>
+
+              <div
+                style={{
+                  padding: 16,
+                  borderRadius: 18,
+                  border: "1px solid rgba(80,200,120,0.25)",
+                  background: "rgba(80,200,120,0.06)",
+                  display: "grid",
+                  gap: 10,
+                }}
+              >
+                <div style={{ fontWeight: 900, fontSize: 16 }}>After</div>
+                <ul style={{ margin: 0, paddingLeft: 18, display: "grid", gap: 8, fontSize: 13, opacity: 0.9 }}>
+                  <li>Clear rules before every trade</li>
+                  <li>Losses tracked and reviewed in R</li>
+                  <li>Stops respected, risk controlled</li>
+                  <li>Consistency measured, not luck</li>
+                  <li>Patterns identified and improved</li>
+                </ul>
+              </div>
+            </div>
+          </Card>
+        </div>
+
+        {/* CTA */}
         <div
           style={{
-            marginTop: 14,
-            opacity: 0.6,
-            fontSize: 12,
+            marginTop: 18,
+            padding: 18,
+            borderRadius: 22,
+            border: "1px solid rgba(255,255,255,0.10)",
+            background:
+              "radial-gradient(900px 300px at 90% 10%, rgba(140,80,255,0.14), transparent 55%), rgba(255,255,255,0.02)",
             display: "flex",
-            justifyContent: "center",
+            alignItems: "center",
+            justifyContent: "space-between",
+            gap: 12,
+            flexWrap: "wrap",
           }}
         >
+          <div>
+            <div style={{ fontSize: 18, fontWeight: 950 }}>{t.bottomTitle}</div>
+            <div style={{ opacity: 0.75, marginTop: 6, fontSize: 13 }}>
+              {t.bottomSub}
+            </div>
+          </div>
+
+          <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
+            <Link href="/register" style={{ textDecoration: "none" }}>
+              <Button variant="primary">Registration</Button>
+            </Link>
+            <Link href="/login" style={{ textDecoration: "none" }}>
+              <Button variant="secondary">Login</Button>
+            </Link>
+          </div>
+        </div>
+
+        {/* Footer */}
+        <div style={{ marginTop: 14, opacity: 0.6, fontSize: 12, display: "flex", justifyContent: "center" }}>
           © {year} TradeLog
         </div>
 
         <style jsx>{`
+          .mockDashboardWrap :global(*) {
+            /* no-op wrapper to scope selectors */
+          }
+          .mockDashboardWrap :global(*:not(script)) {
+            /* we keep safe baseline */
+          }
           .mockDashboardWrap :global([class*="demo"]),
           .mockDashboardWrap :global([data-demo]),
           .mockDashboardWrap :global(.demo),
           .mockDashboardWrap :global(.demoData) {
             display: none !important;
+          }
+
+          /* PnL vs R line draw animation */
+          .pnlLine,
+          .rLine,
+          .rGlow {
+            stroke-dasharray: 900;
+            stroke-dashoffset: 900;
+            animation: drawLine 1.25s ease forwards;
+          }
+
+          .pnlLine {
+            animation-duration: 1.05s;
+            animation-delay: 0.05s;
+            opacity: 0;
+            animation-name: drawPnl;
+          }
+
+          .rGlow {
+            animation-delay: 0.18s;
+            filter: blur(6px);
+          }
+
+          .rLine {
+            animation-delay: 0.18s;
+          }
+
+          .pnlRGrid svg circle {
+            opacity: 0;
+            animation: fadeDots 0.35s ease forwards;
+            animation-delay: 0.95s;
+          }
+
+          @keyframes drawLine {
+            to {
+              stroke-dashoffset: 0;
+            }
+          }
+
+          @keyframes drawPnl {
+            0% {
+              stroke-dashoffset: 900;
+              opacity: 0;
+            }
+            20% {
+              opacity: 1;
+            }
+            100% {
+              stroke-dashoffset: 0;
+              opacity: 1;
+            }
+          }
+
+          @keyframes fadeDots {
+            to {
+              opacity: 0.9;
+            }
           }
 
           @media (max-width: 980px) {
@@ -1275,6 +1083,21 @@ export default function HomePage() {
             div[style*="grid-template-columns: repeat(3, 1fr)"] {
               grid-template-columns: 1fr !important;
             }
+
+            .pricingGrid {
+              grid-template-columns: 1fr !important;
+            }
+            .faqGrid {
+              grid-template-columns: 1fr !important;
+            }
+            .pnlRGrid {
+              grid-template-columns: 1fr !important;
+            }
+            .beforeAfterGrid {
+              grid-template-columns: 1fr !important;
+            }
+
+            /* ✅ Trader panel responsive */
             .traderPanelGrid {
               grid-template-columns: 1fr !important;
             }
