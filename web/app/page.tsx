@@ -738,7 +738,6 @@ function TraderCalendarPanel() {
   );
 }
 
-
 export default function HomePage() {
   const year = useMemo(() => new Date().getFullYear(), []);
   const t = copy;
