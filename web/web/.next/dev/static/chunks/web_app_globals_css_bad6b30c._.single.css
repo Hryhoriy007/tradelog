@@ -166,7 +166,7 @@ html, body {
 }
 
 @media (max-width: 980px) {
-  .mockPricingGrid, .beforeAfterGrid {
+  .mockPricingGrid, .beforeAfterGrid, .pnlRGrid {
     grid-template-columns: 1fr !important;
   }
 }

@@ -2,7 +2,7 @@
 "use client";
 
 import Link from "next/link";
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 
 import { Page, HeaderRow } from "@/app/components/ui/Layout";
 import { Card } from "@/app/components/ui/Card";
@@ -146,6 +146,457 @@ function Step({ n, title, text }: { n: string; title: string; text: string }) {
     </div>
   );
 }
+/* =========================
+   Trader Panel (Binance-like)
+   ========================= */
+
+function clamp01(x: number) {
+  return Math.max(0, Math.min(1, x));
+}
+
+function fmtMoney(v?: number) {
+  if (v === undefined || v === null) return "—";
+  const sign = v > 0 ? "+" : "";
+  return `${sign}${v.toFixed(2)} USD`;
+}
+
+// lightweight deterministic pseudo-random (stable per month/day)
+function hashSeed(s: string) {
+  let h = 2166136261;
+  for (let i = 0; i < s.length; i++) {
+    h ^= s.charCodeAt(i);
+    h = Math.imul(h, 16777619);
+  }
+  return h >>> 0;
+}
+function rand01(seed: number) {
+  // xorshift32
+  let x = seed || 123456789;
+  x ^= x << 13;
+  x ^= x >>> 17;
+  x ^= x << 5;
+  return ((x >>> 0) % 1_000_000) / 1_000_000;
+}
+
+/**
+ * Binance-like tone with intensity by abs(v) / maxAbs
+ */
+function pnlTone(v: number | undefined, maxAbs: number) {
+  if (v === undefined || v === null) {
+    return {
+      bg: "rgba(255,255,255,0.04)",
+      br: "rgba(255,255,255,0.08)",
+      text: "rgba(255,255,255,0.70)",
+    };
+  }
+
+  if (v === 0) {
+    return {
+      bg: "rgba(180,180,180,0.10)",
+      br: "rgba(180,180,180,0.16)",
+      text: "rgba(255,255,255,0.88)",
+    };
+  }
+
+  const t = maxAbs > 0 ? clamp01(Math.abs(v) / maxAbs) : 0;
+
+  // tuned like Binance blocks
+  const bgA = 0.08 + t * 0.30; // 0.08..0.38
+  const brA = 0.16 + t * 0.26; // 0.16..0.42
+
+  if (v > 0) {
+    return {
+      bg: `rgba(0, 180, 120, ${bgA})`,
+      br: `rgba(0, 180, 120, ${brA})`,
+      text: "rgba(235,255,245,0.95)",
+    };
+  }
+
+  return {
+    bg: `rgba(240, 70, 70, ${bgA})`,
+    br: `rgba(240, 70, 70, ${brA})`,
+    text: "rgba(255,235,235,0.95)",
+  };
+}
+
+// ✅ no file needed — embedded SVG placeholder image
+const TRADER_PLACEHOLDER =
+  "data:image/svg+xml;charset=utf-8," +
+  encodeURIComponent(`
+<svg xmlns="http://www.w3.org/2000/svg" width="900" height="675" viewBox="0 0 900 675">
+  <defs>
+    <radialGradient id="g" cx="30%" cy="0%" r="90%">
+      <stop offset="0%" stop-color="rgba(140,80,255,0.55)"/>
+      <stop offset="55%" stop-color="rgba(140,80,255,0.12)"/>
+      <stop offset="100%" stop-color="rgba(0,0,0,0.15)"/>
+    </radialGradient>
+    <linearGradient id="b" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#0b0b12"/>
+      <stop offset="100%" stop-color="#11131b"/>
+    </linearGradient>
+  </defs>
+  <rect width="900" height="675" fill="url(#b)"/>
+  <rect width="900" height="675" fill="url(#g)"/>
+  <circle cx="450" cy="310" r="150" fill="rgba(255,255,255,0.06)"/>
+  <circle cx="450" cy="270" r="70" fill="rgba(255,255,255,0.10)"/>
+  <path d="M290,530c35-90,115-135,160-135s125,45,160,135" fill="rgba(255,255,255,0.10)"/>
+  <text x="50%" y="92%" text-anchor="middle" fill="rgba(255,255,255,0.60)" font-family="Inter, Arial" font-size="28">
+    Trader profile (placeholder)
+  </text>
+</svg>
+`);
+
+function TraderCalendarPanel() {
+  const trader = {
+    name: "Dmytro Kovalenko",
+    age: 28,
+    yearsTrading: 4,
+    style: "Futures • Intraday",
+    note: "Tracks risk in R, avoids revenge trading",
+    photoUrl: TRADER_PLACEHOLDER, // ✅ placeholder (no /public needed)
+  };
+
+  // ✅ current month by default
+  const [monthDate, setMonthDate] = useState(() => {
+    const now = new Date();
+    return new Date(now.getFullYear(), now.getMonth(), 1);
+  });
+
+  const year = monthDate.getFullYear();
+  const monthIndex = monthDate.getMonth();
+  const monthLabel = `${year}-${String(monthIndex + 1).padStart(2, "0")}`;
+
+  // ✅ real days in month
+  const daysInMonth = useMemo(() => new Date(year, monthIndex + 1, 0).getDate(), [year, monthIndex]);
+
+  // ✅ correct leadingEmpty (S M T W T F S ; Sunday-first like Binance)
+  const leadingEmpty = useMemo(() => new Date(year, monthIndex, 1).getDay(), [year, monthIndex]);
+
+  // ✅ generate “Binance-like” mock daily pnl for the whole month
+  const dailyPnl = useMemo(() => {
+    const seedBase = hashSeed(`${year}-${monthIndex}`);
+    const arr: Array<number | undefined> = [];
+
+    // emulate: many small days + few spikes (like futures)
+    for (let d = 1; d <= daysInMonth; d++) {
+      const r = rand01(seedBase + d * 101);
+      const r2 = rand01(seedBase + d * 911);
+
+      // ~22% no trades
+      if (r < 0.22) {
+        arr.push(undefined);
+        continue;
+      }
+
+      // base small pnl
+      let v = (r2 - 0.52) * 6; // around -3..+3
+
+      // occasional spike days
+      const spike = rand01(seedBase + d * 333);
+      if (spike > 0.92) v += (spike - 0.9) * 1500; // big green
+      if (spike < 0.06) v -= (0.08 - spike) * 900; // big red
+
+      // keep 2 decimals
+      arr.push(Number(v.toFixed(2)));
+    }
+
+    return arr;
+  }, [year, monthIndex, daysInMonth]);
+
+  // ✅ max abs for intensity scaling
+  const maxAbs = useMemo(() => {
+    return dailyPnl.reduce((mx, v) => (v === undefined ? mx : Math.max(mx, Math.abs(v))), 0);
+  }, [dailyPnl]);
+
+  // summary numbers (mocked from month data)
+  const { today, pnl7d, pnl30d, pnlAll } = useMemo(() => {
+    const nums = dailyPnl.filter((x): x is number => typeof x === "number");
+    const sum = (xs: number[]) => xs.reduce((a, b) => a + b, 0);
+
+    const last = nums.length ? nums[nums.length - 1] : 0;
+    const last7 = sum(nums.slice(-7));
+    const last30 = sum(nums.slice(-30));
+    const all = sum(nums);
+
+    return {
+      today: Number(last.toFixed(2)),
+      pnl7d: Number(last7.toFixed(2)),
+      pnl30d: Number(last30.toFixed(2)),
+      pnlAll: Number(all.toFixed(2)),
+    };
+  }, [dailyPnl]);
+
+  const goPrevMonth = () => setMonthDate((d) => new Date(d.getFullYear(), d.getMonth() - 1, 1));
+  const goNextMonth = () => setMonthDate((d) => new Date(d.getFullYear(), d.getMonth() + 1, 1));
+
+  return (
+    <Card title="Trader snapshot" subtitle="Binance-style calendar (real month + intensity gradient).">
+      <div
+        className="traderPanelGrid"
+        style={{
+          display: "grid",
+          gridTemplateColumns: "0.9fr 1.1fr",
+          gap: 14,
+          alignItems: "stretch",
+        }}
+      >
+        {/* LEFT: Trader */}
+        <div
+          style={{
+            borderRadius: 18,
+            border: "1px solid rgba(255,255,255,0.10)",
+            background: "rgba(255,255,255,0.02)",
+            overflow: "hidden",
+            display: "grid",
+          }}
+        >
+          <div
+            style={{
+              aspectRatio: "4 / 3",
+              background:
+                "radial-gradient(900px 320px at 30% 0%, rgba(140,80,255,0.18), transparent 55%), rgba(255,255,255,0.02)",
+              borderBottom: "1px solid rgba(255,255,255,0.08)",
+              position: "relative",
+            }}
+          >
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src={trader.photoUrl}
+              alt={trader.name}
+              style={{
+                width: "100%",
+                height: "100%",
+                objectFit: "cover",
+                display: "block",
+                opacity: 0.95,
+              }}
+            />
+
+            <div style={{ position: "absolute", left: 12, top: 12, display: "flex", gap: 8, flexWrap: "wrap" }}>
+              <span
+                style={{
+                  padding: "5px 10px",
+                  borderRadius: 999,
+                  border: "1px solid rgba(255,255,255,0.10)",
+                  background: "rgba(255,255,255,0.04)",
+                  fontSize: 12,
+                  opacity: 0.9,
+                  whiteSpace: "nowrap",
+                }}
+              >
+                {trader.style}
+              </span>
+              <span
+                style={{
+                  padding: "5px 10px",
+                  borderRadius: 999,
+                  border: "1px solid rgba(140,80,255,0.22)",
+                  background: "rgba(140,80,255,0.08)",
+                  fontSize: 12,
+                  opacity: 0.92,
+                  whiteSpace: "nowrap",
+                }}
+              >
+                Risk-first
+              </span>
+            </div>
+          </div>
+
+          <div style={{ padding: 14, display: "grid", gap: 8 }}>
+            <div style={{ fontSize: 16, fontWeight: 950 }}>{trader.name}</div>
+            <div style={{ fontSize: 13, opacity: 0.75 }}>
+              {trader.age} y.o. • {trader.yearsTrading} years trading
+            </div>
+
+            <div style={{ marginTop: 4, display: "grid", gap: 8, fontSize: 13, opacity: 0.85, lineHeight: 1.55 }}>
+              <div>✅ Logs every trade (entry/stop/target)</div>
+              <div>✅ Reviews mistakes weekly</div>
+              <div>✅ Measures performance in R, not vibes</div>
+            </div>
+
+            <div
+              style={{
+                marginTop: 6,
+                padding: 12,
+                borderRadius: 14,
+                border: "1px solid rgba(255,255,255,0.10)",
+                background: "rgba(255,255,255,0.02)",
+                fontSize: 13,
+                opacity: 0.8,
+                lineHeight: 1.55,
+              }}
+            >
+              🧠 {trader.note}
+            </div>
+          </div>
+        </div>
+
+        {/* RIGHT: Calendar */}
+        <div
+          style={{
+            borderRadius: 18,
+            border: "1px solid rgba(255,255,255,0.10)",
+            background: "rgba(255,255,255,0.02)",
+            padding: 14,
+            display: "grid",
+            gap: 12,
+          }}
+        >
+          <div style={{ display: "grid", gap: 8 }}>
+            <div style={{ display: "flex", justifyContent: "space-between", gap: 10, alignItems: "center" }}>
+              <div style={{ fontWeight: 950, fontSize: 14 }}>Futures PnL</div>
+
+              {/* month switcher */}
+              <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
+                <button
+                  type="button"
+                  onClick={goPrevMonth}
+                  style={{
+                    width: 34,
+                    height: 34,
+                    borderRadius: 10,
+                    border: "1px solid rgba(255,255,255,0.10)",
+                    background: "rgba(255,255,255,0.03)",
+                    color: "rgba(255,255,255,0.9)",
+                    cursor: "pointer",
+                  }}
+                  aria-label="Previous month"
+                  title="Previous month"
+                >
+                  ←
+                </button>
+
+                <div
+                  style={{
+                    padding: "6px 10px",
+                    borderRadius: 999,
+                    border: "1px solid rgba(255,255,255,0.10)",
+                    background: "rgba(255,255,255,0.03)",
+                    fontSize: 12,
+                    opacity: 0.92,
+                    minWidth: 84,
+                    textAlign: "center",
+                  }}
+                >
+                  {monthLabel}
+                </div>
+
+                <button
+                  type="button"
+                  onClick={goNextMonth}
+                  style={{
+                    width: 34,
+                    height: 34,
+                    borderRadius: 10,
+                    border: "1px solid rgba(255,255,255,0.10)",
+                    background: "rgba(255,255,255,0.03)",
+                    color: "rgba(255,255,255,0.9)",
+                    cursor: "pointer",
+                  }}
+                  aria-label="Next month"
+                  title="Next month"
+                >
+                  →
+                </button>
+              </div>
+            </div>
+
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 10 }}>
+              {[
+                { k: "Today", v: today },
+                { k: "7d", v: pnl7d },
+                { k: "30d", v: pnl30d },
+                { k: "All time", v: pnlAll },
+              ].map((it) => {
+                const tone = pnlTone(it.v, Math.max(1, Math.abs(pnlAll)));
+                return (
+                  <div
+                    key={it.k}
+                    style={{
+                      padding: 10,
+                      borderRadius: 14,
+                      border: `1px solid ${tone.br}`,
+                      background: tone.bg,
+                      display: "grid",
+                      gap: 4,
+                    }}
+                  >
+                    <div style={{ fontSize: 11, opacity: 0.75 }}>{it.k}</div>
+                    <div style={{ fontWeight: 900, fontSize: 13, color: tone.text }}>{fmtMoney(it.v)}</div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+
+          <div>
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: 10 }}>
+              <div style={{ fontWeight: 950, fontSize: 13, opacity: 0.9 }}>Daily PnL</div>
+              <div style={{ fontSize: 12, opacity: 0.65 }}>S M T W T F S</div>
+            </div>
+
+            <div
+              className="pnlCalendarGrid"
+              style={{
+                marginTop: 10,
+                display: "grid",
+                gridTemplateColumns: "repeat(7, 1fr)",
+                gap: 8,
+              }}
+            >
+              {/* leading empty cells */}
+              {Array.from({ length: leadingEmpty }).map((_, i) => (
+                <div
+                  key={`e-${i}`}
+                  style={{
+                    height: 44,
+                    borderRadius: 10,
+                    border: "1px solid rgba(255,255,255,0.06)",
+                    background: "rgba(255,255,255,0.02)",
+                    opacity: 0.35,
+                  }}
+                />
+              ))}
+
+              {/* month cells */}
+              {dailyPnl.map((v, idx) => {
+                const day = idx + 1;
+                const tone = pnlTone(v, maxAbs);
+
+                return (
+                  <div
+                    key={day}
+                    style={{
+                      height: 44,
+                      borderRadius: 10,
+                      border: `1px solid ${tone.br}`,
+                      background: tone.bg,
+                      padding: "6px 8px",
+                      display: "grid",
+                      alignContent: "space-between",
+                    }}
+                    title={v === undefined ? `Day ${day}: no trades` : `Day ${day}: ${fmtMoney(v)}`}
+                  >
+                    <div style={{ fontSize: 11, opacity: 0.75 }}>{day}</div>
+                    <div style={{ fontSize: 11, fontWeight: 800, color: tone.text }}>
+                      {v === undefined
+                        ? ""
+                        : (v > 0 ? "+" : "") + (Math.abs(v) >= 100 ? v.toFixed(0) : v.toFixed(2))}
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+
+            <div style={{ marginTop: 10, fontSize: 12, opacity: 0.72, lineHeight: 1.5 }}>
+              The calendar reveals streaks, revenge days, and risk spikes — the stuff you actually need to fix.
+            </div>
+          </div>
+        </div>
+      </div>
+    </Card>
+  );
+}
 
 export default function HomePage() {
   const year = useMemo(() => new Date().getFullYear(), []);
@@ -225,6 +676,11 @@ export default function HomePage() {
               <MockDashboard />
             </DashboardWindow>
           </div>
+        </div>
+
+        {/* ✅ NEW: Trader panel BEFORE How it works */}
+        <div style={{ marginTop: 12 }}>
+          <TraderCalendarPanel />
         </div>
 
         {/* HOW IT WORKS */}
@@ -411,7 +867,7 @@ export default function HomePage() {
             </div>
           </Card>
         </div>
-    
+
         {/* WHY R NOT PNL */}
         <div style={{ marginTop: 18 }}>
           <Card title="Why R, not PnL?" subtitle="Because money alone doesn’t tell the truth.">
@@ -439,208 +895,205 @@ export default function HomePage() {
           </Card>
         </div>
 
-       {/* PnL vs R (animated) */}
-<div style={{ marginTop: 18 }}>
-  <Card title="PnL vs R" subtitle="PnL is noisy. R shows execution quality.">
-    <div
-      className="pnlRGrid"
-      style={{
-        display: "grid",
-        gridTemplateColumns: "1.25fr 0.75fr",
-        gap: 14,
-        alignItems: "stretch",
-      }}
-    >
-      {/* Chart */}
-      <div
-        style={{
-          position: "relative",
-          borderRadius: 16,
-          border: "1px solid rgba(255,255,255,0.10)",
-          background:
-            "radial-gradient(900px 260px at 20% 0%, rgba(140,80,255,0.12), transparent 55%), rgba(255,255,255,0.02)",
-          padding: 14,
-          paddingTop: 18,
-          paddingBottom: 18,
-          overflow: "hidden",
-        }}
-      >
-        {/* ✅ top row: Better / Legend / Worse (no absolute, no overlap) */}
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "space-between",
-            gap: 12,
-            alignItems: "center",
-            marginBottom: 8,
-            fontSize: 12,
-            opacity: 0.9,
-          }}
-        >
-          <div style={{ opacity: 0.75 }}>Better ↑</div>
-
-          <div style={{ display: "flex", gap: 12, flexWrap: "wrap", alignItems: "center" }}>
-            <div style={{ display: "flex", alignItems: "center", gap: 8, opacity: 0.75 }}>
-              <span
+        {/* PnL vs R (animated) */}
+        <div style={{ marginTop: 18 }}>
+          <Card title="PnL vs R" subtitle="PnL is noisy. R shows execution quality.">
+            <div
+              className="pnlRGrid"
+              style={{
+                display: "grid",
+                gridTemplateColumns: "1.25fr 0.75fr",
+                gap: 14,
+                alignItems: "stretch",
+              }}
+            >
+              {/* Chart */}
+              <div
                 style={{
-                  width: 18,
-                  height: 2,
-                  background: "rgba(255,255,255,0.28)",
-                  display: "inline-block",
+                  position: "relative",
+                  borderRadius: 16,
+                  border: "1px solid rgba(255,255,255,0.10)",
+                  background:
+                    "radial-gradient(900px 260px at 20% 0%, rgba(140,80,255,0.12), transparent 55%), rgba(255,255,255,0.02)",
+                  padding: 14,
+                  paddingTop: 18,
+                  paddingBottom: 18,
+                  overflow: "hidden",
                 }}
-              />
-              PnL (size & luck)
-            </div>
-            <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-              <span
+              >
+                <div
+                  style={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    gap: 12,
+                    alignItems: "center",
+                    marginBottom: 8,
+                    fontSize: 12,
+                    opacity: 0.9,
+                  }}
+                >
+                  <div style={{ opacity: 0.75 }}>Better ↑</div>
+
+                  <div style={{ display: "flex", gap: 12, flexWrap: "wrap", alignItems: "center" }}>
+                    <div style={{ display: "flex", alignItems: "center", gap: 8, opacity: 0.75 }}>
+                      <span
+                        style={{
+                          width: 18,
+                          height: 2,
+                          background: "rgba(255,255,255,0.28)",
+                          display: "inline-block",
+                        }}
+                      />
+                      PnL (size & luck)
+                    </div>
+                    <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                      <span
+                        style={{
+                          width: 18,
+                          height: 3,
+                          background: "rgba(140,80,255,0.95)",
+                          display: "inline-block",
+                        }}
+                      />
+                      R (discipline)
+                    </div>
+                  </div>
+
+                  <div style={{ opacity: 0.65 }}>Worse ↓</div>
+                </div>
+
+                <svg width="100%" height="210" viewBox="0 0 560 210" role="img" aria-label="PnL vs R chart">
+                  <defs>
+                    <linearGradient id="fade2" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="0%" stopColor="rgba(255,255,255,0.10)" />
+                      <stop offset="100%" stopColor="rgba(255,255,255,0.02)" />
+                    </linearGradient>
+
+                    <filter id="glow2">
+                      <feGaussianBlur stdDeviation="4" result="blur" />
+                      <feMerge>
+                        <feMergeNode in="blur" />
+                        <feMergeNode in="SourceGraphic" />
+                      </feMerge>
+                    </filter>
+                  </defs>
+
+                  <rect x="0" y="0" width="560" height="210" fill="transparent" />
+
+                  {Array.from({ length: 5 }).map((_, i) => {
+                    const y = 40 + i * 35;
+                    return (
+                      <line
+                        key={i}
+                        x1="0"
+                        y1={y}
+                        x2="560"
+                        y2={y}
+                        stroke={i === 4 ? "rgba(255,255,255,0.10)" : "rgba(255,255,255,0.06)"}
+                        strokeWidth="1"
+                      />
+                    );
+                  })}
+
+                  <rect x="0" y="175" width="560" height="35" fill="url(#fade2)" opacity="0.55" />
+
+                  <polyline
+                    className="pnlLine"
+                    points="10,135 60,110 110,155 160,102 210,160 260,96 310,172 360,88 410,166 460,80 510,148 550,70"
+                    fill="none"
+                    stroke="rgba(255,255,255,0.26)"
+                    strokeWidth="1.7"
+                    strokeLinejoin="round"
+                    strokeLinecap="round"
+                  />
+
+                  <polyline
+                    className="rGlow"
+                    points="10,165 60,160 110,153 160,148 210,140 260,132 310,124 360,116 410,106 460,98 510,88 550,78"
+                    fill="none"
+                    stroke="rgba(140,80,255,0.35)"
+                    strokeWidth="7"
+                    strokeLinejoin="round"
+                    strokeLinecap="round"
+                    filter="url(#glow2)"
+                    opacity="0.55"
+                  />
+                  <polyline
+                    className="rLine"
+                    points="10,165 60,160 110,153 160,148 210,140 260,132 310,124 360,116 410,106 460,98 510,88 550,78"
+                    fill="none"
+                    stroke="rgba(140,80,255,0.95)"
+                    strokeWidth="3"
+                    strokeLinejoin="round"
+                    strokeLinecap="round"
+                  />
+
+                  {[
+                    [10, 165],
+                    [60, 160],
+                    [110, 153],
+                    [160, 148],
+                    [210, 140],
+                    [260, 132],
+                    [310, 124],
+                    [360, 116],
+                    [410, 106],
+                    [460, 98],
+                    [510, 88],
+                    [550, 78],
+                  ].map(([x, y]) => (
+                    <circle key={`${x}-${y}`} cx={x} cy={y} r="3.2" fill="rgba(140,80,255,0.95)" />
+                  ))}
+                </svg>
+
+                <div style={{ marginTop: 10, fontSize: 12, opacity: 0.72, lineHeight: 1.5 }}>
+                  PnL swings with size. <b>R stays comparable</b> — it reflects execution quality.
+                </div>
+              </div>
+
+              {/* Example */}
+              <div
                 style={{
-                  width: 18,
-                  height: 3,
-                  background: "rgba(140,80,255,0.95)",
-                  display: "inline-block",
+                  borderRadius: 16,
+                  border: "1px solid rgba(255,255,255,0.10)",
+                  background: "rgba(255,255,255,0.02)",
+                  padding: 14,
+                  display: "grid",
+                  gap: 10,
                 }}
-              />
-              R (discipline)
+              >
+                <div style={{ fontWeight: 900 }}>Example</div>
+
+                <div style={{ fontSize: 13, opacity: 0.78, lineHeight: 1.6 }}>
+                  Trade A: +$200 looks great.
+                  <br />
+                  If risk was $400 → <b>+0.5R</b>.
+                </div>
+
+                <div style={{ fontSize: 13, opacity: 0.78, lineHeight: 1.6 }}>
+                  Trade B: -$50 looks small.
+                  <br />
+                  If risk was $25 → <b>-2R</b>.
+                </div>
+
+                <div
+                  style={{
+                    marginTop: 4,
+                    padding: 10,
+                    borderRadius: 14,
+                    border: "1px solid rgba(140,80,255,0.22)",
+                    background: "rgba(140,80,255,0.08)",
+                    fontSize: 12,
+                    opacity: 0.9,
+                    lineHeight: 1.5,
+                  }}
+                >
+                  R makes results honest — and improvement measurable.
+                </div>
+              </div>
             </div>
-          </div>
-
-          <div style={{ opacity: 0.65 }}>Worse ↓</div>
+          </Card>
         </div>
-
-        <svg width="100%" height="210" viewBox="0 0 560 210" role="img" aria-label="PnL vs R chart">
-          <defs>
-            <linearGradient id="fade2" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stopColor="rgba(255,255,255,0.10)" />
-              <stop offset="100%" stopColor="rgba(255,255,255,0.02)" />
-            </linearGradient>
-
-            <filter id="glow2">
-              <feGaussianBlur stdDeviation="4" result="blur" />
-              <feMerge>
-                <feMergeNode in="blur" />
-                <feMergeNode in="SourceGraphic" />
-              </feMerge>
-            </filter>
-          </defs>
-
-          <rect x="0" y="0" width="560" height="210" fill="transparent" />
-
-          {Array.from({ length: 5 }).map((_, i) => {
-            const y = 40 + i * 35;
-            return (
-              <line
-                key={i}
-                x1="0"
-                y1={y}
-                x2="560"
-                y2={y}
-                stroke={i === 4 ? "rgba(255,255,255,0.10)" : "rgba(255,255,255,0.06)"}
-                strokeWidth="1"
-              />
-            );
-          })}
-
-          <rect x="0" y="175" width="560" height="35" fill="url(#fade2)" opacity="0.55" />
-
-          {/* PnL (noisy) */}
-          <polyline
-            className="pnlLine"
-            points="10,135 60,110 110,155 160,102 210,160 260,96 310,172 360,88 410,166 460,80 510,148 550,70"
-            fill="none"
-            stroke="rgba(255,255,255,0.26)"
-            strokeWidth="1.7"
-            strokeLinejoin="round"
-            strokeLinecap="round"
-          />
-
-          {/* R (smooth) */}
-          <polyline
-            className="rGlow"
-            points="10,165 60,160 110,153 160,148 210,140 260,132 310,124 360,116 410,106 460,98 510,88 550,78"
-            fill="none"
-            stroke="rgba(140,80,255,0.35)"
-            strokeWidth="7"
-            strokeLinejoin="round"
-            strokeLinecap="round"
-            filter="url(#glow2)"
-            opacity="0.55"
-          />
-          <polyline
-            className="rLine"
-            points="10,165 60,160 110,153 160,148 210,140 260,132 310,124 360,116 410,106 460,98 510,88 550,78"
-            fill="none"
-            stroke="rgba(140,80,255,0.95)"
-            strokeWidth="3"
-            strokeLinejoin="round"
-            strokeLinecap="round"
-          />
-
-          {[
-            [10, 165],
-            [60, 160],
-            [110, 153],
-            [160, 148],
-            [210, 140],
-            [260, 132],
-            [310, 124],
-            [360, 116],
-            [410, 106],
-            [460, 98],
-            [510, 88],
-            [550, 78],
-          ].map(([x, y]) => (
-            <circle key={`${x}-${y}`} cx={x} cy={y} r="3.2" fill="rgba(140,80,255,0.95)" />
-          ))}
-        </svg>
-
-        <div style={{ marginTop: 10, fontSize: 12, opacity: 0.72, lineHeight: 1.5 }}>
-          PnL swings with size. <b>R stays comparable</b> — it reflects execution quality.
-        </div>
-      </div>
-
-      {/* Example */}
-      <div
-        style={{
-          borderRadius: 16,
-          border: "1px solid rgba(255,255,255,0.10)",
-          background: "rgba(255,255,255,0.02)",
-          padding: 14,
-          display: "grid",
-          gap: 10,
-        }}
-      >
-        <div style={{ fontWeight: 900 }}>Example</div>
-
-        <div style={{ fontSize: 13, opacity: 0.78, lineHeight: 1.6 }}>
-          Trade A: +$200 looks great.
-          <br />
-          If risk was $400 → <b>+0.5R</b>.
-        </div>
-
-        <div style={{ fontSize: 13, opacity: 0.78, lineHeight: 1.6 }}>
-          Trade B: -$50 looks small.
-          <br />
-          If risk was $25 → <b>-2R</b>.
-        </div>
-
-        <div
-          style={{
-            marginTop: 4,
-            padding: 10,
-            borderRadius: 14,
-            border: "1px solid rgba(140,80,255,0.22)",
-            background: "rgba(140,80,255,0.08)",
-            fontSize: 12,
-            opacity: 0.9,
-            lineHeight: 1.5,
-          }}
-        >
-          R makes results honest — and improvement measurable.
-        </div>
-      </div>
-    </div>
-  </Card>
-</div>
 
         {/* BEFORE / AFTER */}
         <div style={{ marginTop: 18 }}>
@@ -715,7 +1168,9 @@ export default function HomePage() {
         >
           <div>
             <div style={{ fontSize: 18, fontWeight: 950 }}>{t.bottomTitle}</div>
-            <div style={{ opacity: 0.75, marginTop: 6, fontSize: 13 }}>{t.bottomSub}</div>
+            <div style={{ opacity: 0.75, marginTop: 6, fontSize: 13 }}>
+              {t.bottomSub}
+            </div>
           </div>
 
           <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
@@ -822,6 +1277,11 @@ export default function HomePage() {
               grid-template-columns: 1fr !important;
             }
             .beforeAfterGrid {
+              grid-template-columns: 1fr !important;
+            }
+
+            /* ✅ Trader panel responsive */
+            .traderPanelGrid {
               grid-template-columns: 1fr !important;
             }
           }
