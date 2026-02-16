@@ -35,11 +35,7 @@ const copy: {
 } = {
   heroTitle: (
     <>
-      Trade with data,
-      <br />
-      not emotions.
-      <br />
-      Stay consistent.
+      Built for discretionary crypto traders who want to measure discipline, not luck.        
     </>
   ),
   heroSub: "Log entries, exits, risk, emotions, and rules — so your results stop lying to you.",
