@@ -1279,9 +1279,46 @@ export default function HomePage() {
           </div>
         </div>
 
-        {/* Footer */}
-        <div style={{ marginTop: 14, opacity: 0.6, fontSize: 12, display: "flex", justifyContent: "center" }}>
-          © {year} TradeLog
+        {/* Footer (trust layer) */}
+        <div
+          style={{
+            marginTop: 14,
+            padding: "14px 6px",
+            opacity: 0.75,
+            fontSize: 12,
+            display: "grid",
+            gap: 10,
+          }}
+        >
+          <div style={{ display: "flex", gap: 10, flexWrap: "wrap", justifyContent: "center" }}>
+            <Link href="/privacy" style={{ textDecoration: "none", color: "rgba(255,255,255,0.75)" }}>
+              Privacy
+            </Link>
+            <span style={{ opacity: 0.35 }}>•</span>
+            <Link href="/terms" style={{ textDecoration: "none", color: "rgba(255,255,255,0.75)" }}>
+              Terms
+            </Link>
+            <span style={{ opacity: 0.35 }}>•</span>
+            <Link href="/contact" style={{ textDecoration: "none", color: "rgba(255,255,255,0.75)" }}>
+              Contact
+            </Link>
+            <span style={{ opacity: 0.35 }}>•</span>
+            <Link href="/telegram" style={{ textDecoration: "none", color: "rgba(255,255,255,0.75)" }}>
+              Telegram
+            </Link>
+          </div>
+
+          <div style={{ display: "flex", justifyContent: "center", gap: 10, flexWrap: "wrap", opacity: 0.75 }}>
+            <span>🔐 No exchange API keys</span>
+            <span style={{ opacity: 0.35 }}>•</span>
+            <span>📦 Export anytime</span>
+            <span style={{ opacity: 0.35 }}>•</span>
+            <span>🗑️ Delete anytime</span>
+            <span style={{ opacity: 0.35 }}>•</span>
+            <span>Built in 🇺🇦</span>
+          </div>
+
+          <div style={{ display: "flex", justifyContent: "center", opacity: 0.65 }}>© {year} TradeLog</div>
         </div>
 
         <style jsx>{`
@@ -1299,12 +1336,31 @@ export default function HomePage() {
             div[style*="grid-template-columns: repeat(3, 1fr)"] {
               grid-template-columns: 1fr !important;
             }
-
             .faqGrid {
               grid-template-columns: 1fr !important;
             }
-
             .traderPanelGrid {
+              grid-template-columns: 1fr !important;
+            }
+            .pnlRGrid {
+              grid-template-columns: 1fr !important;
+            }
+            .beforeAfterGrid {
+              grid-template-columns: 1fr !important;
+            }
+            .proofGrid {
+              grid-template-columns: 1fr !important;
+            }
+            .proofStatsGrid {
+              grid-template-columns: 1fr !important;
+            }
+            .onboardingGrid {
+              grid-template-columns: 1fr !important;
+            }
+            .retentionGrid {
+              grid-template-columns: 1fr !important;
+            }
+            .trustGrid {
               grid-template-columns: 1fr !important;
             }
           }

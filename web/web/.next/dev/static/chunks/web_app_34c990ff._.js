@@ -2928,7 +2928,7 @@ function HomePage() {
                     position: "relative",
                     zIndex: 1
                 },
-                className: "jsx-52ac77d788e42249",
+                className: "jsx-b22d79802747261b",
                 children: [
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$web$2f$app$2f$components$2f$ui$2f$Layout$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["HeaderRow"], {
                         title: "TradeLog",
@@ -2939,7 +2939,7 @@ function HomePage() {
                                 gap: 8,
                                 flexWrap: "wrap"
                             },
-                            className: "jsx-52ac77d788e42249",
+                            className: "jsx-b22d79802747261b",
                             children: [
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$web$2f$node_modules$2f$next$2f$dist$2f$client$2f$app$2d$dir$2f$link$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
                                     href: "/login",
@@ -2996,7 +2996,7 @@ function HomePage() {
                             alignItems: "stretch",
                             marginTop: 10
                         },
-                        className: "jsx-52ac77d788e42249",
+                        className: "jsx-b22d79802747261b",
                         children: [
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                 style: {
@@ -3005,7 +3005,7 @@ function HomePage() {
                                     border: "1px solid rgba(255,255,255,0.10)",
                                     background: "radial-gradient(1200px 400px at 10% 10%, rgba(140,80,255,0.16), transparent 50%), rgba(255,255,255,0.02)"
                                 },
-                                className: "jsx-52ac77d788e42249",
+                                className: "jsx-b22d79802747261b",
                                 children: [
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                         style: {
@@ -3015,7 +3015,7 @@ function HomePage() {
                                             marginBottom: 12,
                                             alignItems: "center"
                                         },
-                                        className: "jsx-52ac77d788e42249",
+                                        className: "jsx-b22d79802747261b",
                                         children: [
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(Badge, {
                                                 children: "Crypto only"
@@ -3065,7 +3065,7 @@ function HomePage() {
                                             letterSpacing: -0.8,
                                             lineHeight: 1.05
                                         },
-                                        className: "jsx-52ac77d788e42249",
+                                        className: "jsx-b22d79802747261b",
                                         children: t.heroTitle
                                     }, void 0, false, {
                                         fileName: "[project]/web/app/page.tsx",
@@ -3079,7 +3079,7 @@ function HomePage() {
                                             fontSize: 14,
                                             lineHeight: 1.6
                                         },
-                                        className: "jsx-52ac77d788e42249",
+                                        className: "jsx-b22d79802747261b",
                                         children: t.heroSub
                                     }, void 0, false, {
                                         fileName: "[project]/web/app/page.tsx",
@@ -3093,7 +3093,7 @@ function HomePage() {
                                             flexWrap: "wrap",
                                             marginTop: 16
                                         },
-                                        className: "jsx-52ac77d788e42249",
+                                        className: "jsx-b22d79802747261b",
                                         children: [
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$web$2f$node_modules$2f$next$2f$dist$2f$client$2f$app$2d$dir$2f$link$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
                                                 href: "/register",
@@ -3144,7 +3144,7 @@ function HomePage() {
                                             fontSize: 12,
                                             lineHeight: 1.5
                                         },
-                                        className: "jsx-52ac77d788e42249",
+                                        className: "jsx-b22d79802747261b",
                                         children: "No exchange connection • No spreadsheets • Your data stays yours"
                                     }, void 0, false, {
                                         fileName: "[project]/web/app/page.tsx",
@@ -3163,7 +3163,7 @@ function HomePage() {
                                 columnNumber: 11
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                className: "jsx-52ac77d788e42249" + " " + "mockDashboardWrap",
+                                className: "jsx-b22d79802747261b" + " " + "mockDashboardWrap",
                                 children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$web$2f$app$2f$components$2f$marketing$2f$DashboardWindow$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["DashboardWindow"], {
                                     children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$web$2f$app$2f$components$2f$marketing$2f$MockDashboard$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["MockDashboard"], {}, void 0, false, {
                                         fileName: "[project]/web/app/page.tsx",
@@ -3190,7 +3190,7 @@ function HomePage() {
                         style: {
                             marginTop: 12
                         },
-                        className: "jsx-52ac77d788e42249",
+                        className: "jsx-b22d79802747261b",
                         children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(TraderCalendarPanel, {}, void 0, false, {
                             fileName: "[project]/web/app/page.tsx",
                             lineNumber: 885,
@@ -3205,7 +3205,7 @@ function HomePage() {
                         style: {
                             marginTop: 10
                         },
-                        className: "jsx-52ac77d788e42249",
+                        className: "jsx-b22d79802747261b",
                         children: [
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                 style: {
@@ -3213,7 +3213,7 @@ function HomePage() {
                                     fontWeight: 950,
                                     marginBottom: 10
                                 },
-                                className: "jsx-52ac77d788e42249",
+                                className: "jsx-b22d79802747261b",
                                 children: "How it works"
                             }, void 0, false, {
                                 fileName: "[project]/web/app/page.tsx",
@@ -3227,7 +3227,7 @@ function HomePage() {
                                     gap: 12,
                                     alignItems: "stretch"
                                 },
-                                className: "jsx-52ac77d788e42249",
+                                className: "jsx-b22d79802747261b",
                                 children: [
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(Step, {
                                         n: "1",
@@ -3272,7 +3272,7 @@ function HomePage() {
                         style: {
                             marginTop: 44
                         },
-                        className: "jsx-52ac77d788e42249",
+                        className: "jsx-b22d79802747261b",
                         children: [
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                 style: {
@@ -3281,7 +3281,7 @@ function HomePage() {
                                     marginBottom: 14,
                                     paddingLeft: 4
                                 },
-                                className: "jsx-52ac77d788e42249",
+                                className: "jsx-b22d79802747261b",
                                 children: t.featuresTitle
                             }, void 0, false, {
                                 fileName: "[project]/web/app/page.tsx",
@@ -3295,7 +3295,7 @@ function HomePage() {
                                     gap: 12,
                                     alignItems: "stretch"
                                 },
-                                className: "jsx-52ac77d788e42249",
+                                className: "jsx-b22d79802747261b",
                                 children: t.features.map((f)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(Feature, {
                                         title: f.title,
                                         subtitle: f.subtitle,
@@ -3320,7 +3320,7 @@ function HomePage() {
                         style: {
                             marginTop: 18
                         },
-                        className: "jsx-52ac77d788e42249",
+                        className: "jsx-b22d79802747261b",
                         children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$web$2f$app$2f$components$2f$ui$2f$Card$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Card"], {
                             title: "FAQ",
                             subtitle: "Quick answers before you start.",
@@ -3331,7 +3331,7 @@ function HomePage() {
                                     gap: 12,
                                     alignItems: "stretch"
                                 },
-                                className: "jsx-52ac77d788e42249" + " " + "faqGrid",
+                                className: "jsx-b22d79802747261b" + " " + "faqGrid",
                                 children: [
                                     [
                                         {
@@ -3359,13 +3359,13 @@ function HomePage() {
                                                 display: "grid",
                                                 gap: 8
                                             },
-                                            className: "jsx-52ac77d788e42249",
+                                            className: "jsx-b22d79802747261b",
                                             children: [
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                                     style: {
                                                         fontWeight: 900
                                                     },
-                                                    className: "jsx-52ac77d788e42249",
+                                                    className: "jsx-b22d79802747261b",
                                                     children: q
                                                 }, void 0, false, {
                                                     fileName: "[project]/web/app/page.tsx",
@@ -3378,7 +3378,7 @@ function HomePage() {
                                                         opacity: 0.75,
                                                         lineHeight: 1.6
                                                     },
-                                                    className: "jsx-52ac77d788e42249",
+                                                    className: "jsx-b22d79802747261b",
                                                     children: a
                                                 }, void 0, false, {
                                                     fileName: "[project]/web/app/page.tsx",
@@ -3401,13 +3401,13 @@ function HomePage() {
                                             gap: 8,
                                             gridColumn: "1 / -1"
                                         },
-                                        className: "jsx-52ac77d788e42249",
+                                        className: "jsx-b22d79802747261b",
                                         children: [
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                                 style: {
                                                     fontWeight: 900
                                                 },
-                                                className: "jsx-52ac77d788e42249",
+                                                className: "jsx-b22d79802747261b",
                                                 children: "Is my data private?"
                                             }, void 0, false, {
                                                 fileName: "[project]/web/app/page.tsx",
@@ -3420,7 +3420,7 @@ function HomePage() {
                                                     opacity: 0.75,
                                                     lineHeight: 1.6
                                                 },
-                                                className: "jsx-52ac77d788e42249",
+                                                className: "jsx-b22d79802747261b",
                                                 children: "Yes. TradeLog is built around local-first principles. You keep control of your data and can export it whenever you want."
                                             }, void 0, false, {
                                                 fileName: "[project]/web/app/page.tsx",
@@ -3453,7 +3453,7 @@ function HomePage() {
                         style: {
                             marginTop: 18
                         },
-                        className: "jsx-52ac77d788e42249",
+                        className: "jsx-b22d79802747261b",
                         children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$web$2f$app$2f$components$2f$ui$2f$Card$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Card"], {
                             title: "Why R, not PnL?",
                             subtitle: "Because money alone doesn’t tell the truth.",
@@ -3463,14 +3463,14 @@ function HomePage() {
                                     gap: 12,
                                     lineHeight: 1.6
                                 },
-                                className: "jsx-52ac77d788e42249",
+                                className: "jsx-b22d79802747261b",
                                 children: [
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                         style: {
                                             fontSize: 14,
                                             opacity: 0.8
                                         },
-                                        className: "jsx-52ac77d788e42249",
+                                        className: "jsx-b22d79802747261b",
                                         children: "PnL changes with position size and luck. A +$200 trade can still be a bad decision if you risked $400."
                                     }, void 0, false, {
                                         fileName: "[project]/web/app/page.tsx",
@@ -3483,7 +3483,7 @@ function HomePage() {
                                             fontWeight: 600,
                                             opacity: 0.9
                                         },
-                                        className: "jsx-52ac77d788e42249",
+                                        className: "jsx-b22d79802747261b",
                                         children: "R (risk units) measures discipline — how well you execute your plan, independent of account size."
                                     }, void 0, false, {
                                         fileName: "[project]/web/app/page.tsx",
@@ -3500,7 +3500,7 @@ function HomePage() {
                                             fontSize: 13,
                                             opacity: 0.85
                                         },
-                                        className: "jsx-52ac77d788e42249",
+                                        className: "jsx-b22d79802747261b",
                                         children: "📌 A trader who respects risk stays consistent. R makes that visible."
                                     }, void 0, false, {
                                         fileName: "[project]/web/app/page.tsx",
@@ -3527,7 +3527,7 @@ function HomePage() {
                         style: {
                             marginTop: 18
                         },
-                        className: "jsx-52ac77d788e42249",
+                        className: "jsx-b22d79802747261b",
                         children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$web$2f$app$2f$components$2f$ui$2f$Card$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Card"], {
                             title: "PnL vs R",
                             subtitle: "PnL is noisy. R shows execution quality.",
@@ -3538,7 +3538,7 @@ function HomePage() {
                                     gap: 14,
                                     alignItems: "stretch"
                                 },
-                                className: "jsx-52ac77d788e42249" + " " + "pnlRGrid",
+                                className: "jsx-b22d79802747261b" + " " + "pnlRGrid",
                                 children: [
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                         style: {
@@ -3551,7 +3551,7 @@ function HomePage() {
                                             paddingBottom: 18,
                                             overflow: "hidden"
                                         },
-                                        className: "jsx-52ac77d788e42249",
+                                        className: "jsx-b22d79802747261b",
                                         children: [
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                                 style: {
@@ -3562,13 +3562,13 @@ function HomePage() {
                                                     fontSize: 12,
                                                     opacity: 0.9
                                                 },
-                                                className: "jsx-52ac77d788e42249",
+                                                className: "jsx-b22d79802747261b",
                                                 children: [
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                                         style: {
                                                             opacity: 0.75
                                                         },
-                                                        className: "jsx-52ac77d788e42249",
+                                                        className: "jsx-b22d79802747261b",
                                                         children: "Better ↑"
                                                     }, void 0, false, {
                                                         fileName: "[project]/web/app/page.tsx",
@@ -3581,7 +3581,7 @@ function HomePage() {
                                                             gap: 12,
                                                             alignItems: "center"
                                                         },
-                                                        className: "jsx-52ac77d788e42249",
+                                                        className: "jsx-b22d79802747261b",
                                                         children: [
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                                                 style: {
@@ -3590,7 +3590,7 @@ function HomePage() {
                                                                     gap: 8,
                                                                     opacity: 0.75
                                                                 },
-                                                                className: "jsx-52ac77d788e42249",
+                                                                className: "jsx-b22d79802747261b",
                                                                 children: [
                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
                                                                         style: {
@@ -3599,7 +3599,7 @@ function HomePage() {
                                                                             background: "rgba(255,255,255,0.28)",
                                                                             display: "inline-block"
                                                                         },
-                                                                        className: "jsx-52ac77d788e42249"
+                                                                        className: "jsx-b22d79802747261b"
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/web/app/page.tsx",
                                                                         lineNumber: 1051,
@@ -3618,7 +3618,7 @@ function HomePage() {
                                                                     alignItems: "center",
                                                                     gap: 8
                                                                 },
-                                                                className: "jsx-52ac77d788e42249",
+                                                                className: "jsx-b22d79802747261b",
                                                                 children: [
                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
                                                                         style: {
@@ -3627,7 +3627,7 @@ function HomePage() {
                                                                             background: "rgba(140,80,255,0.95)",
                                                                             display: "inline-block"
                                                                         },
-                                                                        className: "jsx-52ac77d788e42249"
+                                                                        className: "jsx-b22d79802747261b"
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/web/app/page.tsx",
                                                                         lineNumber: 1063,
@@ -3650,7 +3650,7 @@ function HomePage() {
                                                         style: {
                                                             opacity: 0.65
                                                         },
-                                                        className: "jsx-52ac77d788e42249",
+                                                        className: "jsx-b22d79802747261b",
                                                         children: "Worse ↓"
                                                     }, void 0, false, {
                                                         fileName: "[project]/web/app/page.tsx",
@@ -3669,10 +3669,10 @@ function HomePage() {
                                                 viewBox: "0 0 560 210",
                                                 role: "img",
                                                 "aria-label": "PnL vs R chart",
-                                                className: "jsx-52ac77d788e42249",
+                                                className: "jsx-b22d79802747261b",
                                                 children: [
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("defs", {
-                                                        className: "jsx-52ac77d788e42249",
+                                                        className: "jsx-b22d79802747261b",
                                                         children: [
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("linearGradient", {
                                                                 id: "fade2",
@@ -3680,12 +3680,12 @@ function HomePage() {
                                                                 y1: "0",
                                                                 x2: "0",
                                                                 y2: "1",
-                                                                className: "jsx-52ac77d788e42249",
+                                                                className: "jsx-b22d79802747261b",
                                                                 children: [
                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("stop", {
                                                                         offset: "0%",
                                                                         stopColor: "rgba(255,255,255,0.10)",
-                                                                        className: "jsx-52ac77d788e42249"
+                                                                        className: "jsx-b22d79802747261b"
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/web/app/page.tsx",
                                                                         lineNumber: 1087,
@@ -3694,7 +3694,7 @@ function HomePage() {
                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("stop", {
                                                                         offset: "100%",
                                                                         stopColor: "rgba(255,255,255,0.02)",
-                                                                        className: "jsx-52ac77d788e42249"
+                                                                        className: "jsx-b22d79802747261b"
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/web/app/page.tsx",
                                                                         lineNumber: 1088,
@@ -3708,23 +3708,23 @@ function HomePage() {
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("filter", {
                                                                 id: "glow2",
-                                                                className: "jsx-52ac77d788e42249",
+                                                                className: "jsx-b22d79802747261b",
                                                                 children: [
                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("feGaussianBlur", {
                                                                         stdDeviation: "4",
                                                                         result: "blur",
-                                                                        className: "jsx-52ac77d788e42249"
+                                                                        className: "jsx-b22d79802747261b"
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/web/app/page.tsx",
                                                                         lineNumber: 1092,
                                                                         columnNumber: 15
                                                                     }, this),
                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("feMerge", {
-                                                                        className: "jsx-52ac77d788e42249",
+                                                                        className: "jsx-b22d79802747261b",
                                                                         children: [
                                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("feMergeNode", {
                                                                                 in: "blur",
-                                                                                className: "jsx-52ac77d788e42249"
+                                                                                className: "jsx-b22d79802747261b"
                                                                             }, void 0, false, {
                                                                                 fileName: "[project]/web/app/page.tsx",
                                                                                 lineNumber: 1094,
@@ -3732,7 +3732,7 @@ function HomePage() {
                                                                             }, this),
                                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("feMergeNode", {
                                                                                 in: "SourceGraphic",
-                                                                                className: "jsx-52ac77d788e42249"
+                                                                                className: "jsx-b22d79802747261b"
                                                                             }, void 0, false, {
                                                                                 fileName: "[project]/web/app/page.tsx",
                                                                                 lineNumber: 1095,
@@ -3762,7 +3762,7 @@ function HomePage() {
                                                         width: "560",
                                                         height: "210",
                                                         fill: "transparent",
-                                                        className: "jsx-52ac77d788e42249"
+                                                        className: "jsx-b22d79802747261b"
                                                     }, void 0, false, {
                                                         fileName: "[project]/web/app/page.tsx",
                                                         lineNumber: 1100,
@@ -3779,7 +3779,7 @@ function HomePage() {
                                                             y2: y,
                                                             stroke: i === 4 ? "rgba(255,255,255,0.10)" : "rgba(255,255,255,0.06)",
                                                             strokeWidth: "1",
-                                                            className: "jsx-52ac77d788e42249"
+                                                            className: "jsx-b22d79802747261b"
                                                         }, i, false, {
                                                             fileName: "[project]/web/app/page.tsx",
                                                             lineNumber: 1105,
@@ -3793,7 +3793,7 @@ function HomePage() {
                                                         height: "35",
                                                         fill: "url(#fade2)",
                                                         opacity: "0.55",
-                                                        className: "jsx-52ac77d788e42249"
+                                                        className: "jsx-b22d79802747261b"
                                                     }, void 0, false, {
                                                         fileName: "[project]/web/app/page.tsx",
                                                         lineNumber: 1117,
@@ -3806,7 +3806,7 @@ function HomePage() {
                                                         strokeWidth: "1.7",
                                                         strokeLinejoin: "round",
                                                         strokeLinecap: "round",
-                                                        className: "jsx-52ac77d788e42249" + " " + "pnlLine"
+                                                        className: "jsx-b22d79802747261b" + " " + "pnlLine"
                                                     }, void 0, false, {
                                                         fileName: "[project]/web/app/page.tsx",
                                                         lineNumber: 1119,
@@ -3821,7 +3821,7 @@ function HomePage() {
                                                         strokeLinecap: "round",
                                                         filter: "url(#glow2)",
                                                         opacity: "0.55",
-                                                        className: "jsx-52ac77d788e42249" + " " + "rGlow"
+                                                        className: "jsx-b22d79802747261b" + " " + "rGlow"
                                                     }, void 0, false, {
                                                         fileName: "[project]/web/app/page.tsx",
                                                         lineNumber: 1129,
@@ -3834,7 +3834,7 @@ function HomePage() {
                                                         strokeWidth: "3",
                                                         strokeLinejoin: "round",
                                                         strokeLinecap: "round",
-                                                        className: "jsx-52ac77d788e42249" + " " + "rLine"
+                                                        className: "jsx-b22d79802747261b" + " " + "rLine"
                                                     }, void 0, false, {
                                                         fileName: "[project]/web/app/page.tsx",
                                                         lineNumber: 1141,
@@ -3894,7 +3894,7 @@ function HomePage() {
                                                             cy: y,
                                                             r: "3.2",
                                                             fill: "rgba(140,80,255,0.95)",
-                                                            className: "jsx-52ac77d788e42249"
+                                                            className: "jsx-b22d79802747261b"
                                                         }, `${x}-${y}`, false, {
                                                             fileName: "[project]/web/app/page.tsx",
                                                             lineNumber: 1165,
@@ -3912,11 +3912,11 @@ function HomePage() {
                                                     fontSize: 12,
                                                     opacity: 0.72
                                                 },
-                                                className: "jsx-52ac77d788e42249",
+                                                className: "jsx-b22d79802747261b",
                                                 children: [
                                                     "PnL swings with size. ",
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("b", {
-                                                        className: "jsx-52ac77d788e42249",
+                                                        className: "jsx-b22d79802747261b",
                                                         children: "R stays comparable"
                                                     }, void 0, false, {
                                                         fileName: "[project]/web/app/page.tsx",
@@ -3945,13 +3945,13 @@ function HomePage() {
                                             display: "grid",
                                             gap: 10
                                         },
-                                        className: "jsx-52ac77d788e42249",
+                                        className: "jsx-b22d79802747261b",
                                         children: [
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                                 style: {
                                                     fontWeight: 900
                                                 },
-                                                className: "jsx-52ac77d788e42249",
+                                                className: "jsx-b22d79802747261b",
                                                 children: "Example"
                                             }, void 0, false, {
                                                 fileName: "[project]/web/app/page.tsx",
@@ -3963,11 +3963,11 @@ function HomePage() {
                                                     fontSize: 13,
                                                     opacity: 0.78
                                                 },
-                                                className: "jsx-52ac77d788e42249",
+                                                className: "jsx-b22d79802747261b",
                                                 children: [
                                                     "Trade A: +$200 looks great.",
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("br", {
-                                                        className: "jsx-52ac77d788e42249"
+                                                        className: "jsx-b22d79802747261b"
                                                     }, void 0, false, {
                                                         fileName: "[project]/web/app/page.tsx",
                                                         lineNumber: 1195,
@@ -3975,7 +3975,7 @@ function HomePage() {
                                                     }, this),
                                                     "If risk was $400 → ",
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("b", {
-                                                        className: "jsx-52ac77d788e42249",
+                                                        className: "jsx-b22d79802747261b",
                                                         children: "+0.5R"
                                                     }, void 0, false, {
                                                         fileName: "[project]/web/app/page.tsx",
@@ -3993,11 +3993,11 @@ function HomePage() {
                                                     fontSize: 13,
                                                     opacity: 0.78
                                                 },
-                                                className: "jsx-52ac77d788e42249",
+                                                className: "jsx-b22d79802747261b",
                                                 children: [
                                                     "Trade B: -$50 looks small.",
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("br", {
-                                                        className: "jsx-52ac77d788e42249"
+                                                        className: "jsx-b22d79802747261b"
                                                     }, void 0, false, {
                                                         fileName: "[project]/web/app/page.tsx",
                                                         lineNumber: 1201,
@@ -4005,7 +4005,7 @@ function HomePage() {
                                                     }, this),
                                                     "If risk was $25 → ",
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("b", {
-                                                        className: "jsx-52ac77d788e42249",
+                                                        className: "jsx-b22d79802747261b",
                                                         children: "-2R"
                                                     }, void 0, false, {
                                                         fileName: "[project]/web/app/page.tsx",
@@ -4028,7 +4028,7 @@ function HomePage() {
                                                     fontSize: 12,
                                                     opacity: 0.9
                                                 },
-                                                className: "jsx-52ac77d788e42249",
+                                                className: "jsx-b22d79802747261b",
                                                 children: "R makes results honest — and improvement measurable."
                                             }, void 0, false, {
                                                 fileName: "[project]/web/app/page.tsx",
@@ -4062,7 +4062,7 @@ function HomePage() {
                         style: {
                             marginTop: 18
                         },
-                        className: "jsx-52ac77d788e42249",
+                        className: "jsx-b22d79802747261b",
                         children: [
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$web$2f$app$2f$components$2f$ui$2f$Card$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Card"], {
                                 title: "Before vs After TradeLog",
@@ -4075,7 +4075,7 @@ function HomePage() {
                                             gap: 14,
                                             alignItems: "stretch"
                                         },
-                                        className: "jsx-52ac77d788e42249" + " " + "beforeAfterGrid",
+                                        className: "jsx-b22d79802747261b" + " " + "beforeAfterGrid",
                                         children: [
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                                 style: {
@@ -4086,14 +4086,14 @@ function HomePage() {
                                                     display: "grid",
                                                     gap: 10
                                                 },
-                                                className: "jsx-52ac77d788e42249",
+                                                className: "jsx-b22d79802747261b",
                                                 children: [
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                                         style: {
                                                             fontWeight: 900,
                                                             fontSize: 16
                                                         },
-                                                        className: "jsx-52ac77d788e42249",
+                                                        className: "jsx-b22d79802747261b",
                                                         children: "Before"
                                                     }, void 0, false, {
                                                         fileName: "[project]/web/app/page.tsx",
@@ -4109,10 +4109,10 @@ function HomePage() {
                                                             fontSize: 13,
                                                             opacity: 0.85
                                                         },
-                                                        className: "jsx-52ac77d788e42249",
+                                                        className: "jsx-b22d79802747261b",
                                                         children: [
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("li", {
-                                                                className: "jsx-52ac77d788e42249",
+                                                                className: "jsx-b22d79802747261b",
                                                                 children: "Trading without a written plan"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/web/app/page.tsx",
@@ -4120,7 +4120,7 @@ function HomePage() {
                                                                 columnNumber: 11
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("li", {
-                                                                className: "jsx-52ac77d788e42249",
+                                                                className: "jsx-b22d79802747261b",
                                                                 children: "Revenge trades after losses"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/web/app/page.tsx",
@@ -4128,7 +4128,7 @@ function HomePage() {
                                                                 columnNumber: 11
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("li", {
-                                                                className: "jsx-52ac77d788e42249",
+                                                                className: "jsx-b22d79802747261b",
                                                                 children: "Moving stop-loss emotionally"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/web/app/page.tsx",
@@ -4136,7 +4136,7 @@ function HomePage() {
                                                                 columnNumber: 11
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("li", {
-                                                                className: "jsx-52ac77d788e42249",
+                                                                className: "jsx-b22d79802747261b",
                                                                 children: "Judging performance by random PnL"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/web/app/page.tsx",
@@ -4144,7 +4144,7 @@ function HomePage() {
                                                                 columnNumber: 11
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("li", {
-                                                                className: "jsx-52ac77d788e42249",
+                                                                className: "jsx-b22d79802747261b",
                                                                 children: "Repeating the same mistakes"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/web/app/page.tsx",
@@ -4172,14 +4172,14 @@ function HomePage() {
                                                     display: "grid",
                                                     gap: 10
                                                 },
-                                                className: "jsx-52ac77d788e42249",
+                                                className: "jsx-b22d79802747261b",
                                                 children: [
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                                         style: {
                                                             fontWeight: 900,
                                                             fontSize: 16
                                                         },
-                                                        className: "jsx-52ac77d788e42249",
+                                                        className: "jsx-b22d79802747261b",
                                                         children: "After"
                                                     }, void 0, false, {
                                                         fileName: "[project]/web/app/page.tsx",
@@ -4195,10 +4195,10 @@ function HomePage() {
                                                             fontSize: 13,
                                                             opacity: 0.9
                                                         },
-                                                        className: "jsx-52ac77d788e42249",
+                                                        className: "jsx-b22d79802747261b",
                                                         children: [
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("li", {
-                                                                className: "jsx-52ac77d788e42249",
+                                                                className: "jsx-b22d79802747261b",
                                                                 children: "Clear rules before every trade"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/web/app/page.tsx",
@@ -4206,7 +4206,7 @@ function HomePage() {
                                                                 columnNumber: 15
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("li", {
-                                                                className: "jsx-52ac77d788e42249",
+                                                                className: "jsx-b22d79802747261b",
                                                                 children: "Losses tracked and reviewed in R"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/web/app/page.tsx",
@@ -4214,7 +4214,7 @@ function HomePage() {
                                                                 columnNumber: 15
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("li", {
-                                                                className: "jsx-52ac77d788e42249",
+                                                                className: "jsx-b22d79802747261b",
                                                                 children: "Stops respected, risk controlled"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/web/app/page.tsx",
@@ -4222,7 +4222,7 @@ function HomePage() {
                                                                 columnNumber: 15
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("li", {
-                                                                className: "jsx-52ac77d788e42249",
+                                                                className: "jsx-b22d79802747261b",
                                                                 children: "Consistency measured, not luck"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/web/app/page.tsx",
@@ -4230,7 +4230,7 @@ function HomePage() {
                                                                 columnNumber: 15
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("li", {
-                                                                className: "jsx-52ac77d788e42249",
+                                                                className: "jsx-b22d79802747261b",
                                                                 children: "Patterns identified and improved"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/web/app/page.tsx",
@@ -4282,17 +4282,17 @@ function HomePage() {
                             gap: 12,
                             flexWrap: "wrap"
                         },
-                        className: "jsx-52ac77d788e42249",
+                        className: "jsx-b22d79802747261b",
                         children: [
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                className: "jsx-52ac77d788e42249",
+                                className: "jsx-b22d79802747261b",
                                 children: [
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                         style: {
                                             fontSize: 18,
                                             fontWeight: 950
                                         },
-                                        className: "jsx-52ac77d788e42249",
+                                        className: "jsx-b22d79802747261b",
                                         children: t.bottomTitle
                                     }, void 0, false, {
                                         fileName: "[project]/web/app/page.tsx",
@@ -4305,7 +4305,7 @@ function HomePage() {
                                             marginTop: 6,
                                             fontSize: 13
                                         },
-                                        className: "jsx-52ac77d788e42249",
+                                        className: "jsx-b22d79802747261b",
                                         children: t.bottomSub
                                     }, void 0, false, {
                                         fileName: "[project]/web/app/page.tsx",
@@ -4324,7 +4324,7 @@ function HomePage() {
                                     gap: 10,
                                     flexWrap: "wrap"
                                 },
-                                className: "jsx-52ac77d788e42249",
+                                className: "jsx-b22d79802747261b",
                                 children: [
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$web$2f$node_modules$2f$next$2f$dist$2f$client$2f$app$2d$dir$2f$link$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
                                         href: "/register",
@@ -4377,16 +4377,208 @@ function HomePage() {
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                         style: {
                             marginTop: 14,
-                            opacity: 0.6,
+                            padding: "14px 6px",
+                            opacity: 0.75,
                             fontSize: 12,
-                            display: "flex",
-                            justifyContent: "center"
+                            display: "grid",
+                            gap: 10
                         },
-                        className: "jsx-52ac77d788e42249",
+                        className: "jsx-b22d79802747261b",
                         children: [
-                            "© ",
-                            year,
-                            " TradeLog"
+                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                style: {
+                                    display: "flex",
+                                    gap: 10,
+                                    flexWrap: "wrap",
+                                    justifyContent: "center"
+                                },
+                                className: "jsx-b22d79802747261b",
+                                children: [
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$web$2f$node_modules$2f$next$2f$dist$2f$client$2f$app$2d$dir$2f$link$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
+                                        href: "/privacy",
+                                        style: {
+                                            textDecoration: "none",
+                                            color: "rgba(255,255,255,0.75)"
+                                        },
+                                        children: "Privacy"
+                                    }, void 0, false, {
+                                        fileName: "[project]/web/app/page.tsx",
+                                        lineNumber: 1294,
+                                        columnNumber: 13
+                                    }, this),
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                        style: {
+                                            opacity: 0.35
+                                        },
+                                        className: "jsx-b22d79802747261b",
+                                        children: "•"
+                                    }, void 0, false, {
+                                        fileName: "[project]/web/app/page.tsx",
+                                        lineNumber: 1297,
+                                        columnNumber: 13
+                                    }, this),
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$web$2f$node_modules$2f$next$2f$dist$2f$client$2f$app$2d$dir$2f$link$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
+                                        href: "/terms",
+                                        style: {
+                                            textDecoration: "none",
+                                            color: "rgba(255,255,255,0.75)"
+                                        },
+                                        children: "Terms"
+                                    }, void 0, false, {
+                                        fileName: "[project]/web/app/page.tsx",
+                                        lineNumber: 1298,
+                                        columnNumber: 13
+                                    }, this),
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                        style: {
+                                            opacity: 0.35
+                                        },
+                                        className: "jsx-b22d79802747261b",
+                                        children: "•"
+                                    }, void 0, false, {
+                                        fileName: "[project]/web/app/page.tsx",
+                                        lineNumber: 1301,
+                                        columnNumber: 13
+                                    }, this),
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$web$2f$node_modules$2f$next$2f$dist$2f$client$2f$app$2d$dir$2f$link$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
+                                        href: "/contact",
+                                        style: {
+                                            textDecoration: "none",
+                                            color: "rgba(255,255,255,0.75)"
+                                        },
+                                        children: "Contact"
+                                    }, void 0, false, {
+                                        fileName: "[project]/web/app/page.tsx",
+                                        lineNumber: 1302,
+                                        columnNumber: 13
+                                    }, this),
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                        style: {
+                                            opacity: 0.35
+                                        },
+                                        className: "jsx-b22d79802747261b",
+                                        children: "•"
+                                    }, void 0, false, {
+                                        fileName: "[project]/web/app/page.tsx",
+                                        lineNumber: 1305,
+                                        columnNumber: 13
+                                    }, this),
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$web$2f$node_modules$2f$next$2f$dist$2f$client$2f$app$2d$dir$2f$link$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
+                                        href: "/telegram",
+                                        style: {
+                                            textDecoration: "none",
+                                            color: "rgba(255,255,255,0.75)"
+                                        },
+                                        children: "Telegram"
+                                    }, void 0, false, {
+                                        fileName: "[project]/web/app/page.tsx",
+                                        lineNumber: 1306,
+                                        columnNumber: 13
+                                    }, this)
+                                ]
+                            }, void 0, true, {
+                                fileName: "[project]/web/app/page.tsx",
+                                lineNumber: 1293,
+                                columnNumber: 11
+                            }, this),
+                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                style: {
+                                    display: "flex",
+                                    justifyContent: "center",
+                                    gap: 10,
+                                    flexWrap: "wrap",
+                                    opacity: 0.75
+                                },
+                                className: "jsx-b22d79802747261b",
+                                children: [
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                        className: "jsx-b22d79802747261b",
+                                        children: "🔐 No exchange API keys"
+                                    }, void 0, false, {
+                                        fileName: "[project]/web/app/page.tsx",
+                                        lineNumber: 1312,
+                                        columnNumber: 13
+                                    }, this),
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                        style: {
+                                            opacity: 0.35
+                                        },
+                                        className: "jsx-b22d79802747261b",
+                                        children: "•"
+                                    }, void 0, false, {
+                                        fileName: "[project]/web/app/page.tsx",
+                                        lineNumber: 1313,
+                                        columnNumber: 13
+                                    }, this),
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                        className: "jsx-b22d79802747261b",
+                                        children: "📦 Export anytime"
+                                    }, void 0, false, {
+                                        fileName: "[project]/web/app/page.tsx",
+                                        lineNumber: 1314,
+                                        columnNumber: 13
+                                    }, this),
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                        style: {
+                                            opacity: 0.35
+                                        },
+                                        className: "jsx-b22d79802747261b",
+                                        children: "•"
+                                    }, void 0, false, {
+                                        fileName: "[project]/web/app/page.tsx",
+                                        lineNumber: 1315,
+                                        columnNumber: 13
+                                    }, this),
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                        className: "jsx-b22d79802747261b",
+                                        children: "🗑️ Delete anytime"
+                                    }, void 0, false, {
+                                        fileName: "[project]/web/app/page.tsx",
+                                        lineNumber: 1316,
+                                        columnNumber: 13
+                                    }, this),
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                        style: {
+                                            opacity: 0.35
+                                        },
+                                        className: "jsx-b22d79802747261b",
+                                        children: "•"
+                                    }, void 0, false, {
+                                        fileName: "[project]/web/app/page.tsx",
+                                        lineNumber: 1317,
+                                        columnNumber: 13
+                                    }, this),
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                        className: "jsx-b22d79802747261b",
+                                        children: "Built in 🇺🇦"
+                                    }, void 0, false, {
+                                        fileName: "[project]/web/app/page.tsx",
+                                        lineNumber: 1318,
+                                        columnNumber: 13
+                                    }, this)
+                                ]
+                            }, void 0, true, {
+                                fileName: "[project]/web/app/page.tsx",
+                                lineNumber: 1311,
+                                columnNumber: 11
+                            }, this),
+                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                style: {
+                                    display: "flex",
+                                    justifyContent: "center",
+                                    opacity: 0.65
+                                },
+                                className: "jsx-b22d79802747261b",
+                                children: [
+                                    "© ",
+                                    year,
+                                    " TradeLog"
+                                ]
+                            }, void 0, true, {
+                                fileName: "[project]/web/app/page.tsx",
+                                lineNumber: 1321,
+                                columnNumber: 11
+                            }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/web/app/page.tsx",
@@ -4394,8 +4586,8 @@ function HomePage() {
                         columnNumber: 9
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$web$2f$node_modules$2f$styled$2d$jsx$2f$style$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
-                        id: "52ac77d788e42249",
-                        children: '.mockDashboardWrap.jsx-52ac77d788e42249 [class*=demo],.mockDashboardWrap.jsx-52ac77d788e42249 [data-demo],.mockDashboardWrap.jsx-52ac77d788e42249 .demo,.mockDashboardWrap.jsx-52ac77d788e42249 .demoData{display:none!important}@media (width<=980px){div[style*="grid-template-columns: 1.2fr 1fr"].jsx-52ac77d788e42249,div[style*="grid-template-columns: repeat(3, 1fr)"].jsx-52ac77d788e42249,.faqGrid.jsx-52ac77d788e42249,.traderPanelGrid.jsx-52ac77d788e42249{grid-template-columns:1fr!important}}'
+                        id: "b22d79802747261b",
+                        children: '.mockDashboardWrap.jsx-b22d79802747261b [class*=demo],.mockDashboardWrap.jsx-b22d79802747261b [data-demo],.mockDashboardWrap.jsx-b22d79802747261b .demo,.mockDashboardWrap.jsx-b22d79802747261b .demoData{display:none!important}@media (width<=980px){div[style*="grid-template-columns: 1.2fr 1fr"].jsx-b22d79802747261b,div[style*="grid-template-columns: repeat(3, 1fr)"].jsx-b22d79802747261b,.faqGrid.jsx-b22d79802747261b,.traderPanelGrid.jsx-b22d79802747261b,.pnlRGrid.jsx-b22d79802747261b,.beforeAfterGrid.jsx-b22d79802747261b,.proofGrid.jsx-b22d79802747261b,.proofStatsGrid.jsx-b22d79802747261b,.onboardingGrid.jsx-b22d79802747261b,.retentionGrid.jsx-b22d79802747261b,.trustGrid.jsx-b22d79802747261b{grid-template-columns:1fr!important}}'
                     }, void 0, false, void 0, this)
                 ]
             }, void 0, true, {
