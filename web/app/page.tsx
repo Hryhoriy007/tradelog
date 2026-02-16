@@ -738,7 +738,11 @@ function TraderCalendarPanel() {
 
 function HeroPricingCard() {
   const monthly = 9;
-  const yearly = monthly * 12; // 108
+  const yearly = 79; // strategic (save ~27%)
+  const lifetime = 149;
+
+  const yearlyVsMonthly = monthly * 12;
+  const savePct = Math.round(((yearlyVsMonthly - yearly) / yearlyVsMonthly) * 100);
 
   return (
     <div
@@ -749,7 +753,7 @@ function HeroPricingCard() {
         border: "1px solid rgba(140,80,255,0.22)",
         background: "rgba(140,80,255,0.08)",
         display: "grid",
-        gap: 10,
+        gap: 12,
       }}
     >
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: 10 }}>
@@ -771,31 +775,373 @@ function HeroPricingCard() {
         </span>
       </div>
 
-      <div style={{ display: "grid", gap: 6 }}>
-        <div style={{ fontSize: 28, fontWeight: 950, letterSpacing: -0.3, lineHeight: 1 }}>
-          ${monthly} <span style={{ fontSize: 12, opacity: 0.75, fontWeight: 700 }}>/ month</span>
+      <div style={{ display: "grid", gap: 10 }}>
+        {/* monthly */}
+        <div
+          style={{
+            padding: 12,
+            borderRadius: 16,
+            border: "1px solid rgba(255,255,255,0.10)",
+            background: "rgba(255,255,255,0.02)",
+            display: "grid",
+            gap: 6,
+          }}
+        >
+          <div style={{ display: "flex", justifyContent: "space-between", gap: 10, alignItems: "center" }}>
+            <div style={{ fontWeight: 900 }}>Pro (Monthly)</div>
+            <div style={{ fontSize: 12, opacity: 0.75 }}>${monthly}/mo</div>
+          </div>
+          <div style={{ fontSize: 12, opacity: 0.78, lineHeight: 1.5 }}>
+            Full access: R analytics, Win/Loss/BE, psychology tags, exports.
+          </div>
         </div>
-        <div style={{ fontSize: 12, opacity: 0.78 }}>
-          or <b>${yearly}</b> / year
-        </div>
-      </div>
 
-      <div style={{ fontSize: 13, opacity: 0.82, lineHeight: 1.55 }}>
-        Full access: R-based stats, Win/Loss/BE, psychology notes, exports.
+        {/* yearly */}
+        <div
+          style={{
+            padding: 12,
+            borderRadius: 16,
+            border: "1px solid rgba(255,205,80,0.24)",
+            background: "rgba(255,205,80,0.06)",
+            display: "grid",
+            gap: 6,
+          }}
+        >
+          <div style={{ display: "flex", justifyContent: "space-between", gap: 10, alignItems: "center" }}>
+            <div style={{ display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap" }}>
+              <div style={{ fontWeight: 900 }}>Pro (Yearly)</div>
+              <span
+                style={{
+                  padding: "4px 10px",
+                  borderRadius: 999,
+                  border: "1px solid rgba(255,205,80,0.35)",
+                  background: "rgba(255,205,80,0.10)",
+                  fontSize: 12,
+                  fontWeight: 900,
+                  opacity: 0.95,
+                  whiteSpace: "nowrap",
+                }}
+              >
+                ⭐ Save {savePct}%
+              </span>
+              <span style={{ fontSize: 12, opacity: 0.8 }}>Most disciplined traders choose yearly</span>
+            </div>
+            <div style={{ fontSize: 12, opacity: 0.75 }}>${yearly}/yr</div>
+          </div>
+          <div style={{ fontSize: 12, opacity: 0.78, lineHeight: 1.5 }}>
+            ~2 months free vs monthly. Same features. Better commitment.
+          </div>
+        </div>
+
+        {/* lifetime */}
+        <div
+          style={{
+            padding: 12,
+            borderRadius: 16,
+            border: "1px solid rgba(255,255,255,0.10)",
+            background: "rgba(255,255,255,0.02)",
+            display: "grid",
+            gap: 6,
+          }}
+        >
+          <div style={{ display: "flex", justifyContent: "space-between", gap: 10, alignItems: "center" }}>
+            <div style={{ display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap" }}>
+              <div style={{ fontWeight: 900 }}>Lifetime (Launch)</div>
+              <span style={{ fontSize: 12, opacity: 0.75 }}>Limited offer</span>
+            </div>
+            <div style={{ fontSize: 12, opacity: 0.75 }}>${lifetime} one-time</div>
+          </div>
+          <div style={{ fontSize: 12, opacity: 0.78, lineHeight: 1.5 }}>Early-bird plan to support the launch.</div>
+        </div>
       </div>
 
       <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
         <Link href="/register" style={{ textDecoration: "none" }}>
           <Button variant="primary">Get access</Button>
         </Link>
-        <Link href="/login" style={{ textDecoration: "none" }}>
-          <Button variant="secondary">Login</Button>
+        <Link href="/demo" style={{ textDecoration: "none" }}>
+          <Button variant="secondary">Start demo</Button>
         </Link>
       </div>
 
       <div style={{ fontSize: 12, opacity: 0.65, lineHeight: 1.5 }}>
-        (Checkout буде підключений пізніше через Stripe.)
+        (Checkout буде підключений пізніше через Stripe. Demo — без API ключів та без автоторгівлі.)
       </div>
+    </div>
+  );
+}
+
+function SocialProof() {
+  return (
+    <div style={{ marginTop: 12 }}>
+      <Card title="Why traders switch to TradeLog" subtitle="R exposes what PnL hides. Patterns become obvious.">
+        <div style={{ display: "grid", gap: 12 }}>
+          <div
+            style={{
+              display: "grid",
+              gridTemplateColumns: "repeat(3, 1fr)",
+              gap: 12,
+              alignItems: "stretch",
+            }}
+            className="proofGrid"
+          >
+            {[
+              {
+                quote: "“I realized I was green in PnL, but negative in R.”",
+                meta: "Futures trader • 3y experience",
+              },
+              {
+                quote: "“Calendar view exposed my revenge days instantly.”",
+                meta: "Intraday scalper • Binance/Bybit",
+              },
+              {
+                quote: "“Tracking in R fixed my position sizing and stops.”",
+                meta: "Discretionary trader • Risk-first",
+              },
+            ].map((t) => (
+              <div
+                key={t.quote}
+                style={{
+                  padding: 14,
+                  borderRadius: 16,
+                  border: "1px solid rgba(255,255,255,0.10)",
+                  background: "rgba(255,255,255,0.02)",
+                  display: "grid",
+                  gap: 10,
+                  height: "100%",
+                }}
+              >
+                <div style={{ fontWeight: 900, fontSize: 13, lineHeight: 1.55, opacity: 0.95 }}>{t.quote}</div>
+                <div style={{ fontSize: 12, opacity: 0.7 }}>{t.meta}</div>
+              </div>
+            ))}
+          </div>
+
+          <div
+            style={{
+              display: "grid",
+              gridTemplateColumns: "repeat(3, 1fr)",
+              gap: 12,
+              alignItems: "stretch",
+            }}
+            className="proofStatsGrid"
+          >
+            {[
+              { k: "Trades logged", v: "2,430+" },
+              { k: "Revenge patterns flagged", v: "312+" },
+              { k: "Risk spikes detected", v: "128+" },
+            ].map((s) => (
+              <div
+                key={s.k}
+                style={{
+                  padding: 14,
+                  borderRadius: 16,
+                  border: "1px solid rgba(255,255,255,0.10)",
+                  background: "rgba(255,255,255,0.02)",
+                  display: "grid",
+                  gap: 6,
+                }}
+              >
+                <div style={{ fontSize: 12, opacity: 0.7 }}>{s.k}</div>
+                <div style={{ fontSize: 18, fontWeight: 950, letterSpacing: -0.2 }}>{s.v}</div>
+              </div>
+            ))}
+          </div>
+
+          <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
+            <Link href="/demo" style={{ textDecoration: "none" }}>
+              <Button variant="primary">View interactive demo</Button>
+            </Link>
+            <Link href="/sample" style={{ textDecoration: "none" }}>
+              <Button variant="secondary">View sample journal</Button>
+            </Link>
+          </div>
+
+          <div style={{ fontSize: 12, opacity: 0.65, lineHeight: 1.5 }}>
+            Demo & sample use mock data — the goal is to show how R-based tracking works in seconds.
+          </div>
+        </div>
+      </Card>
+    </div>
+  );
+}
+
+function OnboardingPreview() {
+  return (
+    <div style={{ marginTop: 18 }}>
+      <Card title="Onboarding that actually improves retention" subtitle="4 quick steps → personalized insights from day one.">
+        <div style={{ display: "grid", gap: 12 }}>
+          <div
+            className="onboardingGrid"
+            style={{
+              display: "grid",
+              gridTemplateColumns: "repeat(4, 1fr)",
+              gap: 12,
+              alignItems: "stretch",
+            }}
+          >
+            {[
+              { n: "1", t: "Set your risk model", d: "Standard risk per trade ($ / %). TradeLog calibrates R instantly." },
+              { n: "2", t: "Choose what you trade", d: "Futures / Spot / Both — dashboards adapt to your style." },
+              { n: "3", t: "Experience level", d: "New / Intermediate / Advanced — tips match your reality." },
+              { n: "4", t: "Biggest issue", d: "Revenge, overtrading, emotional stops… we track the right patterns." },
+            ].map((x) => (
+              <div
+                key={x.n}
+                style={{
+                  padding: 14,
+                  borderRadius: 16,
+                  border: "1px solid rgba(255,255,255,0.10)",
+                  background: "rgba(255,255,255,0.02)",
+                  display: "grid",
+                  gap: 8,
+                  height: "100%",
+                }}
+              >
+                <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                  <div
+                    style={{
+                      width: 28,
+                      height: 28,
+                      borderRadius: 10,
+                      display: "grid",
+                      placeItems: "center",
+                      fontWeight: 950,
+                      border: "1px solid rgba(140,80,255,0.22)",
+                      background: "rgba(140,80,255,0.10)",
+                      flex: "0 0 auto",
+                    }}
+                  >
+                    {x.n}
+                  </div>
+                  <div style={{ fontWeight: 950 }}>{x.t}</div>
+                </div>
+                <div style={{ fontSize: 12, opacity: 0.75, lineHeight: 1.55 }}>{x.d}</div>
+              </div>
+            ))}
+          </div>
+
+          <div
+            style={{
+              padding: 14,
+              borderRadius: 16,
+              border: "1px solid rgba(140,80,255,0.22)",
+              background: "rgba(140,80,255,0.08)",
+              fontSize: 13,
+              lineHeight: 1.55,
+              opacity: 0.9,
+            }}
+          >
+            ✅ After onboarding, TradeLog shows a personalized insight like: <b>“Your biggest risk is revenge trading after -1R days.”</b>
+          </div>
+
+          <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
+            <Link href="/register" style={{ textDecoration: "none" }}>
+              <Button variant="primary">Start onboarding</Button>
+            </Link>
+            <Link href="/demo" style={{ textDecoration: "none" }}>
+              <Button variant="secondary">Try demo first</Button>
+            </Link>
+          </div>
+        </div>
+      </Card>
+    </div>
+  );
+}
+
+function RetentionMechanics() {
+  return (
+    <div style={{ marginTop: 18 }}>
+      <Card title="Retention mechanics" subtitle="Why traders come back every week (and keep paying).">
+        <div
+          className="retentionGrid"
+          style={{
+            display: "grid",
+            gridTemplateColumns: "repeat(3, 1fr)",
+            gap: 12,
+            alignItems: "stretch",
+          }}
+        >
+          {[
+            {
+              t: "Weekly Discipline Report",
+              d: "Avg R, best setup, biggest mistake tag, revenge days — a clean weekly summary.",
+              p: ["Email + in-app report", "One actionable focus per week", "Turns journaling into a habit"],
+            },
+            {
+              t: "Discipline score",
+              d: "A simple score that makes progress visible: stops respected, risk consistent, no revenge chains.",
+              p: ["Score 0–100", "Explains what changed", "Gamifies consistency, not PnL"],
+            },
+            {
+              t: "Monthly insights",
+              d: "See exactly what made money vs what destroyed discipline — and what to fix next.",
+              p: ["Best & worst setups", "Emotion tags impact", "Risk spikes & streaks"],
+            },
+          ].map((x) => (
+            <div
+              key={x.t}
+              style={{
+                padding: 14,
+                borderRadius: 16,
+                border: "1px solid rgba(255,255,255,0.10)",
+                background: "rgba(255,255,255,0.02)",
+                display: "grid",
+                gap: 10,
+                height: "100%",
+              }}
+            >
+              <div style={{ fontWeight: 950 }}>{x.t}</div>
+              <div style={{ fontSize: 13, opacity: 0.75, lineHeight: 1.55 }}>{x.d}</div>
+              <ul style={{ margin: 0, paddingLeft: 18, display: "grid", gap: 8, opacity: 0.9, fontSize: 13 }}>
+                {x.p.map((p) => (
+                  <li key={p}>{p}</li>
+                ))}
+              </ul>
+            </div>
+          ))}
+        </div>
+      </Card>
+    </div>
+  );
+}
+
+function TrustBlock() {
+  return (
+    <div style={{ marginTop: 18 }}>
+      <Card title="Security & privacy" subtitle="Designed to be safe for traders (and boring for attackers).">
+        <div
+          className="trustGrid"
+          style={{
+            display: "grid",
+            gridTemplateColumns: "repeat(3, 1fr)",
+            gap: 12,
+            alignItems: "stretch",
+          }}
+        >
+          {[
+            { t: "No exchange access", d: "No Binance/Bybit API keys. TradeLog never touches your exchange account." },
+            { t: "Manual logging only", d: "No auto-trading. Journaling stays intentional and risk-first." },
+            { t: "Export & delete anytime", d: "CSV/JSON export. No lock-in. Delete your account whenever you want." },
+          ].map((x) => (
+            <div
+              key={x.t}
+              style={{
+                padding: 14,
+                borderRadius: 16,
+                border: "1px solid rgba(255,255,255,0.10)",
+                background: "rgba(255,255,255,0.02)",
+                display: "grid",
+                gap: 8,
+                height: "100%",
+              }}
+            >
+              <div style={{ fontWeight: 950 }}>{x.t}</div>
+              <div style={{ fontSize: 13, opacity: 0.75, lineHeight: 1.55 }}>{x.d}</div>
+            </div>
+          ))}
+        </div>
+      </Card>
     </div>
   );
 }
@@ -811,14 +1157,17 @@ export default function HomePage() {
       <div style={{ position: "relative", zIndex: 1 }}>
         <HeaderRow
           title="TradeLog"
-          subtitle="Journal your crypto trades. Trade with data, not emotions."
+          subtitle="Discipline analytics for crypto futures traders."
           right={
             <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
+              <Link href="/demo" style={{ textDecoration: "none" }}>
+                <Button variant="secondary">Demo</Button>
+              </Link>
               <Link href="/login" style={{ textDecoration: "none" }}>
                 <Button variant="secondary">Login</Button>
               </Link>
               <Link href="/register" style={{ textDecoration: "none" }}>
-                <Button variant="primary">Registration</Button>
+                <Button variant="primary">Get access</Button>
               </Link>
             </div>
           }
