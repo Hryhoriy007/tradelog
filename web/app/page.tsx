@@ -859,10 +859,7 @@ function HeroPricingCard() {
         <Link href="/register" style={{ textDecoration: "none" }}>
           <Button variant="primary">Get access</Button>
         </Link>
-        <Link href="/demo" style={{ textDecoration: "none" }}>
-          <Button variant="secondary">Start demo</Button>
-        </Link>
-      </div>
+              </div>
 
       <div style={{ fontSize: 12, opacity: 0.65, lineHeight: 1.5 }}>
         (Checkout буде підключений пізніше через Stripe. Demo — без API ключів та без автоторгівлі.)
@@ -1160,9 +1157,6 @@ export default function HomePage() {
           subtitle="Discipline analytics for crypto futures traders."
           right={
             <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
-              <Link href="/demo" style={{ textDecoration: "none" }}>
-                <Button variant="secondary">Demo</Button>
-              </Link>
               <Link href="/login" style={{ textDecoration: "none" }}>
                 <Button variant="secondary">Login</Button>
               </Link>
